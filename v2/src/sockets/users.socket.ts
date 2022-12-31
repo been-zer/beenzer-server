@@ -1,5 +1,8 @@
 import { Socket } from 'socket.io';
-import { sqlFilter } from '../utils';
+import { 
+  sqlFilter,
+  concatPubKeys
+} from '../utils';
 import { 
   isNewUser, 
   isUserName,
@@ -8,8 +11,13 @@ import {
   updateUser,
   getUserFriends,
   searchUsers,
-
+  addFriends,
+  deleteFriends
 } from '../controllers/users.controller';
+import {
+  createMessages,
+  deleteMessages
+} from '../controllers/messages.controller';
 import { getUserNFTs } from '../controllers/nfts.controller';
 
 export const newConnectionSocket = async (socket: Socket): Promise<void>  => {
@@ -110,11 +118,48 @@ export const updateUserSocket = async (socket: Socket): Promise<void>  => {
   });
 };
 
+export const addFriendSocket = async (socket: Socket): Promise<void>  => {
+  socket.on('addFriend', async (pubkey: string, pubkey2: string) => {
+    if ( pubkey.length > 22 && pubkey2.length > 22 ) {
+      const table = concatPubKeys(pubkey, pubkey2);
+      if ( await createMessages(table) ) {
+        console.log('addFriend', pubkey, pubkey2);
+        socket.emit('addFriendRes', await addFriends(pubkey, pubkey2));
+      };
+    }
+  });
+};
+
+export const deleteFriendSocket = async (socket: Socket): Promise<void>  => {
+  socket.on('deleteFriend', async (pubkey: string, pubkey2: string) => {
+    if ( pubkey.length > 22 && pubkey2.length > 22 ) {
+      const table = concatPubKeys(pubkey, pubkey2);
+      if ( await deleteMessages(table) ) {
+        socket.emit('deleteFriendRes', await deleteFriends(pubkey, pubkey2));
+      }
+    }
+  });
+};
+
+export const getUserFriendsSocket = async (socket: Socket): Promise<void>  => {
+  socket.on('getUserFriends', async (pubkey:string) => {
+    const userFriends = await getUserFriends(pubkey);
+    if ( userFriends.length > 0 ) {
+      socket.emit('userFriends', userFriends);
+    } else {
+      // console.log('WARNING: User has no friends yet.');
+    }
+  });
+};
+
 const userSocket = async (socket: Socket): Promise<void> => {
   await newConnectionSocket(socket);
   await searchUsersSocket(socket);
   await getUserSocket(socket);
   await updateUserSocket(socket);
+  await addFriendSocket(socket);
+  await deleteFriendSocket(socket);
+  await getUserFriendsSocket(socket);
 };
 
 export default userSocket;
