@@ -123,6 +123,13 @@ export const _newNFTtransactions = (token: string, owner: string, pubkey: string
   }
 };
 
+// Token sql queries
+export const _getAllTokenTransactions = (): string => {
+  return `SELECT * FROM transactions`;
+};
+
+
+
 /**
  * @description Get getNFTtransactions data
  * @date 12/1/2022 - 11:35:04 AM
