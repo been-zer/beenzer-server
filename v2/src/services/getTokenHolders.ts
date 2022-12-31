@@ -1,11 +1,13 @@
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { Connection } from "@solana/web3.js";
 
-const getTokenHolders = async (_token = 'DoA5HLxcNGuqGb4wAfTXJZzAzt1juhgpYCxZpuvzgUTy') => {
-  const rpcEndpoint = 'https://dry-nameless-moon.solana-mainnet.discover.quiknode.pro/f61fa4c0c62f358f4b77346ad4faa84f8742ed73/';
-  const connection = new Connection(rpcEndpoint);
+const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
+const TOKEN = process.env.TOKEN as string;
+const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL);
 
-  const accounts = await connection.getProgramAccounts(
+export const getTokenHolders = async ( _token: string = TOKEN ) => {
+
+  const accounts = await SOLANA_CONNECTION.getProgramAccounts(
     TOKEN_PROGRAM_ID, // new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
     {
       dataSlice: {
@@ -30,5 +32,3 @@ const getTokenHolders = async (_token = 'DoA5HLxcNGuqGb4wAfTXJZzAzt1juhgpYCxZpuv
   );
   console.log(accounts);
 };
-
-getTokenHolders();
