@@ -1,9 +1,16 @@
 import { Socket } from 'socket.io';
-import { sqlFilter } from '../utils';
+import { sleep } from '../utils';
+import { mintNFT } from '../services/mintNFT';
+import { sendNFT } from '../services/sendNFT';
+import {
+  addNFTCounter,
+  getNFTCounter,
+  newNFT,
+  getUserNFTs,
+  getAllNFTs
+} from '../controllers/nfts.controller';
 
-
-const nftsSocket = async (socket: Socket): Promise<void> => {
-  // NFTS functions
+export const newMintSocket = async (socket: Socket): Promise<void> => {
   socket.on('newMint', async ( buffer: Buffer, type: string, creator: string, supply: number=1, username: string, description: string, city: string, latitude: number, longitude: number) => {
     let i = 0;
     while ( i < 10 ) {
@@ -36,15 +43,28 @@ const nftsSocket = async (socket: Socket): Promise<void> => {
       }
     }
   });
+};
+
+export const getUserNFTsSocket = async (socket: Socket): Promise<void> => {
   socket.on('getUserNFTs', async (pubkey:string) => {
     if ( pubkey.length > 22 ) {
       socket.emit('userNFTs', await getUserNFTs(pubkey));
     }
-  })
+  });
+};
+
+export const getAllNFTsSocket = async (socket: Socket): Promise<void> => {
   socket.on('getAllNFTs', async (res:string) => {
     if ( res === 'please' ) {
       socket.emit('allNFTs', await getAllNFTs());
     }
   });
+};
 
-}
+const nftsSocket = async (socket: Socket): Promise<void> => {
+  await newMintSocket(socket);
+  await getUserNFTsSocket(socket);
+  await getAllNFTsSocket(socket);
+};
+
+export default nftsSocket;

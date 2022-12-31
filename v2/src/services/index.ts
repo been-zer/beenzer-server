@@ -1,3 +1,3 @@
-// export interface { uploadImage } from './mint.js';
+// export interface { getBalances } from './getBalances';
 
 
