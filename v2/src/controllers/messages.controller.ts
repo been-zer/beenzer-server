@@ -7,7 +7,7 @@ import {
 	_getMessages, 
 	_likeMessage, 
 	_addEmoji 
-} from "./users.queries";
+} from "./messages.queries";
 
 const db: Client = messagesDB;
 

@@ -14,7 +14,7 @@ import {
   _getUserNFTs,
   _getAllNFTs,
   _newOwner
-} from './users.queries';
+} from './nfts.queries';
 import { getDate, getTime } from '../utils';
 
 /**

@@ -1,8 +1,7 @@
 import { server, io } from './app';
-import { socketConnect } from './services/sockets';
+import { socketConnect } from './sockets';
 import { getTime } from './utils';
 import getBalances from './services/getBalances';
-
 
 server.listen(process.env.PORT, () => {
 
