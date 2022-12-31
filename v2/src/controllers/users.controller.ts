@@ -7,15 +7,17 @@ import {
   _getFriends,
   _addFriends,
   _deleteFriends,
-  _getNFT,
   _isNewUser,
   _isUserName,
+  _searchUsers
+} from './users.queries';
+import {
+  _getNFT,
   _newNFT,
   _updateNFTOwner,
   _updateNFTLikes,
   _createNFTtransactions,
-  _searchUsers
-} from './users.queries';
+} from './nfts.queries'
 import {
   createMessages,
   deleteMessages
