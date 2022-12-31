@@ -6,7 +6,6 @@ const TOKEN = process.env.TOKEN as string;
 const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL);
 
 export const getTokenHolders = async ( _token: string = TOKEN ) => {
-
   const accounts = await SOLANA_CONNECTION.getProgramAccounts(
     TOKEN_PROGRAM_ID, // new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
     {
