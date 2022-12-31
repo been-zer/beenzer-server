@@ -49,7 +49,7 @@ export async function isUserName(username: string): Promise<any> {
   return true;
 }
 
-export async function isNewUser(pubkey: string) {
+export async function isNewUser(pubkey: string): Promise<boolean> {
   let user: any;
   try {
     user = await db.query(_isNewUser(pubkey));
@@ -63,7 +63,7 @@ export async function isNewUser(pubkey: string) {
   return true;
 }
 
-export async function newUser(pubkey: string, username: string) {
+export async function newUser(pubkey: string, username: string): Promise<boolean> {
   try {
     await db.query(_newUser(pubkey, username));
     return true;
@@ -77,7 +77,7 @@ export async function newUser(pubkey: string, username: string) {
   }
 }
 
-export async function updateUser(pubkey: string, update: string, value: string) {
+export async function updateUser(pubkey: string, update: string, value: string): Promise<boolean> {
   try {
     await db.query(_updateUser(pubkey, update, value));
     return true;
@@ -88,7 +88,7 @@ export async function updateUser(pubkey: string, update: string, value: string) 
 }
 
 
-export async function addFollower(pubkey: string, pubkey2: string) {
+export async function addFollower(pubkey: string, pubkey2: string): Promise<boolean> {
   try {
     await db.query(_addFriends(pubkey,pubkey2)); // __follower__ -> __user__
     return true;
@@ -102,7 +102,7 @@ export async function addFollower(pubkey: string, pubkey2: string) {
   }
 }
 
-export async function addFriends(pubkey: string, pubkey2: string) {
+export async function addFriends(pubkey: string, pubkey2: string): Promise<boolean> {
   try {
     await db.query(_addFriends(pubkey,pubkey2));
     // confirmation
@@ -122,7 +122,7 @@ export async function addFriends(pubkey: string, pubkey2: string) {
   }
 }
 
-export async function deleteFriends(pubkey: string, pubkey2: string) {
+export async function deleteFriends(pubkey: string, pubkey2: string): Promise<boolean> {
   try {
     await db.query(_deleteFriends(pubkey, pubkey2));
     await db.query(_deleteFriends(pubkey2, pubkey));
@@ -165,7 +165,7 @@ export async function getUserFriends(pubkey: string): Promise<any> {
   }
 }
 
-export async function deleteFollower(follower: string, user: string) {
+export async function deleteFollower(follower: string, user: string): Promise<boolean> {
   try {
     await db.query(_deleteFriends(follower, user));
     return true;
@@ -175,7 +175,7 @@ export async function deleteFollower(follower: string, user: string) {
   }
 }
 
-export async function searchUsers(search: string) {
+export async function searchUsers(search: string): Promise<any> {
   try {
     const data = await db.query(_searchUsers(search));
     const rows = data.rows;

@@ -1,4 +1,4 @@
-import { userSchema, friendsSchema } from './users.schemas';
+import { usersSchema, friendsSchema } from './users.schemas';
 
 export const _getUser = (pubkey: string): string => {
   return `SELECT * FROM users WHERE __pubkey__ = '${pubkey}'`;
@@ -13,7 +13,7 @@ export const _isNewUser = (pubkey: string): string => {
 };
 
 export const _newUser = (pubkey: string, username: string): string => {
-  return `INSERT INTO users (${userSchema}) VALUES ('${pubkey}', '${username}', '', '', '', '', '', '', '', false, '', '', '', '', '', ${Date.now()}, ${Date.now()})`;
+  return `INSERT INTO users (${usersSchema}) VALUES ('${pubkey}', '${username}', '', '', '', '', '', '', '', false, '', '', '', '', '', ${Date.now()}, ${Date.now()})`;
 };
 
 export const _updateUser = (pubkey: string, update: string, value: string): string => {
