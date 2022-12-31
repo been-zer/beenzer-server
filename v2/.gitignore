@@ -1,0 +1,26 @@
+node_modules/
+tests/
+__tests__/
+keys/
+.env
+env.local
+env.development
+env.production
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+*.lock
+*.key
+web-build/
+yarn.lock
+yarn-error.log
+package-lock.json
+.vscode/
+# macOS
+.DS_Store
