@@ -3,8 +3,6 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-// import { socketConnect } from './sockets';
-// import { getTime } from './utils';
 import dotenv from 'dotenv';
 dotenv.config();
 
