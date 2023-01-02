@@ -25,55 +25,62 @@ export const newConnectionSocket = async (socket: Socket): Promise<void>  => {
     console.log('NEW LOGIN:', pubkey)
     // Users functions
     const isNew = await isNewUser(pubkey);
-    // console.log('isNewUser', isNew);
-    socket.emit('isNewUser', isNew);
+    socket.emit('isNewUser', isNewUser);
     if (isNew) {
-      socket.on('userName', async (username) => {
-        const regexUser = sqlFilter(username);
-        if ( regexUser.length >= 3 ) {
-          console.log('userName', regexUser);
-          const userNameAv = await isUserName(regexUser);
-          console.log('userNameAv', userNameAv);
-          socket.emit('userNameAv', userNameAv);;
-          if ( userNameAv ) {
-            let i = 0;
-            while ( i < 10 ) {
-              if ( await newUser(pubkey, regexUser) ) {
-                socket.emit('newUserCreated', true);
-                console.log('New user created!');
-                const userInfo = await getUser(pubkey);
-                socket.emit('userInfo', userInfo);
-                i = 10;
-                break;
-              } else {
-                console.log('New user creation failed.', i);
-                socket.emit('newUserCreated', false);
-                i++;
-              }
-            }
+      await newUserSocket(socket, pubkey);
+    }
+    await userDataSocket(socket, pubkey);   
+  });
+};
+
+export const newUserSocket = async (socket: Socket, pubkey: string): Promise<void>  => {
+  socket.on('userName', async (username: string, appuser: boolean) => {
+    const regexUser = sqlFilter(username);
+    if ( regexUser.length >= 3 ) {
+      console.log('userName', regexUser);
+      const userNameAv = await isUserName(regexUser);
+      console.log('userNameAv', userNameAv);
+      socket.emit('userNameAv', userNameAv);;
+      if ( userNameAv ) {
+        let i = 0;
+        while ( i < 10 ) {
+          if ( await newUser(pubkey, regexUser, appuser) ) {
+            socket.emit('newUserCreated', true);
+            console.log('New user created!');
+            const userInfo = await getUser(pubkey);
+            socket.emit('userInfo', userInfo);
+            i = 10;
+            break;
+          } else {
+            console.log('New user creation failed.', i);
+            socket.emit('newUserCreated', false);
+            i++;
           }
         }
-      });
-    } 
-    const userInfo = await getUser(pubkey);
-    if ( userInfo.length > 0 ) {
-      socket.emit('userInfo', userInfo);
-    } else {
-      // console.log('WARNING: No user info available from db.');
-    }
-    const userNFTs = await getUserNFTs(pubkey);
-    if ( userNFTs.length > 0 ) {
-      socket.emit('userNFTs', userNFTs);
-    } else {
-      // console.log('WARNING: User has no NFTs yet.');
-    }
-    const userFriends = await getUserFriends(pubkey);
-    if ( userFriends.length > 0 ) {
-      socket.emit('userFriends', userFriends);
-    } else {
-      // console.log('WARNING: User has no friends yet.');
+      }
     }
   });
+};
+
+export const userDataSocket = async (socket: Socket, pubkey: string): Promise<void>  => {
+  const userInfo = await getUser(pubkey);
+  if ( userInfo.length > 0 ) {
+    socket.emit('userInfo', userInfo);
+  } else {
+    // console.log('WARNING: No user info available from db.');
+  }
+  const userNFTs = await getUserNFTs(pubkey);
+  if ( userNFTs.length > 0 ) {
+    socket.emit('userNFTs', userNFTs);
+  } else {
+    // console.log('WARNING: User has no NFTs yet.');
+  }
+  const userFriends = await getUserFriends(pubkey);
+  if ( userFriends.length > 0 ) {
+    socket.emit('userFriends', userFriends);
+  } else {
+    // console.log('WARNING: User has no friends yet.');
+  }
 };
 
 export const searchUsersSocket = async (socket: Socket): Promise<void>  => {

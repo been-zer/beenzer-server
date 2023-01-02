@@ -63,9 +63,9 @@ export async function isNewUser(pubkey: string): Promise<boolean> {
   return true;
 }
 
-export async function newUser(pubkey: string, username: string): Promise<boolean> {
+export async function newUser(pubkey: string, username: string, appuser: boolean): Promise<boolean> {
   try {
-    await db.query(_newUser(pubkey, username));
+    await db.query(_newUser(pubkey, username, appuser));
     return true;
   } catch (error) {
     if (String(error).includes('duplicate')) {
