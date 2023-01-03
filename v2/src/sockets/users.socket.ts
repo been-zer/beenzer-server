@@ -23,7 +23,6 @@ import { getUserNFTs } from '../controllers/nfts.controller';
 export const newConnectionSocket = async (socket: Socket): Promise<void>  => {
   socket.on('newConnection', async (pubkey: string) => {
     console.log('NEW LOGIN:', pubkey)
-    // Users functions
     const isNew = await isNewUser(pubkey);
     socket.emit('isNewUser', isNewUser);
     if (isNew) {
@@ -154,7 +153,7 @@ export const getUserFriendsSocket = async (socket: Socket): Promise<void>  => {
     if ( userFriends.length > 0 ) {
       socket.emit('userFriends', userFriends);
     } else {
-      // console.log('WARNING: User has no friends yet.');
+      socket.emit('userFriends', 0);
     }
   });
 };
