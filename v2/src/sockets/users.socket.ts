@@ -63,28 +63,15 @@ export const newUserSocket = async (socket: Socket, pubkey: string): Promise<voi
 
 export const userDataSocket = async (socket: Socket, pubkey: string): Promise<void> => {
   const userInfo = await getUser(pubkey);
-  if (userInfo.length > 0) {
-    socket.emit('userInfo', userInfo);
-  } else {
-    // console.log('WARNING: No user info available from db.');
-  }
   const userNFTs = await getUserNFTs(pubkey);
-  if (userNFTs.length >= 0) {
-    socket.emit('userNFTs', userNFTs);
-  } else {
-    // console.log('WARNING: User has no NFTs yet.');
-  }
   const userFriends = await getUserFriends(pubkey);
-  if (userFriends.length > 0) {
-    socket.emit('userFriends', userFriends);
-  } else {
-    // console.log('WARNING: User has no friends yet.');
-  }
+  socket.emit('userNFTs', userNFTs);
+  socket.emit('userInfo', userInfo);
+  socket.emit('userFriends', userFriends);
 };
 
 export const searchUsersSocket = async (socket: Socket): Promise<void> => {
   socket.on('searchUsers', async (search: string) => {
-    // console.log('Searching...', search)
     if (search.length >= 3) {
       socket.emit('searchUsersRes', await searchUsers(search));
     }
@@ -103,14 +90,11 @@ export const updateUserSocket = async (socket: Socket): Promise<void> => {
     const pubkey_ = sqlFilter(pubkey);
     const update_ = sqlFilter(update);
     let value_ = sqlFilter(value);
-    // console.log('update request', pubkey_, update_, value_)
     if (value.slice(0, 2) === '__') {
       value_ = value.replace('__', '');
     }
-    // console.log('update request', pubkey_, update_, value_)
     if (pubkey_ && update_ && value_) {
       const isUserUpdate = await updateUser(pubkey_, update_, value_);
-      // console.log('userInfo update:', isUserUpdate, update_, value_, pubkey_);
       socket.emit('updateUserRes', isUserUpdate);
       if (isUserUpdate) {
         const userInfo = await getUser(pubkey);
