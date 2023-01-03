@@ -1,10 +1,10 @@
 import { Socket } from 'socket.io';
-import { 
+import {
   sqlFilter,
   concatPubKeys
 } from '../utils';
-import { 
-  isNewUser, 
+import {
+  isNewUser,
   isUserName,
   newUser,
   getUser,
@@ -20,30 +20,30 @@ import {
 } from '../controllers/messages.controller';
 import { getUserNFTs } from '../controllers/nfts.controller';
 
-export const newConnectionSocket = async (socket: Socket): Promise<void>  => {
+export const newConnectionSocket = async (socket: Socket): Promise<void> => {
   socket.on('newConnection', async (pubkey: string) => {
     console.log('NEW LOGIN:', pubkey)
     const isNew = await isNewUser(pubkey);
-    socket.emit('isNewUser', isNewUser);
+    socket.emit('isNewUser', isNew);
     if (isNew) {
       await newUserSocket(socket, pubkey);
     }
-    await userDataSocket(socket, pubkey);   
+    await userDataSocket(socket, pubkey);
   });
 };
 
-export const newUserSocket = async (socket: Socket, pubkey: string): Promise<void>  => {
+export const newUserSocket = async (socket: Socket, pubkey: string): Promise<void> => {
   socket.on('userName', async (username: string, appuser: boolean) => {
     const regexUser = sqlFilter(username);
-    if ( regexUser.length >= 3 ) {
+    if (regexUser.length >= 3) {
       console.log('userName', regexUser);
       const userNameAv = await isUserName(regexUser);
       console.log('userNameAv', userNameAv);
       socket.emit('userNameAv', userNameAv);;
-      if ( userNameAv ) {
+      if (userNameAv) {
         let i = 0;
-        while ( i < 10 ) {
-          if ( await newUser(pubkey, regexUser, appuser) ) {
+        while (i < 10) {
+          if (await newUser(pubkey, regexUser, appuser)) {
             socket.emit('newUserCreated', true);
             console.log('New user created!');
             const userInfo = await getUser(pubkey);
@@ -61,58 +61,58 @@ export const newUserSocket = async (socket: Socket, pubkey: string): Promise<voi
   });
 };
 
-export const userDataSocket = async (socket: Socket, pubkey: string): Promise<void>  => {
+export const userDataSocket = async (socket: Socket, pubkey: string): Promise<void> => {
   const userInfo = await getUser(pubkey);
-  if ( userInfo.length > 0 ) {
+  if (userInfo.length > 0) {
     socket.emit('userInfo', userInfo);
   } else {
     // console.log('WARNING: No user info available from db.');
   }
   const userNFTs = await getUserNFTs(pubkey);
-  if ( userNFTs.length > 0 ) {
+  if (userNFTs.length >= 0) {
     socket.emit('userNFTs', userNFTs);
   } else {
     // console.log('WARNING: User has no NFTs yet.');
   }
   const userFriends = await getUserFriends(pubkey);
-  if ( userFriends.length > 0 ) {
+  if (userFriends.length > 0) {
     socket.emit('userFriends', userFriends);
   } else {
     // console.log('WARNING: User has no friends yet.');
   }
 };
 
-export const searchUsersSocket = async (socket: Socket): Promise<void>  => {
+export const searchUsersSocket = async (socket: Socket): Promise<void> => {
   socket.on('searchUsers', async (search: string) => {
     // console.log('Searching...', search)
-    if ( search.length >= 3 ) {
+    if (search.length >= 3) {
       socket.emit('searchUsersRes', await searchUsers(search));
     }
   });
 };
 
-export const getUserSocket = async (socket: Socket): Promise<void>  => {
-  socket.on('getUser', async (user: string ) => {
+export const getUserSocket = async (socket: Socket): Promise<void> => {
+  socket.on('getUser', async (user: string) => {
     const userInfo = await getUser(user);
     socket.emit('getUserRes', userInfo)
   })
 };
 
-export const updateUserSocket = async (socket: Socket): Promise<void>  => {
+export const updateUserSocket = async (socket: Socket): Promise<void> => {
   socket.on('updateUser', async (pubkey: string, update: string, value: string) => {
     const pubkey_ = sqlFilter(pubkey);
     const update_ = sqlFilter(update);
     let value_ = sqlFilter(value);
     // console.log('update request', pubkey_, update_, value_)
-    if ( value.slice(0, 2) === '__') {
+    if (value.slice(0, 2) === '__') {
       value_ = value.replace('__', '');
     }
     // console.log('update request', pubkey_, update_, value_)
-    if ( pubkey_ && update_ && value_ ) {
+    if (pubkey_ && update_ && value_) {
       const isUserUpdate = await updateUser(pubkey_, update_, value_);
       // console.log('userInfo update:', isUserUpdate, update_, value_, pubkey_);
       socket.emit('updateUserRes', isUserUpdate);
-      if ( isUserUpdate ) {
+      if (isUserUpdate) {
         const userInfo = await getUser(pubkey);
         socket.emit('userInfo', userInfo);
         console.log('Updated user succesfully!');
@@ -124,11 +124,11 @@ export const updateUserSocket = async (socket: Socket): Promise<void>  => {
   });
 };
 
-export const addFriendSocket = async (socket: Socket): Promise<void>  => {
+export const addFriendSocket = async (socket: Socket): Promise<void> => {
   socket.on('addFriend', async (pubkey: string, pubkey2: string) => {
-    if ( pubkey.length > 22 && pubkey2.length > 22 ) {
+    if (pubkey.length > 22 && pubkey2.length > 22) {
       const table = concatPubKeys(pubkey, pubkey2);
-      if ( await createMessages(table) ) {
+      if (await createMessages(table)) {
         console.log('addFriend', pubkey, pubkey2);
         socket.emit('addFriendRes', await addFriends(pubkey, pubkey2));
       };
@@ -136,21 +136,21 @@ export const addFriendSocket = async (socket: Socket): Promise<void>  => {
   });
 };
 
-export const deleteFriendSocket = async (socket: Socket): Promise<void>  => {
+export const deleteFriendSocket = async (socket: Socket): Promise<void> => {
   socket.on('deleteFriend', async (pubkey: string, pubkey2: string) => {
-    if ( pubkey.length > 22 && pubkey2.length > 22 ) {
+    if (pubkey.length > 22 && pubkey2.length > 22) {
       const table = concatPubKeys(pubkey, pubkey2);
-      if ( await deleteMessages(table) ) {
+      if (await deleteMessages(table)) {
         socket.emit('deleteFriendRes', await deleteFriends(pubkey, pubkey2));
       }
     }
   });
 };
 
-export const getUserFriendsSocket = async (socket: Socket): Promise<void>  => {
-  socket.on('getUserFriends', async (pubkey:string) => {
+export const getUserFriendsSocket = async (socket: Socket): Promise<void> => {
+  socket.on('getUserFriends', async (pubkey: string) => {
     const userFriends = await getUserFriends(pubkey);
-    if ( userFriends.length > 0 ) {
+    if (userFriends.length > 0) {
       socket.emit('userFriends', userFriends);
     } else {
       socket.emit('userFriends', 0);
