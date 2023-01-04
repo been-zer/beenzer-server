@@ -65,8 +65,8 @@ export const userDataSocket = async (socket: Socket, pubkey: string): Promise<vo
   const userInfo = await getUser(pubkey);
   const userNFTs = await getUserNFTs(pubkey);
   const userFriends = await getUserFriends(pubkey);
-  socket.emit('userNFTs', userNFTs);
   socket.emit('userInfo', userInfo);
+  socket.emit('userNFTs', userNFTs);
   socket.emit('userFriends', userFriends);
 };
 

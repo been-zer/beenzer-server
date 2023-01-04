@@ -22,5 +22,9 @@ export const socketConnect = (io: Server): void => {
     await messagesSocket(socket);
     await nftsSocket(socket);
     await tokenSocket(socket);  
+
+    socket.on('hello', (mess) => {
+      console.log(mess);
+    })
   });
 };

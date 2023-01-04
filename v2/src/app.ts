@@ -37,7 +37,10 @@ export const server: any = createServer(app);
  */
 export const io: any = new Server(server, {
     cors: {
-        origin: '*',
+        origin: [
+            '*', 
+            'http://localhost:8080'
+        ],
         methods: ['GET', 'POST']
     }
 });
