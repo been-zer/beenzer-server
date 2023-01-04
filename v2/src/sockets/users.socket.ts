@@ -36,9 +36,7 @@ export const newUserSocket = async (socket: Socket, pubkey: string): Promise<voi
   socket.on('userName', async (username: string, appuser: boolean) => {
     const regexUser = sqlFilter(username);
     if (regexUser.length >= 3) {
-      console.log('userName', regexUser);
       const userNameAv = await isUserName(regexUser);
-      console.log('userNameAv', userNameAv);
       socket.emit('userNameAv', userNameAv);;
       if (userNameAv) {
         let i = 0;
