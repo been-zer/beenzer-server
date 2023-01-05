@@ -24,6 +24,7 @@ export const newConnectionSocket = (socket: Socket): void => {
   socket.on('newConnection', async (pubkey: string) => {
     console.log('NEW LOGIN:', pubkey)
     const isNew = await isNewUser(pubkey);
+    console.log('isnew:', isNew);
     socket.emit('isNewUser', isNew);
     if (isNew) {
       await newUserSocket(socket, pubkey);
@@ -76,8 +77,9 @@ export const userDataSocket = async (socket: Socket, pubkey: string): Promise<vo
 
 export const searchUsersSocket = (socket: Socket): void => {
   socket.on('searchUsers', async (search: string) => {
-    if (search.length >= 3) {
-      socket.emit('searchUsersRes', await searchUsers(search));
+    const inputClean: string = sqlFilter(search);
+    if (inputClean.length >= 3) {
+      socket.emit('searchUsersRes', await searchUsers(inputClean));
     }
   });
 };
@@ -146,7 +148,7 @@ export const getUserFriendsSocket = (socket: Socket): void => {
   });
 };
 
-const userSocket = async (socket: Socket): Promise<void> => {
+const userSocket = (socket: Socket): void => {
   newConnectionSocket(socket);
   newDisonnectionSocket(socket);
   searchUsersSocket(socket);

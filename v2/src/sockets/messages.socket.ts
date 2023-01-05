@@ -7,7 +7,7 @@ import {
   addEmoji
 } from '../controllers/messages.controller';
 
-export const getMessagesSocket = async (socket: Socket): Promise<void> => {
+export const getMessagesSocket = (socket: Socket): void => {
   socket.on('getMessages', async (pubkey:string, pubkey2:string) => {
     if ( pubkey.length > 22 && pubkey2.length > 22 ) {
       const table = concatPubKeys(pubkey, pubkey2);
@@ -16,7 +16,7 @@ export const getMessagesSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-export const newMessageSocket = async (socket: Socket): Promise<void> => {
+export const newMessageSocket = (socket: Socket): void => {
   socket.on('newMessage', async (receiver:string, sender:string, message:string) => {
     if ( receiver.length > 22 && sender.length > 22 && message.length > 0 ) {
       const table = concatPubKeys(receiver, sender);
@@ -26,7 +26,7 @@ export const newMessageSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-export const likeMessageSocket = async (socket: Socket): Promise<void> => {
+export const likeMessageSocket = (socket: Socket): void => {
   socket.on('likeMessage', async (pubkey:string, pubkey2:string, timestamp:number) => {
     if ( pubkey.length > 22 && pubkey2.length > 22 ) {
       const table = concatPubKeys(pubkey, pubkey2);
@@ -36,7 +36,7 @@ export const likeMessageSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-export const addEmojiSocket = async (socket: Socket): Promise<void> => {
+export const addEmojiSocket = (socket: Socket): void => {
   socket.on('addEmoji', async (pubkey:string, pubkey2:string, timestamp:number, emoji:string) => {
     if ( pubkey.length > 22 && pubkey2.length > 22 ) {
       const table = concatPubKeys(pubkey, pubkey2);
@@ -46,11 +46,11 @@ export const addEmojiSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-const messagesSocket = async (socket: Socket) => {
-  await getMessagesSocket(socket);
-  await newMessageSocket(socket);
-  await likeMessageSocket(socket);
-  await addEmojiSocket(socket);
+const messagesSocket = (socket: Socket) => {
+  getMessagesSocket(socket);
+  newMessageSocket(socket);
+  likeMessageSocket(socket);
+  addEmojiSocket(socket);
 };
 
 export default messagesSocket;

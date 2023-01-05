@@ -7,24 +7,20 @@ import tokenSocket from './token.socket';
 let usersConnected: number = 0;
 
 export const socketConnect = (io: Server): void => {
-  io.on("connection", async (socket: Socket) => {
-    // Disconnect
-    socket.on('disconnect', () => {
-      usersConnected--;
-      console.log(usersConnected, 'users connected.')
-    });
+  io.on("connection", (socket: Socket) => {
     // Connection
     usersConnected++;
     console.log(usersConnected, 'users connected.');
     socket.emit("serverConnection", "Client connected to server succesfully");
+    // Disconnection
+    socket.on('disconnect', () => {
+      usersConnected--;
+      console.log(usersConnected, 'users connected.')
+    });
     // Sockets
-    await userSocket(socket);
-    await messagesSocket(socket);
-    await nftsSocket(socket);
-    await tokenSocket(socket);  
-
-    socket.on('hello', (mess) => {
-      console.log(mess);
-    })
+    userSocket(socket);
+    messagesSocket(socket);
+    nftsSocket(socket);
+    tokenSocket(socket);  
   });
 };
