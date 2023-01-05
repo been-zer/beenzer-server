@@ -53,6 +53,7 @@ export async function isNewUser(pubkey: string): Promise<boolean> {
   let user: any;
   try {
     user = await db.query(_isNewUser(pubkey));
+    console.log('helloooo', user)
   } catch (error) {
     console.log('isUserName Ctrl error:', error);
     return false;
