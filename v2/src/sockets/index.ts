@@ -4,7 +4,7 @@ import messagesSocket from './messages.socket';
 import nftsSocket from './nfts.socket';
 import tokenSocket from './token.socket';
 
-let usersConnected: number = 0;
+export let usersConnected: number = 0;
 
 export const socketConnect = (io: Server): void => {
   io.on("connection", (socket: Socket) => {
