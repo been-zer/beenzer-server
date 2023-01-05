@@ -20,7 +20,7 @@ import {
 } from '../controllers/messages.controller';
 import { getUserNFTs } from '../controllers/nfts.controller';
 
-export const newConnectionSocket = async (socket: Socket): Promise<void> => {
+export const newConnectionSocket = (socket: Socket): void => {
   socket.on('newConnection', async (pubkey: string) => {
     console.log('NEW LOGIN:', pubkey)
     const isNew = await isNewUser(pubkey);
@@ -29,6 +29,12 @@ export const newConnectionSocket = async (socket: Socket): Promise<void> => {
       await newUserSocket(socket, pubkey);
     }
     await userDataSocket(socket, pubkey);
+  });
+};
+
+export const newDisonnectionSocket = (socket: Socket): void => {
+  socket.on('newDisconnection', (pubkey: string) => {
+    console.log('NEW LOGOUT:', pubkey)
   });
 };
 
@@ -68,7 +74,7 @@ export const userDataSocket = async (socket: Socket, pubkey: string): Promise<vo
   socket.emit('userFriends', userFriends);
 };
 
-export const searchUsersSocket = async (socket: Socket): Promise<void> => {
+export const searchUsersSocket = (socket: Socket): void => {
   socket.on('searchUsers', async (search: string) => {
     if (search.length >= 3) {
       socket.emit('searchUsersRes', await searchUsers(search));
@@ -76,14 +82,14 @@ export const searchUsersSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-export const getUserSocket = async (socket: Socket): Promise<void> => {
+export const getUserSocket = (socket: Socket): void => {
   socket.on('getUser', async (user: string) => {
     const userInfo = await getUser(user);
     socket.emit('getUserRes', userInfo)
   })
 };
 
-export const updateUserSocket = async (socket: Socket): Promise<void> => {
+export const updateUserSocket = (socket: Socket): void => {
   socket.on('updateUser', async (pubkey: string, update: string, value: string) => {
     const pubkey_ = sqlFilter(pubkey);
     const update_ = sqlFilter(update);
@@ -106,7 +112,7 @@ export const updateUserSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-export const addFriendSocket = async (socket: Socket): Promise<void> => {
+export const addFriendSocket = (socket: Socket): void => {
   socket.on('addFriend', async (pubkey: string, pubkey2: string) => {
     if (pubkey.length > 22 && pubkey2.length > 22) {
       const table = concatPubKeys(pubkey, pubkey2);
@@ -118,7 +124,7 @@ export const addFriendSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-export const deleteFriendSocket = async (socket: Socket): Promise<void> => {
+export const deleteFriendSocket = (socket: Socket): void => {
   socket.on('deleteFriend', async (pubkey: string, pubkey2: string) => {
     if (pubkey.length > 22 && pubkey2.length > 22) {
       const table = concatPubKeys(pubkey, pubkey2);
@@ -129,7 +135,7 @@ export const deleteFriendSocket = async (socket: Socket): Promise<void> => {
   });
 };
 
-export const getUserFriendsSocket = async (socket: Socket): Promise<void> => {
+export const getUserFriendsSocket = (socket: Socket): void => {
   socket.on('getUserFriends', async (pubkey: string) => {
     const userFriends = await getUserFriends(pubkey);
     if (userFriends.length > 0) {
@@ -141,13 +147,14 @@ export const getUserFriendsSocket = async (socket: Socket): Promise<void> => {
 };
 
 const userSocket = async (socket: Socket): Promise<void> => {
-  await newConnectionSocket(socket);
-  await searchUsersSocket(socket);
-  await getUserSocket(socket);
-  await updateUserSocket(socket);
-  await addFriendSocket(socket);
-  await deleteFriendSocket(socket);
-  await getUserFriendsSocket(socket);
+  newConnectionSocket(socket);
+  newDisonnectionSocket(socket);
+  searchUsersSocket(socket);
+  getUserSocket(socket);
+  updateUserSocket(socket);
+  addFriendSocket(socket);
+  deleteFriendSocket(socket);
+  getUserFriendsSocket(socket);
 };
 
 export default userSocket;
