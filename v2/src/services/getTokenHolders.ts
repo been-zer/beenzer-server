@@ -27,7 +27,7 @@ export const getTokenHolders = async ( _token: string = TOKEN ) => {
     }
   );
   console.log(
-    `Found ${accounts.length} token account(s) for mint ${_token}`
+    `Found ${accounts.length} BEEN account(s) for mint ${_token}`
   );
-  console.log(accounts);
+  return accounts;
 };
