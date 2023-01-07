@@ -26,9 +26,6 @@ export const newConnectionSocket = (socket: Socket): void => {
     const isNew = await isNewUser(pubkey);
     console.log('isnew:', isNew);
     socket.emit('isNewUser', isNew);
-    if (isNew) {
-      await newUserSocket(socket, pubkey);
-    }
     await userDataSocket(socket, pubkey);
   });
 };
