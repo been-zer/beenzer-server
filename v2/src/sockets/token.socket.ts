@@ -1,10 +1,12 @@
 import { Socket } from 'socket.io';
+import { getTokenHolders } from '../services/getTokenHolders';
 import {
   getTokenTransactions,
-  getTokenHolders,
+  // getTokenHolders,
   addTokenTransaction,
   addTokenHolder
 } from '../controllers/token.controller';
+
 
 export const getTokenTransactionsSocket = (socket: Socket): void => {
   socket.on('getTokenTransactions', async () => {
