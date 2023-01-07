@@ -33,14 +33,14 @@ export const newConnectionSocket = (socket: Socket): void => {
   });
 };
 
-export const newDisonnectionSocket = (socket: Socket): void => {
+export const newDisconnectionSocket = (socket: Socket): void => {
   socket.on('newDisconnection', (pubkey: string) => {
     console.log('NEW LOGOUT:', pubkey)
   });
 };
 
-export const newUserSocket = async (socket: Socket, pubkey: string): Promise<void> => {
-  socket.on('newUser', async (username: string, appuser: boolean) => {
+export const newUserSocket = async (socket: Socket): Promise<void> => {
+  socket.on('newUser', async (pubkey: string, username: string, appuser: boolean) => {
     if (username.length >= 3) {
       const regexUser = sqlFilter(username);
       let i = 0;
@@ -154,7 +154,9 @@ export const getUserFriendsSocket = (socket: Socket): void => {
 
 const userSocket = (socket: Socket): void => {
   newConnectionSocket(socket);
-  newDisonnectionSocket(socket);
+  newDisconnectionSocket(socket);
+  newUserSocket(socket);
+  usernameExistsSocket(socket);
   searchUsersSocket(socket);
   getUserSocket(socket);
   updateUserSocket(socket);
