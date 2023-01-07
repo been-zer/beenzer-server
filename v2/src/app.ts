@@ -39,7 +39,8 @@ export const io: any = new Server(server, {
     cors: {
         origin: [
             '*', 
-            // 'http://127.0.0.1:8080'
+            '139.47.123.176',
+            '139.47.123.176:8080'
         ],
         methods: ['GET', 'POST']
     }
