@@ -40,7 +40,8 @@ export const io: any = new Server(server, {
         origin: [
             '*', 
             '139.47.123.176',
-            '139.47.123.176:8080'
+            '139.47.123.176:8080',
+            'http://localhost:8080',
         ],
         methods: ['GET', 'POST']
     }
