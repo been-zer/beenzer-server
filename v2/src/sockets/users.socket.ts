@@ -40,13 +40,15 @@ export const newUserSocket = async (socket: Socket): Promise<void> => {
   socket.on('newUser', async (pubkey: string, username: string, appuser: boolean) => {
     if (username.length >= 3) {
       const regexUser = sqlFilter(username);
-      if (await newUser(pubkey, regexUser, appuser)) {
-        socket.emit('newUserCreated', true);
-        console.log('New user created!');
-        await userDataSocket(socket, pubkey);
-      } else {
-        console.log('New user creation failed.');
-        socket.emit('newUserCreated', false);
+      if (regexUser.length >= 3) {
+        if (await newUser(pubkey, regexUser, appuser)) {
+          socket.emit('newUserCreated', true);
+          console.log('New user created!', regexUser, pubkey);
+          await userDataSocket(socket, pubkey);
+        } else {
+          console.log('New user creation failed.');
+          socket.emit('newUserCreated', false);
+        }
       }
     }
   });

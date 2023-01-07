@@ -10,12 +10,14 @@ export const socketConnect = (io: Server): void => {
   io.on("connection", (socket: Socket) => {
     // Connection
     usersConnected++;
+    socket.emit('nUsers', usersConnected)
     console.log(usersConnected, 'users connected.');
     socket.emit("serverConnection", "Client connected to server succesfully");
     // Disconnection
     socket.on('disconnect', () => {
       usersConnected--;
       console.log(usersConnected, 'users connected.')
+      socket.emit('nUsers', usersConnected)
     });
     // Sockets
     userSocket(socket);
