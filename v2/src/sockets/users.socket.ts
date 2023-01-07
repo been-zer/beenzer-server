@@ -40,29 +40,33 @@ export const newDisonnectionSocket = (socket: Socket): void => {
 };
 
 export const newUserSocket = async (socket: Socket, pubkey: string): Promise<void> => {
-  socket.on('userName', async (username: string, appuser: boolean) => {
-    const regexUser = sqlFilter(username);
-    if (regexUser.length >= 3) {
-      const userNameAv = await isUserName(regexUser);
-      socket.emit('userNameAv', userNameAv);;
-      if (userNameAv) {
-        let i = 0;
-        while (i < 10) {
-          if (await newUser(pubkey, regexUser, appuser)) {
-            socket.emit('newUserCreated', true);
-            console.log('New user created!');
-            const userInfo = await getUser(pubkey);
-            socket.emit('userInfo', userInfo);
-            i = 10;
-            break;
-          } else {
-            console.log('New user creation failed.', i);
-            socket.emit('newUserCreated', false);
-            i++;
-          }
+  socket.on('newUser', async (username: string, appuser: boolean) => {
+    if (username.length >= 3) {
+      const regexUser = sqlFilter(username);
+      let i = 0;
+      while (i < 10) {
+        if (await newUser(pubkey, regexUser, appuser)) {
+          socket.emit('newUserCreated', true);
+          console.log('New user created!');
+          const userInfo = await getUser(pubkey);
+          socket.emit('userInfo', userInfo);
+          i = 10;
+          break;
+        } else {
+          console.log('New user creation failed.', i);
+          socket.emit('newUserCreated', false);
+          i++;
         }
       }
     }
+  });
+};
+
+export const usernameExistsSocket = (socket: Socket) => {
+  socket.on('userName', async (username: string) => {
+    const regexUser = sqlFilter(username);
+    const userNameAv = await isUserName(regexUser);
+    socket.emit('userNameAv', userNameAv);
   });
 };
 
