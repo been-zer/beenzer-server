@@ -12,7 +12,8 @@ import {
   getUserFriends,
   searchUsers,
   addFriends,
-  deleteFriends
+  deleteFriends,
+  getUsersFlags,
 } from '../controllers/users.controller';
 import {
   createMessages,
@@ -144,6 +145,13 @@ export const getUserFriendsSocket = (socket: Socket): void => {
   });
 };
 
+export const getUsersFlagsSocket = (socket: Socket): void => {
+  socket.on('getUsersFlags', async () => {
+    const usersFlags = await getUsersFlags();
+    socket.emit('getUsersFlagsRes', usersFlags);
+  });
+};
+
 const userSocket = (socket: Socket): void => {
   newConnectionSocket(socket);
   newDisconnectionSocket(socket);
@@ -155,6 +163,7 @@ const userSocket = (socket: Socket): void => {
   addFriendSocket(socket);
   deleteFriendSocket(socket);
   getUserFriendsSocket(socket);
+  getUsersFlagsSocket(socket);
 };
 
 export default userSocket;

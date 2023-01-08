@@ -43,3 +43,7 @@ export const _getUserFriends = (pubkeys: Array<string>) => {
 export const _searchUsers = (search: string): string => {
   return `SELECT * FROM users WHERE __pubkey__ LIKE '${search}%' OR _username_ LIKE '${search}%'`;
 };
+
+export const _usersFlags = (): string => {
+  return `SELECT __pubkey__, _flag FROM users WHERE _flag IS NOT EMPTY AND _flag != '🏴‍☠️'`;
+};

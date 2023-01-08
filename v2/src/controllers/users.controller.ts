@@ -9,7 +9,8 @@ import {
   _deleteFriends,
   _isNewUser,
   _isUserName,
-  _searchUsers
+  _searchUsers,
+  _usersFlags
 } from './users.queries';
 import {
   _getNFT,
@@ -178,6 +179,17 @@ export async function deleteFollower(follower: string, user: string): Promise<bo
 export async function searchUsers(search: string): Promise<any> {
   try {
     const data = await db.query(_searchUsers(search));
+    const rows = data.rows;
+    return rows;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getUsersFlags(): Promise<any> {
+  try {
+    const data = await db.query(_usersFlags());
     const rows = data.rows;
     return rows;
   } catch (error) {
