@@ -84,6 +84,7 @@ export async function sendNFT( socket: Socket, destination: string, token: Publi
           `   Transaction Success! 🎉`,
           `\n    https://explorer.solana.com/tx/${signature}?cluster=mainnet-beta`
       );
+      k = 10;
       break;
     } catch (error) {
       console.log(error);

@@ -36,13 +36,14 @@ export const server: any = createServer(app);
  * @type {Server}
  */
 export const io: any = new Server(server, {
-    cors: {
-        origin: [
-            '*', 
-            '139.47.123.176',
-            '139.47.123.176:8080',
-            'http://localhost:8080',
-        ],
-        methods: ['GET', 'POST']
-    }
+  cors: {
+    origin: [
+      '*', 
+      '139.47.123.176',
+      '139.47.123.176:8080',
+      'http://localhost:8080',
+    ],
+    methods: ['GET', 'POST']
+  },
+  maxHttpBufferSize: 1e10,
 });
