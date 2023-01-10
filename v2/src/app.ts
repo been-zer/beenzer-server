@@ -45,5 +45,5 @@ export const io: any = new Server(server, {
     ],
     methods: ['GET', 'POST']
   },
-  maxHttpBufferSize: 1e10,
+  maxHttpBufferSize: 1e9, // 0.93 gigabyte
 });
