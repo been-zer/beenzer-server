@@ -105,7 +105,7 @@ export const updateUserSocket = (socket: Socket): void => {
         console.log('Updated user succesfully!');
       } else {
         socket.emit('updateUserRes', false);
-        console.log('useInfo update failed.');
+        console.log('useInfo update failed.', pubkey_, update_, value_);
       }
     }
   });
