@@ -20,12 +20,16 @@ export const _updateUser = (pubkey: string, update: string, value: string): stri
   return `UPDATE users SET ${update} = '${value}', _timestamp = ${Date.now()} WHERE __pubkey__ = '${pubkey}'`;
 };
 
-export const _addFriends = (pubkey: string, pubkey2: string): string => {
+export const _addFriend = (pubkey: string, pubkey2: string): string => {
   return `INSERT INTO friends (${friendsSchema}) VALUES ('${pubkey}', '${pubkey2}', ${Date.now()})`;
 };
 
-export const _deleteFriends = (pubkey: string, pubkey2: string): string => {
-  return `DELETE FROM friends WHERE __pubkey__ = '${pubkey}' OR __pubkey2__ = '${pubkey2}'`;
+export const _removeFriend = (pubkey: string, pubkey2: string): string => {
+  return `DELETE FROM friends WHERE __pubkey__ = '${pubkey}' AND __pubkey2__ = '${pubkey2}'`;
+};
+
+export const _isFriend = (pubkey: string, pubkey2: string): string => {
+  return `SELECT * FROM friends WHERE __pubkey__ = '${pubkey}' AND __pubkey2__ = '${pubkey2}'`;
 };
 
 export const _getFriends = (pubkey: string): string => {

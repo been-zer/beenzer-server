@@ -5,8 +5,9 @@ import {
   _newUser,
   _updateUser,
   _getFriends,
-  _addFriends,
-  _deleteFriends,
+  _addFriend,
+  _removeFriend,
+  _isFriend,
   _isNewUser,
   _isUserName,
   _searchUsers,
@@ -19,10 +20,10 @@ import {
   _updateNFTLikes,
   _createNFTtransactions,
 } from './nfts.queries'
-import {
-  createMessages,
-  deleteMessages
-} from './messages.controller';
+// import {
+//   createMessages,
+//   deleteMessages
+// } from './messages.controller';
 
 const db: Client = usersDB;
 
@@ -88,31 +89,10 @@ export async function updateUser(pubkey: string, update: string, value: string):
   }
 }
 
-
-export async function addFollower(pubkey: string, pubkey2: string): Promise<boolean> {
+export async function addFriend(pubkey: string, pubkey2: string): Promise<boolean> {
   try {
-    await db.query(_addFriends(pubkey,pubkey2)); // __follower__ -> __user__
+    await db.query(_addFriend(pubkey,pubkey2));
     return true;
-  } catch (error) {
-    if (String(error).includes('duplicate')) {
-      console.log("ERROR: Table already exists");
-      return false;
-    }
-    console.log(error);
-    return false;
-  }
-}
-
-export async function addFriends(pubkey: string, pubkey2: string): Promise<boolean> {
-  try {
-    await db.query(_addFriends(pubkey,pubkey2));
-    // confirmation
-    await db.query(_addFriends(pubkey2,pubkey));
-    const table = '_'+pubkey+'_'+pubkey2+'_';
-    if ( await createMessages(table) )
-      return true;
-    else
-      return false;
   } catch (error) {
     if (String(error).includes('duplicate')) {
       console.log("ERROR: Fail to add friends connection to db!");
@@ -123,15 +103,24 @@ export async function addFriends(pubkey: string, pubkey2: string): Promise<boole
   }
 }
 
-export async function deleteFriends(pubkey: string, pubkey2: string): Promise<boolean> {
+export async function removeFriend(pubkey: string, pubkey2: string): Promise<boolean> {
   try {
-    await db.query(_deleteFriends(pubkey, pubkey2));
-    await db.query(_deleteFriends(pubkey2, pubkey));
-    const table = '_'+pubkey+'_'+pubkey2+'_';
-    if ( await deleteMessages(table) ) 
+    await db.query(_removeFriend(pubkey, pubkey2));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function isFriend(pubkey: string, pubkey2: string): Promise<boolean> {
+  try {
+    const data = await db.query(_isFriend(pubkey, pubkey2));
+    if ( data.rows.length > 0 ) {
       return true;
-    else
+    } else {
       return false;
+    }
   } catch (error) {
     console.log(error);
     return false;
@@ -162,16 +151,6 @@ export async function getUserFriends(pubkey: string): Promise<any> {
     return friends
   } catch (error) {
     console.log('ERROR: getUserFriends contrl failed:\n', error);
-    return false;
-  }
-}
-
-export async function deleteFollower(follower: string, user: string): Promise<boolean> {
-  try {
-    await db.query(_deleteFriends(follower, user));
-    return true;
-  } catch (error) {
-    console.log(error);
     return false;
   }
 }

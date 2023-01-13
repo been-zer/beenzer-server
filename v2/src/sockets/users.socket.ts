@@ -11,13 +11,14 @@ import {
   updateUser,
   getUserFriends,
   searchUsers,
-  addFriends,
-  deleteFriends,
+  addFriend,
+  removeFriend,
   getUsersFlags,
+  isFriend,
 } from '../controllers/users.controller';
 import {
   createMessages,
-  deleteMessages
+  // deleteMessages
 } from '../controllers/messages.controller';
 import { getUserNFTs } from '../controllers/nfts.controller';
 
@@ -113,24 +114,30 @@ export const updateUserSocket = (socket: Socket): void => {
 
 export const addFriendSocket = (socket: Socket): void => {
   socket.on('addFriend', async (pubkey: string, pubkey2: string) => {
-    console.log('new friend request', pubkey, pubkey2,);
     if (pubkey.length > 22 && pubkey2.length > 22) {
-      const table = concatPubKeys(pubkey, pubkey2);
-      if (await createMessages(table)) {
-        console.log('addFriend', pubkey, pubkey2);
-        socket.emit('addFriendRes', await addFriends(pubkey, pubkey2));
-      };
+      socket.emit('addFriendRes', await addFriend(pubkey, pubkey2));
+      if ( await isFriend(pubkey2, pubkey) ) {
+        const table = concatPubKeys(pubkey, pubkey2);
+        if ( await createMessages(table) ) {
+          socket.emit('addFriendRes', 'New chat created successfully');
+          console.log('Chat created successfully');
+        } else {
+          socket.emit('addFriendRes', 'Chat creation failed. Trying one more time...');
+          if ( await createMessages(table) ) {
+            socket.emit('addFriendRes', 'New chat created successfully');
+            console.log('Chat creation failed!');
+            console.log('Chat created successfully');
+          }
+        }
+      }
     }
   });
 };
 
-export const deleteFriendSocket = (socket: Socket): void => {
+export const removeFriendSocket = (socket: Socket): void => {
   socket.on('deleteFriend', async (pubkey: string, pubkey2: string) => {
     if (pubkey.length > 22 && pubkey2.length > 22) {
-      const table = concatPubKeys(pubkey, pubkey2);
-      if (await deleteMessages(table)) {
-        socket.emit('deleteFriendRes', await deleteFriends(pubkey, pubkey2));
-      }
+      socket.emit('deleteFriendRes', await removeFriend(pubkey, pubkey2));
     }
   });
 };
@@ -162,7 +169,7 @@ const userSocket = (socket: Socket): void => {
   getUserSocket(socket);
   updateUserSocket(socket);
   addFriendSocket(socket);
-  deleteFriendSocket(socket);
+  removeFriendSocket(socket);
   getUserFriendsSocket(socket);
   getUsersFlagsSocket(socket);
 };
