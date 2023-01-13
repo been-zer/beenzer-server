@@ -140,7 +140,8 @@ export async function getUserFollows(pubkey: string): Promise<any> {
     }
     const follows = [];
     for (const publickey of pubkeys) {
-      follows.push(await getUser(publickey));
+      const user = await getUser(publickey);
+      follows.push(user[0]);
     }
     return follows;
   } catch (error) {
@@ -159,7 +160,8 @@ export async function getUserFollowers(pubkey: string): Promise<any> {
     }
     const followers = [];
     for (const publickey of pubkeys) {
-      followers.push(await getUser(publickey));
+      const user = await getUser(publickey);
+      followers.push(user[0]);
     }
     return followers;
   } catch (error) {
@@ -188,8 +190,9 @@ export async function getUserFriends(pubkey: string): Promise<any> {
       }
     }
     const friends = [];
-    for (const match of matches) {
-      friends.push(await getUser(match));
+    for (const publickey of matches) {
+      const user = await getUser(publickey);
+      friends.push(user[0]);
     }
     return friends;
   } catch (error) {
