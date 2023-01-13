@@ -113,6 +113,7 @@ export const updateUserSocket = (socket: Socket): void => {
 
 export const addFriendSocket = (socket: Socket): void => {
   socket.on('addFriend', async (pubkey: string, pubkey2: string) => {
+    console.log('new friend request', pubkey, pubkey2,);
     if (pubkey.length > 22 && pubkey2.length > 22) {
       const table = concatPubKeys(pubkey, pubkey2);
       if (await createMessages(table)) {
