@@ -158,12 +158,7 @@ export const getUserFollowersSocket = (socket: Socket) => {
 
 export const getUserFriendsSocket = (socket: Socket): void => {
   socket.on('getUserFriends', async (pubkey: string) => {
-    const userFriends = await getUserFriends(pubkey);
-    if (userFriends.length > 0) {
-      socket.emit('userFriends', userFriends);
-    } else {
-      socket.emit('userFriends', 0);
-    }
+    socket.emit('userFriends',  await getUserFriends(pubkey));
   });
 };
 

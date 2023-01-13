@@ -10,6 +10,7 @@ import {
   _removeFriend,
   _getUserFollows,
   _getUserFollowers,
+  _getUserFriends,
   _isNewUser,
   _isUserName,
   _searchUsers,
@@ -133,10 +134,15 @@ export async function getUserFollows(pubkey: string): Promise<any> {
   try {
     const data = await db.query(_getUserFollows(pubkey));
     const rows = data.rows;
-    const ret = [];
-    for (const row of rows) 
-      ret.push(row.__pubkey2__)
-    return ret;
+    const pubkeys = [];
+    for (const row of rows) {
+      pubkeys.push(row.__pubkey2__)
+    }
+    const follows = [];
+    for (const publickey of pubkeys) {
+      follows.push(await getUser(publickey));
+    }
+    return follows;
   } catch (error) {
     console.log(error);
     return false;
@@ -147,10 +153,15 @@ export async function getUserFollowers(pubkey: string): Promise<any> {
   try {
     const data = await db.query(_getUserFollowers(pubkey));
     const rows = data.rows;
-    const ret = [];
-    for (const row of rows) 
-      ret.push(row.__pubkey__)
-    return ret;
+    const pubkeys = [];
+    for (const row of rows) {
+      pubkeys.push(row.__pubkey__)
+    }
+    const followers = [];
+    for (const publickey of pubkeys) {
+      followers.push(await getUser(publickey));
+    }
+    return followers;
   } catch (error) {
     console.log(error);
     return false;
@@ -159,15 +170,28 @@ export async function getUserFollowers(pubkey: string): Promise<any> {
 
 export async function getUserFriends(pubkey: string): Promise<any> {
   try {
-    const friends: Array<any> = [];
-    const pubkeys: Array<string> = [];
-    const connections = await getFriends(pubkey) as Array<any>;
-    connections.forEach((connection: any) => pubkeys.push(connection.__pubkey2__));
-    for (let i = 0; i < pubkeys.length; i++) {
-      const user = await getUser(pubkeys[i]);
-      friends.push(user[0]);
-    };
-    return friends
+    const data = await db.query(_getUserFriends(pubkey));
+    const rows = data.rows;
+    const follows = [];
+    const followers = [];
+    for (const row of rows) {
+      if (row.__pubkey__ === pubkey) {
+        follows.push(row.__pubkey2__);
+      } else if (row.__pubkey2__ === pubkey) {
+        followers.push(row.__pubkey__);
+      }
+    }
+    const matches = [];
+    for (const x of follows) {
+      if (followers.indexOf(x) !== -1) {
+        matches.push(x);
+      }
+    }
+    const friends = [];
+    for (const match of matches) {
+      friends.push(await getUser(match));
+    }
+    return friends;
   } catch (error) {
     console.log('ERROR: getUserFriends contrl failed:\n', error);
     return false;
