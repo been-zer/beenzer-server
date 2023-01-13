@@ -5,9 +5,11 @@ import {
   _newUser,
   _updateUser,
   _getFriends,
+  _isFriend,
   _addFriend,
   _removeFriend,
-  _isFriend,
+  _getUserFollows,
+  _getUserFollowers,
   _isNewUser,
   _isUserName,
   _searchUsers,
@@ -127,11 +129,28 @@ export async function isFriend(pubkey: string, pubkey2: string): Promise<boolean
   }
 }
 
-export async function getFriends(pubkey: string): Promise<any> {
+export async function getUserFollows(pubkey: string): Promise<any> {
   try {
-    const data = await db.query(_getFriends(pubkey));
+    const data = await db.query(_getUserFollows(pubkey));
     const rows = data.rows;
-    return rows;
+    const ret = [];
+    for (const row of rows) 
+      ret.push(row.__pubkey2__)
+    return ret;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getUserFollowers(pubkey: string): Promise<any> {
+  try {
+    const data = await db.query(_getUserFollowers(pubkey));
+    const rows = data.rows;
+    const ret = [];
+    for (const row of rows) 
+      ret.push(row.__pubkey__)
+    return ret;
   } catch (error) {
     console.log(error);
     return false;
@@ -151,6 +170,17 @@ export async function getUserFriends(pubkey: string): Promise<any> {
     return friends
   } catch (error) {
     console.log('ERROR: getUserFriends contrl failed:\n', error);
+    return false;
+  }
+}
+
+export async function getFriends(pubkey: string): Promise<any> {
+  try {
+    const data = await db.query(_getFriends(pubkey));
+    const rows = data.rows;
+    return rows;
+  } catch (error) {
+    console.log(error);
     return false;
   }
 }

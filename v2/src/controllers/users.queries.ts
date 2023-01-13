@@ -32,8 +32,12 @@ export const _isFriend = (pubkey: string, pubkey2: string): string => {
   return `SELECT * FROM friends WHERE __pubkey__ = '${pubkey}' AND __pubkey2__ = '${pubkey2}'`;
 };
 
-export const _getFriends = (pubkey: string): string => {
-  return `SELECT * FROM friends WHERE __pubkey__ = '${pubkey}'`;
+export const _getUserFollows = (pubkey: string): string => {
+  return `SELECT * FROM users WHERE __pubkey__ = '${pubkey}'`;
+};
+
+export const _getUserFollowers = (pubkey: string): string => {
+  return `SELECT * FROM users WHERE __pubkey2__ = '${pubkey}'`;
 };
 
 export const _getUserFriends = (pubkeys: Array<string>) => {
@@ -42,7 +46,11 @@ export const _getUserFriends = (pubkeys: Array<string>) => {
     friends.push(`SELECT * FROM users WHERE __pubkey__ = '${pubkey}'`);
   });
   return friends;
-}
+};
+
+export const _getFriends = (pubkey: string): string => {
+  return `SELECT * FROM friends WHERE __pubkey__ = '${pubkey}'`;
+};
 
 export const _searchUsers = (search: string): string => {
   return `SELECT * FROM users WHERE __pubkey__ LIKE '${search}%' OR _username_ LIKE '${search}%'`;

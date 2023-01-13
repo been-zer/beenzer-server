@@ -9,6 +9,8 @@ import {
   newUser,
   getUser,
   updateUser,
+  getUserFollows,
+  getUserFollowers,
   getUserFriends,
   searchUsers,
   addFriend,
@@ -142,6 +144,18 @@ export const removeFriendSocket = (socket: Socket): void => {
   });
 };
 
+export const getUserFollowsSocket = (socket: Socket) => {
+  socket.on('getUserFollows', async (pubkey: string) => {
+    socket.emit('getUserFollowsRes', await getUserFollows(pubkey));
+  });
+}
+
+export const getUserFollowersSocket = (socket: Socket) => {
+  socket.on('getUserFollowers', async (pubkey: string) => {
+    socket.emit('getUserFollowersRes', await getUserFollowers(pubkey));
+  });
+}
+
 export const getUserFriendsSocket = (socket: Socket): void => {
   socket.on('getUserFriends', async (pubkey: string) => {
     const userFriends = await getUserFriends(pubkey);
@@ -170,6 +184,8 @@ const userSocket = (socket: Socket): void => {
   updateUserSocket(socket);
   addFriendSocket(socket);
   removeFriendSocket(socket);
+  getUserFollowsSocket(socket);
+  getUserFollowersSocket(socket);
   getUserFriendsSocket(socket);
   getUsersFlagsSocket(socket);
 };
