@@ -107,6 +107,7 @@ export async function getAllNFTs(): Promise<any> {
   try {
     const data = await db.query(_getAllNFTs());
     const rows = data.rows;
+    console.log('userNFTs:', rows)
     return rows;
   } catch (error) {
     console.log(error);
