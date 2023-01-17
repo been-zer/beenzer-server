@@ -25,7 +25,7 @@ export const newMessageSocket = (socket: Socket): void => {
       if (receiver.length > 22 && sender.length > 22 && message.length > 0) {
         const table = concatPubKeys(receiver, sender);
         socket.emit("newMessageRes", await newMessage(table, sender, message));
-        socket.emit("getMessagesRes", await getMessages(table));
+        // socket.emit("getMessagesRes", await getMessages(table));
       }
     }
   );
@@ -38,7 +38,7 @@ export const likeMessageSocket = (socket: Socket): void => {
       if (pubkey.length > 22 && pubkey2.length > 22) {
         const table = concatPubKeys(pubkey, pubkey2);
         socket.emit("likeMessageRes", await likeMessage(table, timestamp));
-        socket.emit("getMessagesRes", await getMessages(table));
+        // socket.emit("getMessagesRes", await getMessages(table));
       }
     }
   );
@@ -56,7 +56,7 @@ export const addEmojiSocket = (socket: Socket): void => {
       if (pubkey.length > 22 && pubkey2.length > 22) {
         const table = concatPubKeys(pubkey, pubkey2);
         socket.emit("addEmojiRes", await addEmoji(table, timestamp, emoji));
-        socket.emit("getMessagesRes", await getMessages(table));
+        // socket.emit("getMessagesRes", await getMessages(table));
       }
     }
   );
