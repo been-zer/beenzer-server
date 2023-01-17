@@ -1,48 +1,61 @@
 import { Client } from "pg";
 import { messagesDB } from "./db.connections";
-import { 
+import {
   _createMessages,
   _deleteMessages,
-	_newMessage, 
-	_getMessages, 
-	_likeMessage, 
-	_addEmoji 
+  _newMessage,
+  _getMessages,
+  _likeMessage,
+  _addEmoji,
 } from "./messages.queries";
 
 const db: Client = messagesDB;
 
 export async function createMessages(table: string): Promise<Boolean> {
   try {
-		await db.query(_createMessages(table));
-		return true;
-	} catch (error) {
-		console.log(error);
-		return false;
-	}
+    await db.query(_createMessages(table));
+    if (
+      await newMessage(
+        table,
+        "admin",
+        "Congratulations! 🎉 You are friends! Frienship is important. Start your conversation now."
+      )
+    ) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export async function deleteMessages(table: string): Promise<Boolean> {
   try {
-		await db.query(_deleteMessages(table));
-		return true;
-	} catch (error) {
-		console.log(error);
-		return false;
-	}
+    await db.query(_deleteMessages(table));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
-export async function newMessage(table: string, owner: string, message: string): Promise<Boolean> {
-	try {
-		await db.query(_newMessage(table, owner, message));
-		return true;
-	} catch (error) {
-		console.log(error);
-		return false;
-	}
+export async function newMessage(
+  table: string,
+  owner: string,
+  message: string
+): Promise<Boolean> {
+  try {
+    await db.query(_newMessage(table, owner, message));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export async function getMessages(table: string): Promise<any> {
-	try {
+  try {
     const data = await db.query(_getMessages(table));
     const rows = data.rows;
     return rows;
@@ -52,20 +65,27 @@ export async function getMessages(table: string): Promise<any> {
   }
 }
 
-export async function likeMessage(table: string, timestamp: number): Promise<Boolean> {
-	try {
+export async function likeMessage(
+  table: string,
+  timestamp: number
+): Promise<Boolean> {
+  try {
     await db.query(_likeMessage(table, Math.floor(timestamp)));
-		return true;
+    return true;
   } catch (error) {
     console.log(error);
     return false;
   }
 }
 
-export async function addEmoji(table: string, timestamp: number, emoji: string): Promise<Boolean> {
-	try {
+export async function addEmoji(
+  table: string,
+  timestamp: number,
+  emoji: string
+): Promise<Boolean> {
+  try {
     await db.query(_addEmoji(table, Math.floor(timestamp), emoji));
-		return true;
+    return true;
   } catch (error) {
     console.log(error);
     return false;
