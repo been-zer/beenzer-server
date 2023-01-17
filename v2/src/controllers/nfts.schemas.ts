@@ -8,7 +8,7 @@ export const transactionsInit =
   "_owner VARCHAR(255),_pubkey VARCHAR(255), _type VARCHAR(5), _currency VARCHAR(5), _amount FLOAT, _hash VARCHAR(255), _timestamp BIGINT";
 // Tables schemas (columns)
 export const nftSchema =
-  "_id_, __token__, _supply,	 _creator, _username, _asset, _type, _description,	_city, _latitude, _longitude, _distance, _maxLat, _minLat, _maxLon, _minLon, _date, _time, _timestamp";
+  "_id_, __token__, _supply, _creator, _username, _asset, _type, _description,	_city, _latitude, _longitude, _distance, _maxLat, _minLat, _maxLon, _minLon, _date, _time, _timestamp";
 export const counterSchema = "_n, _timestamp";
 export const ownerSchema = "_token, _owner, _timestamp";
 export const transactionsSchema =
