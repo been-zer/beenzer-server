@@ -11,7 +11,7 @@ import {
 } from '../controllers/nfts.controller';
 
 export const newMintSocket = (socket: Socket): void => {
-  socket.on('newMint', async ( buffer: Buffer, type: string, creator: string, supply: number=1, username: string, description: string, city: string, latitude: number, longitude: number) => {
+  socket.on('newMint', async ( buffer: Buffer, type: string, creator: string, supply: number=1, username: string, description: string, city: string, latitude: number, longitude: number, distance: string, maxLat: string, minLat: string, maxLon: string, minLon: string) => {
     let i = 0;
     while ( i < 10 ) {
       if ( await addNFTCounter() ) {
@@ -22,14 +22,14 @@ export const newMintSocket = (socket: Socket): void => {
     const id = await getNFTCounter();
     console.log('BEENZER #', id)
     console.log('Got newMint socket...', buffer, type, creator, description, latitude, longitude);
-    const token = await mintNFT(socket, id, buffer, type, supply, creator, username, description, city, latitude, longitude);
+    const token = await mintNFT(socket, id, buffer, type, supply, creator, username, description, city, latitude, longitude, distance, maxLat, minLat, maxLon, minLon);
     if ( token && token != 'ERROR' ) {
       socket.emit('mintLogs', `BEENZER minted succesfully! Solscan: https://explorer.solana.com/address/${token}?cluster=mainnet-beta`);
       console.log('NFT minted succesfully! Solscan:', `https://explorer.solana.com/address/${token}?cluster=mainnet-beta`);
       // sleep(10000);
       let i = 0;
       while ( i < 10 ) {
-        if (await newNFT(id, token.toBase58(), supply, creator, username, token.imageURL, type, description, city, latitude, longitude)) {
+        if (await newNFT(id, token.toBase58(), supply, creator, username, token.imageURL, type, description, city, latitude, longitude, distance, maxLat, minLat, maxLon, minLon)) {
           socket.emit('mintLogs', `The Beenzer has been added to your collection! 🎉 ${token}`);
           console.log('NFT added to DB succesfully! 🎉');
           i = 10;

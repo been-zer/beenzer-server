@@ -94,7 +94,7 @@ async function mintTokens(metadataUri: string, name: string, supply: number, sel
   }
 }
 
-export async function mintNFT(socket: Socket, id: number, buffer: Buffer, type: string, supply: number, creator: string, username: string, description: string, city: string, latitude: number, longitude: number): Promise<any> {
+export async function mintNFT(socket: Socket, id: number, buffer: Buffer, type: string, supply: number, creator: string, username: string, description: string, city: string, latitude: number, longitude: number, distance: string, maxLat: string, minLat: string, maxLon: string, minLon: string): Promise<any> {
 
   const nftName = async () => {
     if (id !== -1) {
@@ -110,20 +110,25 @@ export async function mintNFT(socket: Socket, id: number, buffer: Buffer, type: 
     nftTitle: await nftName(),
     description: description,
     attributes: [
-      { trait_type: 'CREATOR', value: creator },
-      { trait_type: 'USERNAME', value: username },
-      { trait_type: 'DATE', value: getDate() },
-      { trait_type: 'TIME UTC', value: getTime() },
-      { trait_type: 'CITY', value: city },// await getCity(latitude, longitude) },
-      { trait_type: 'LATITUDE', value: String(latitude) },
-      { trait_type: 'LONGITUDE', value: String(longitude) },
+      { trait_type: "CREATOR", value: creator },
+      { trait_type: "USERNAME", value: username },
+      { trait_type: "DATE", value: getDate() },
+      { trait_type: "TIME UTC", value: getTime() },
+      { trait_type: "CITY", value: city },
+      { trait_type: "LATITUDE", value: String(latitude) },
+      { trait_type: "LONGITUDE", value: String(longitude) },
+      { trait_type: "DISTANCE", value: distance },
+      { trait_type: "maxLAT", value: maxLat },
+      { trait_type: "minLAT", value: minLat },
+      { trait_type: "maxLON", value: maxLon },
+      { trait_type: "minLON", value: minLon },
     ],
-    sellerFeeBasisPoints: 800, // 800 bp = 8% royalties
-    symbol: 'BEENZER',
+    sellerFeeBasisPoints: 1000, // 1000 bp = 10% royalties
+    symbol: "BEENZER",
     supply: supply,
     creators: [
-      {address: new PublicKey(creator), share: 75},
-      {address: WALLET.publicKey, share: 25},
+      { address: new PublicKey(creator), share: 80 },
+      { address: WALLET.publicKey, share: 20 },
     ],
   };
   socket.emit('mintLogs', `Minting ${CONFIG.nftTitle} NFT: ${creator}.`)

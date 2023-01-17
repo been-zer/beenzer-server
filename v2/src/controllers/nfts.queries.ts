@@ -1,11 +1,30 @@
-import { nftSchema, ownerSchema, transactionsSchema } from './nfts.schemas';
+import { nftSchema, ownerSchema, transactionsSchema } from "./nfts.schemas";
 
 export const _getNFT = (token: string): string => {
   return `SELECT * FROM nfts WHERE __token__ = '${token}'`;
 };
 
-export const _newNFT = (id: number, token: string, supply: number=1, creator: string, username: string, asset: string, type: string, description: string, city: string, latitude: number, longitude: number, date: string, time: string): string => {
-  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, '${creator}', '${username}', '${asset}', '${type}', '${description}', '${city}', ${latitude}, ${longitude}, '${date}', '${time}', ${Date.now()})`;
+export const _newNFT = (
+  id: number,
+  token: string,
+  supply: number = 1,
+  creator: string,
+  username: string,
+  asset: string,
+  type: string,
+  description: string,
+  city: string,
+  latitude: number,
+  longitude: number,
+  distance: string,
+  minLat: string,
+  maxLat: string,
+  maxLon: string,
+  minLon: string,
+  date: string,
+  time: string
+): string => {
+  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, '${creator}', '${username}', '${asset}', '${type}', '${description}', '${city}', ${latitude}, ${longitude}, '${distance}', '${maxLat}', '${minLat}', '${maxLon}', '${minLon}', '${date}', '${time}', ${Date.now()})`;
 };
 
 export const _newOwner = (token: string, owner: string): string => {
@@ -49,16 +68,24 @@ export const _addNFTCounter = () => {
 };
 
 export const _getNFTsLength = () => {
-  return `SELECT COUNT(__t_getNFTsByOwneroken__) FROM nfts`
+  return `SELECT COUNT(__t_getNFTsByOwneroken__) FROM nfts`;
 };
 
-export const _newNFTtransactions = (token: string, owner: string, pubkey: string, type: string, currency: string, amount: number, hash: string = ''): string => {
-  if (type === 'BID')
+export const _newNFTtransactions = (
+  token: string,
+  owner: string,
+  pubkey: string,
+  type: string,
+  currency: string,
+  amount: number,
+  hash: string = ""
+): string => {
+  if (type === "BID")
     return `INSERT INTO _${token}_ (${transactionsSchema}) VALUES ('${owner}', '${pubkey}', '${type}', '${currency}', ${amount}, '', ${Date.now()}`;
-  else if (type === 'ASK')
+  else if (type === "ASK")
     return `INSERT INTO ${token} (${transactionsSchema}) VALUES ('${pubkey}', '${owner}', '${type}', '${currency}', ${amount}, ${hash}, ${Date.now()}`;
   else {
-    console.log('Bad type. Type can only BID or ASK')
-    return 'BAD REQUEST';
+    console.log("Bad type. Type can only BID or ASK");
+    return "BAD REQUEST";
   }
 };

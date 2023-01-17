@@ -39,13 +39,13 @@ export async function getNFT(token: string): Promise<any> {
   }
 }
 
-export async function newNFT(id: number, token: string, supply: number=1, creator: string, username: string, asset: string, type:string, description: string, city: string, latitude: number, longitude: number): Promise<boolean> {
+export async function newNFT(id: number, token: string, supply: number=1, creator: string, username: string, asset: string, type:string, description: string, city: string, latitude: number, longitude: number, distance: string, maxLat: string, minLat: string, maxLon: string, minLon: string): Promise<boolean> {
   if ( token != 'ERROR' && token.length > 0 ) {
     try {
       const date = getDate();
       const time = getTime();
       if ( id != -1 ) {
-        await db.query(_newNFT(id, token, supply, creator, username, asset, type, description, city, latitude, longitude, date, time ));
+        await db.query(_newNFT(id, token, supply, creator, username, asset, type, description, city, latitude, longitude, distance, maxLat, minLat, maxLon, minLon, date, time ));
         await newOwner(token, creator);
         return true;
       } else {
