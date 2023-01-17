@@ -11,7 +11,7 @@ import {
 } from '../controllers/nfts.controller';
 
 export const newMintSocket = (socket: Socket): void => {
-  socket.on('newMint', async ( buffer: Buffer, type: string, creator: string, supply: number=1, username: string, description: string, city: string, latitude: number, longitude: number, distance: string, maxLat: string, minLat: string, maxLon: string, minLon: string) => {
+  socket.on('newMint', async ( buffer: Buffer, type: string, creator: string, supply: number, username: string, description: string, city: string, latitude: number, longitude: number, distance: string, maxLat: string, minLat: string, maxLon: string, minLon: string) => {
     let i = 0;
     while ( i < 10 ) {
       if ( await addNFTCounter() ) {
