@@ -91,11 +91,13 @@ export async function getUserNFTs (owner: string): Promise<any> {
     const nfts: Array<object> = [];
     const tokens: Array<string> = [];
     const nftsList = await getNFTsByOwner(owner);
+    console.log('nftsList', nftsList);
     nftsList.forEach((owner: any) => tokens.push(owner._token));
     for (let i = 0; i < tokens.length; i++) {
       const nft = await getNFT(tokens[i]);
       nfts.push(nft[0]);
     };
+    console.log("userNFTs:", nfts);
     return nfts;
   } catch (error) {
     console.log(error)
@@ -107,7 +109,6 @@ export async function getAllNFTs(): Promise<any> {
   try {
     const data = await db.query(_getAllNFTs());
     const rows = data.rows;
-    console.log('userNFTs:', rows)
     return rows;
   } catch (error) {
     console.log(error);
