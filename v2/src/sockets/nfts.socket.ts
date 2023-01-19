@@ -37,6 +37,8 @@ export const newMintSocket = (socket: Socket): void => {
           i = 10;
           break;
         }
+        sleep(2000);
+        i++;
       }
       const id = await getNFTCounter();
       console.log("BEENZER #", id);
@@ -49,72 +51,85 @@ export const newMintSocket = (socket: Socket): void => {
         latitude,
         longitude
       );
-      const token = await mintNFT(
-        socket,
-        id,
-        buffer,
-        type,
-        supply,
-        creator,
-        username,
-        description,
-        city,
-        latitude,
-        longitude,
-        distance,
-        maxLat,
-        minLat,
-        maxLon,
-        minLon
-      );
-      if (token && token != "ERROR") {
-        socket.emit(
-          "mintLogs",
-          `BEENZER minted succesfully! Solscan: https://explorer.solana.com/address/${token}?cluster=mainnet-beta`
+      i = 0;
+      while (i < 10) {
+        const token = await mintNFT(
+          socket,
+          id,
+          buffer,
+          type,
+          supply,
+          creator,
+          username,
+          description,
+          city,
+          latitude,
+          longitude,
+          distance,
+          maxLat,
+          minLat,
+          maxLon,
+          minLon
         );
-        console.log(
-          "NFT minted succesfully! Solscan:",
-          `https://explorer.solana.com/address/${token}?cluster=mainnet-beta`
-        );
-        // sleep(10000);
-        let i = 0;
-        while (i < 10) {
-          if (
-            await newNFT(
-              id,
-              token.toBase58(),
-              supply,
-              creator,
-              username,
-              token.imageURL,
-              type,
-              description,
-              city,
-              latitude,
-              longitude,
-              distance,
-              maxLat,
-              minLat,
-              maxLon,
-              minLon
-            )
-          ) {
-            socket.emit(
-              "mintLogs",
-              `The Beenzer has been added to your collection! 🎉 ${token}`
-            );
-            console.log("NFT added to DB succesfully! 🎉");
-            i = 10;
-            break;
+        if (token && token != "ERROR") {
+          socket.emit(
+            "mintLogs",
+            `BEENZER minted succesfully! Solscan: https://explorer.solana.com/address/${token}?cluster=mainnet-beta`
+          );
+          console.log(
+            "NFT minted succesfully! Solscan:",
+            `https://explorer.solana.com/address/${token}?cluster=mainnet-beta`
+          );
+          i = 0;
+          while (i < 10) {
+            if (
+              await newNFT(
+                id,
+                token,
+                supply,
+                creator,
+                username,
+                token.imageURL,
+                type,
+                description,
+                city,
+                latitude,
+                longitude,
+                distance,
+                maxLat,
+                minLat,
+                maxLon,
+                minLon
+              )
+            ) {
+              socket.emit(
+                "mintLogs",
+                `The Beenzer has been added to your collection! 🎉 ${token}`
+              );
+              console.log("NFT added to DB succesfully! 🎉");
+              i = 0;
+              while (i < 10) {
+                if (
+                  await sendToken(
+                    new PublicKey(creator),
+                    new PublicKey(token),
+                    supply
+                  )
+                ) {
+                  socket.emit("mintLogs", "true");
+                  i = 10;
+                  break;
+                }
+                sleep(3000);
+                i++;
+              }
+            }
+            sleep(3000);
+            i++;
           }
-          sleep(3000);
-          i++;
         }
-        if (
-          await sendToken(new PublicKey(creator), new PublicKey(token), supply)
-        ) {
-          socket.emit("mintLogs", "true");
-        }
+        sleep(3000);
+        i++;
       }
     }
   );
