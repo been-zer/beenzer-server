@@ -45,7 +45,7 @@ export const _getUserNFTs = (tokens: Array<string>): Array<string> => {
 };
 
 export const _getNFTsByTokens = (tokens: string): string => {
-  return `SELECT * FROM nfts WHERE __token__ IN (${tokens.toString()})`;
+  return `SELECT * FROM nfts WHERE __token__ IN (${tokens})`;
 };
 
 export const _getAllNFTs = (): string => {
