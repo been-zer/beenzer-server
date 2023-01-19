@@ -31,17 +31,22 @@ export const getUserNFTs = async (
   _pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION,
   _keypair: Keypair = Keypair.generate()
-) => {
+): Promise<Array<any>> => {
   const solanaNFTs = await getUserNFTsSolana(
     _pubkey,
     _solanaConnection,
     _keypair
   );
   let tokens = "";
-  for (const nft of solanaNFTs) {
-    tokens += `'${nft.token}', `;
+  if (solanaNFTs.length === 1) {
+    tokens = solanaNFTs[0].token;
+  } else if (solanaNFTs.length > 1) {
+    for (const nft of solanaNFTs) {
+      tokens += `'${nft.token}', `;
+    }
+    tokens = tokens.slice(0, -2);
   }
-  return await getNFTsByTokens(tokens.slice(0, -2));
+  return await getNFTsByTokens(tokens);
 };
 
 export const getUserNFTsSolana = async (
