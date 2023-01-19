@@ -1,5 +1,4 @@
 import { Socket } from "socket.io";
-import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../utils";
 import { mintNFT } from "../services/mintNFT";
 import { sendNFT } from "../services/sendNFT";
