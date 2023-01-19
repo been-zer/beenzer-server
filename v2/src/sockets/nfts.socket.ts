@@ -36,10 +36,10 @@ export const newMintSocket = (socket: Socket): void => {
           i = 10;
           break;
         }
-        sleep(2000);
         i++;
       }
       const id = await getNFTCounter();
+      socket.emit("mintLogs", `Minting BEENZER #${id}...`);
       console.log("BEENZER #", id);
       console.log(
         "Got newMint socket...",
@@ -81,48 +81,51 @@ export const newMintSocket = (socket: Socket): void => {
           );
           i = 0;
           while (i < 10) {
-            if (
-              await newNFT(
-                id,
-                token,
-                supply,
-                creator,
-                username,
-                token.imageURL,
-                type,
-                description,
-                city,
-                latitude,
-                longitude,
-                distance,
-                maxLat,
-                minLat,
-                maxLon,
-                minLon
-              )
-            ) {
+            if (await sendNFT(creator, token, supply)) {
               socket.emit(
                 "mintLogs",
-                `The Beenzer has been added to your collection! 🎉 ${token}`
+                `Transaction Success! 🎉 \n Check your wallet!`
               );
-              console.log("NFT added to DB succesfully! 🎉");
-              i = 0;
-              while (i < 10) {
-                if (await sendNFT(socket, creator, token, supply)) {
-                  socket.emit("mintLogs", "true");
-                  i = 10;
-                  break;
-                }
-                sleep(3000);
+              if (
+                await newNFT(
+                  id,
+                  token,
+                  supply,
+                  creator,
+                  username,
+                  token.imageURL,
+                  type,
+                  description,
+                  "BEENZER #" + String(id),
+                  city,
+                  latitude,
+                  longitude,
+                  distance,
+                  maxLat,
+                  minLat,
+                  maxLon,
+                  minLon
+                )
+              ) {
+                socket.emit(
+                  "mintLogs",
+                  `The Beenzer has been added to your collection! 🎉 ${token}`
+                );
+                console.log("NFT added to DB succesfully! 🎉");
+                i = 10;
+                break;
+              } else {
                 i++;
+                sleep(1000);
               }
+            } else {
+              i++;
+              sleep(2000);
             }
-            sleep(3000);
-            i++;
           }
         }
-        sleep(3000);
         i++;
+        sleep(3000);
       }
     }
   );

@@ -9,7 +9,6 @@ import {
   sendAndConfirmTransaction,
   Transaction,
 } from "@solana/web3.js";
-import { Socket } from "socket.io";
 import dotenv from "dotenv";
 import { sleep } from "../utils";
 dotenv.config();
@@ -20,15 +19,10 @@ const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL);
 const WALLET = Keypair.fromSecretKey(new Uint8Array(secret));
 
 export async function sendNFT(
-  socket: Socket,
   destination: string,
   token: string,
   supply: number
 ) {
-  socket.emit(
-    "mintLogs",
-    `Sending ${supply} ${token.toString()} from ${WALLET.publicKey.toString()} to ${destination}.`
-  );
   console.log(
     `Sending ${supply} ${token.toString()} from ${WALLET.publicKey.toString()} to ${destination}.`
   );
@@ -102,10 +96,6 @@ export async function sendNFT(
       const signature = await sendAndConfirmTransaction(SOLANA_CONNECTION, tx, [
         WALLET,
       ]);
-      socket.emit(
-        "mintLogs",
-        `Transaction Success! 🎉 \n https://explorer.solana.com/tx/${signature}?cluster=mainnet-beta`
-      );
       console.log(
         "\x1b[32m", //Green Text
         `   Transaction Success! 🎉`,

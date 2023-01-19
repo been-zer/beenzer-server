@@ -12,6 +12,7 @@ export const _newNFT = (
   username: string,
   asset: string,
   type: string,
+  name: string,
   description: string,
   city: string,
   latitude: number,
@@ -24,7 +25,7 @@ export const _newNFT = (
   date: string,
   time: string
 ): string => {
-  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, '${creator}', '${username}', '${asset}', '${type}', '${description}', '${city}', ${latitude}, ${longitude}, '${distance}', '${maxLat}', '${minLat}', '${maxLon}', '${minLon}', '${date}', '${time}', ${Date.now()})`;
+  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, '${creator}', '${username}', '${asset}', '${type}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${distance}', ${maxLat}, ${minLat}', ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
 };
 
 export const _newOwner = (token: string, owner: string): string => {
@@ -48,7 +49,7 @@ export const _getAllNFTs = (): string => {
 };
 
 export const _getMapNFTs = (latitude: number, longitude: number): string => {
-  return `SELECT * FROM nfts WHERE ( CAST(_maxlat AS FLOAT) >= ${latitude} AND CAST(_minlat AS FLOAT) <= ${latitude} AND CAST(_maxlon AS FLOAT) >= ${longitude} AND CAST(_minlon AS FLOAT) <= ${longitude} ) OR ( _maxlat = '-')`;
+  return `SELECT * FROM nfts WHERE ( _maxlat >= ${latitude} AND _minlat <= ${latitude} AND _maxlon >= ${longitude} AND _minlon <= ${longitude} ) OR ( _maxlat = 0)`;
 };
 
 export const _updateNFTOwner = (token: string, newOwner: string): string => {
