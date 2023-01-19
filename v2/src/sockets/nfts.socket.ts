@@ -126,8 +126,8 @@ export const newMintSocket = (socket: Socket): void => {
                     "mintLogs",
                     `The Beenzer has been added to your collection! 🎉 ${token}`
                   );
-                  console.log("NFT added to DB succesfully! 🎉");
                   socket.emit("mintLogs", "true");
+                  console.log("NFT added to DB succesfully! 🎉");
                   i = 10;
                   break;
                 }
