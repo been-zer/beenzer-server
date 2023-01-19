@@ -15,7 +15,7 @@ import {
 import dotenv from "dotenv";
 dotenv.config();
 
-export default async function sendToken(
+export async function sendToken(
   _destination: PublicKey,
   _token: PublicKey,
   _amount: number = 1,
