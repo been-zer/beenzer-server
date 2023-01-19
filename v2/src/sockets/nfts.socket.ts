@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../utils";
 import { mintNFT } from "../services/mintNFT";
-import { sendToken } from "../services/sendToken";
+import { sendNFT } from "../services/sendNFT";
 import {
   addNFTCounter,
   getNFTCounter,
@@ -109,13 +109,7 @@ export const newMintSocket = (socket: Socket): void => {
               console.log("NFT added to DB succesfully! 🎉");
               i = 0;
               while (i < 10) {
-                if (
-                  await sendToken(
-                    new PublicKey(creator),
-                    new PublicKey(token.toBase58()),
-                    supply
-                  )
-                ) {
+                if (await sendNFT(socket, creator, token, supply)) {
                   socket.emit("mintLogs", "true");
                   i = 10;
                   break;
