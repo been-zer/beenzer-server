@@ -78,7 +78,7 @@ export const newMintSocket = (socket: Socket): void => {
         } else {
           socket.emit(
             "mintLogs",
-            `BEENZER minted succesfully! Solscan: https://explorer.solana.com/address/${token}?cluster=mainnet-beta`
+            `BEENZER #${id} minted succesfully! Token address: ${token}, Supply: ${supply}`
           );
           console.log(
             "NFT minted succesfully! Solscan:",
@@ -93,7 +93,7 @@ export const newMintSocket = (socket: Socket): void => {
             } else {
               socket.emit(
                 "mintLogs",
-                `Transaction Success! 🎉 \n Check your wallet!`
+                `Transaction Success! 🚀 \n Check your wallet!`
               );
               i = 0;
               while (i < TRIES) {
@@ -127,6 +127,7 @@ export const newMintSocket = (socket: Socket): void => {
                     `The Beenzer has been added to your collection! 🎉 ${token}`
                   );
                   socket.emit("mintLogs", "true");
+                  socket.emit("mintLogs", true);
                   console.log("NFT added to DB succesfully! 🎉");
                   i = 10;
                   break;
