@@ -124,7 +124,7 @@ export const newMintSocket = (socket: Socket): void => {
                 } else {
                   socket.emit(
                     "mintLogs",
-                    `The Beenzer has been added to your collection! 🎉 ${token}`
+                    `BEENZER #${id} has been added to your collection! 🎉`
                   );
                   socket.emit("mintLogs", "true");
                   socket.emit("mintLogs", true);
