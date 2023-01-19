@@ -84,7 +84,7 @@ export const newMintSocket = (socket: Socket): void => {
             if (
               await newNFT(
                 id,
-                token.address,
+                token,
                 supply,
                 creator,
                 username,
