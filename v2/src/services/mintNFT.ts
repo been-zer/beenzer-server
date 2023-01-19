@@ -223,6 +223,5 @@ export async function mintNFT(
   socket.emit("mintLogs", `NFT minted! Token address: ${token}`);
   console.log("NFT minted! Token address:", token);
   token.imageURL = assetUri;
-
   return token;
 }
