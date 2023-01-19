@@ -1,5 +1,6 @@
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import fetch from "node-fetch";
 
 const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
 const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL as string);
@@ -39,7 +40,7 @@ export const getUserNFTs = async (
   const NFTs: NFT[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   for (const rawNFT of rawNFTs) {
-    const metadata = await fetch(rawNFT.uri as string)
+    const metadata: any = await fetch(rawNFT.uri as string)
       .then((response) => response.json())
       .then((data) => data);
     const mint = rawNFT.mintAddress.toBase58();
