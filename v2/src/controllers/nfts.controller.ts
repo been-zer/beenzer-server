@@ -54,10 +54,10 @@ export async function newNFT(
   latitude: number,
   longitude: number,
   distance: string,
-  maxLat: string,
-  minLat: string,
-  maxLon: string,
-  minLon: string
+  maxLat: number,
+  minLat: number,
+  maxLon: number,
+  minLon: number
 ): Promise<boolean> {
   if (token != "ERROR" && token.length > 0) {
     try {

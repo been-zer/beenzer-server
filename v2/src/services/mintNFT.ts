@@ -11,7 +11,7 @@ import {
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { Buffer } from "buffer";
 import { getDate, getTime, sleep } from "../utils";
-import { Socket } from "socket.io";
+// import { Socket } from "socket.io";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -127,10 +127,10 @@ export async function mintNFT(
   latitude: number,
   longitude: number,
   distance: string,
-  maxLat: string,
-  minLat: string,
-  maxLon: string,
-  minLon: string
+  maxLat: number,
+  minLat: number,
+  maxLon: number,
+  minLon: number
 ): Promise<any> {
   const nftName = async () => {
     if (id !== -1) {
@@ -154,10 +154,10 @@ export async function mintNFT(
       { trait_type: "LATITUDE", value: String(latitude) },
       { trait_type: "LONGITUDE", value: String(longitude) },
       { trait_type: "DISTANCE", value: distance },
-      { trait_type: "MAX LAT", value: maxLat },
-      { trait_type: "MIN LAT", value: minLat },
-      { trait_type: "MAX LON", value: maxLon },
-      { trait_type: "MIN LON", value: minLon },
+      { trait_type: "MAX LAT", value: String(maxLat) },
+      { trait_type: "MIN LAT", value: String(minLat) },
+      { trait_type: "MAX LON", value: String(maxLon) },
+      { trait_type: "MIN LON", value: String(minLon) },
     ],
     sellerFeeBasisPoints: 1000, // 1000 bp = 10% royalties
     symbol: "BEENZER",

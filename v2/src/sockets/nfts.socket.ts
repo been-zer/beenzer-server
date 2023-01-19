@@ -25,10 +25,10 @@ export const newMintSocket = (socket: Socket): void => {
       latitude: number,
       longitude: number,
       distance: string,
-      maxLat: string,
-      minLat: string,
-      maxLon: string,
-      minLon: string
+      maxLat: number,
+      minLat: number,
+      maxLon: number,
+      minLon: number
     ) => {
       let i = 0;
       while (i < 10) {

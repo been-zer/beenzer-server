@@ -18,10 +18,10 @@ export const _newNFT = (
   latitude: number,
   longitude: number,
   distance: string,
-  minLat: string,
-  maxLat: string,
-  maxLon: string,
-  minLon: string,
+  minLat: number,
+  maxLat: number,
+  maxLon: number,
+  minLon: number,
   date: string,
   time: string
 ): string => {
