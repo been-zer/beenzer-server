@@ -11,6 +11,8 @@ import {
   getMapNFTs,
 } from "../controllers/nfts.controller";
 
+const TRIES = 10;
+
 export const newMintSocket = (socket: Socket): void => {
   socket.on(
     "newMint",
@@ -31,7 +33,7 @@ export const newMintSocket = (socket: Socket): void => {
       minLon: number
     ) => {
       let i = 0;
-      while (i < 10) {
+      while (i < TRIES) {
         if (await addNFTCounter()) {
           i = 10;
           break;
@@ -51,7 +53,7 @@ export const newMintSocket = (socket: Socket): void => {
         longitude
       );
       i = 0;
-      while (i < 10) {
+      while (i < TRIES) {
         const token = await mintNFT(
           id,
           buffer,
@@ -69,7 +71,11 @@ export const newMintSocket = (socket: Socket): void => {
           maxLon,
           minLon
         );
-        if (token && token != "ERROR") {
+        if (!token && token == "ERROR") {
+          sleep(3000);
+          i++;
+          continue;
+        } else {
           socket.emit(
             "mintLogs",
             `BEENZER minted succesfully! Solscan: https://explorer.solana.com/address/${token}?cluster=mainnet-beta`
@@ -79,48 +85,53 @@ export const newMintSocket = (socket: Socket): void => {
             `https://explorer.solana.com/address/${token}?cluster=mainnet-beta`
           );
           i = 0;
-          while (i < 10) {
-            if (await sendNFT(creator, token, supply)) {
+          while (i < TRIES) {
+            if (!(await sendNFT(creator, token, supply))) {
+              sleep(3000);
+              i++;
+              continue;
+            } else {
               socket.emit(
                 "mintLogs",
                 `Transaction Success! 🎉 \n Check your wallet!`
               );
-              if (
-                await newNFT(
-                  id,
-                  token,
-                  supply,
-                  creator,
-                  username,
-                  token.imageURL,
-                  type,
-                  description,
-                  "BEENZER #" + String(id),
-                  city,
-                  latitude,
-                  longitude,
-                  distance,
-                  maxLat,
-                  minLat,
-                  maxLon,
-                  minLon
-                )
-              ) {
-                socket.emit(
-                  "mintLogs",
-                  `The Beenzer has been added to your collection! 🎉 ${token}`
-                );
-                console.log("NFT added to DB succesfully! 🎉");
-                socket.emit("mintLogs", "true");
-                i = 10;
-                break;
-              } else {
-                i++;
-                sleep(1000);
+              i = 0;
+              while (i < TRIES) {
+                if (
+                  !(await newNFT(
+                    id,
+                    token,
+                    supply,
+                    creator,
+                    username,
+                    token.imageURL,
+                    type,
+                    description,
+                    "BEENZER #" + String(id),
+                    city,
+                    latitude,
+                    longitude,
+                    distance,
+                    maxLat,
+                    minLat,
+                    maxLon,
+                    minLon
+                  ))
+                ) {
+                  sleep(1000);
+                  i++;
+                  continue;
+                } else {
+                  socket.emit(
+                    "mintLogs",
+                    `The Beenzer has been added to your collection! 🎉 ${token}`
+                  );
+                  console.log("NFT added to DB succesfully! 🎉");
+                  socket.emit("mintLogs", "true");
+                  i = 10;
+                  break;
+                }
               }
-            } else {
-              i++;
-              sleep(2000);
             }
           }
         }
