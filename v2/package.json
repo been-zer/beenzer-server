@@ -42,7 +42,7 @@
     "http": "^0.0.1-security",
     "lodash": "^4.17.21",
     "lodash.isequal": "^4.5.0",
-    "node-fetch": "^3.3.0",
+    "node-fetch": "2.6.1",
     "pg": "^8.8.0",
     "regex": "^0.1.1",
     "socket.io": "^4.5.4",
