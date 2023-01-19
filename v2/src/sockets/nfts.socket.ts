@@ -112,7 +112,7 @@ export const newMintSocket = (socket: Socket): void => {
                 if (
                   await sendToken(
                     new PublicKey(creator),
-                    new PublicKey(token),
+                    new PublicKey(token.toBase58()),
                     supply
                   )
                 ) {
