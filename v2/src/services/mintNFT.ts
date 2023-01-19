@@ -146,7 +146,6 @@ export async function mintNFT(
     nftTitle: await nftName(),
     description: description,
     attributes: [
-      { trait_type: "ID", value: String(id) },
       { trait_type: "CREATOR", value: creator },
       { trait_type: "USERNAME", value: username },
       { trait_type: "SUPPLY", value: String(supply) },
