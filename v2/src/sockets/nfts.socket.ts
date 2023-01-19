@@ -2,11 +2,11 @@ import { Socket } from "socket.io";
 import { sleep } from "../utils";
 import { mintNFT } from "../services/mintNFT";
 import { sendNFT } from "../services/sendNFT";
+import { getUserNFTs } from "../services/getUserNFTs";
 import {
   addNFTCounter,
   getNFTCounter,
   newNFT,
-  getUserNFTs,
   getAllNFTs,
   getMapNFTs,
 } from "../controllers/nfts.controller";
