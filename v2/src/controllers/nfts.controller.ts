@@ -148,7 +148,7 @@ export async function getUserNFTsDB(owner: string): Promise<any> {
   }
 }
 
-export async function getNFTsByTokens(tokens: Array<string>): Promise<any> {
+export async function getNFTsByTokens(tokens: string): Promise<any> {
   try {
     const data = await db.query(_getNFTsByTokens(tokens));
     const rows = data.rows;

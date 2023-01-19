@@ -37,9 +37,9 @@ export const getUserNFTs = async (
     _solanaConnection,
     _keypair
   );
-  const tokens: string[] = [];
+  let tokens = "";
   for (const nft of solanaNFTs) {
-    tokens.push(nft.token);
+    tokens += `'${nft.token}', `;
   }
   return await getNFTsByTokens(tokens);
 };
