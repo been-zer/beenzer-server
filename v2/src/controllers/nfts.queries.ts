@@ -47,6 +47,10 @@ export const _getAllNFTs = (): string => {
   return `SELECT * FROM nfts`;
 };
 
+export const _getMapNFTs = (latitude: number, longitude: number): string => {
+  return `SELECT * FROM nfts WHERE ( _maxlat > ${latitude} AND _minlat < ${latitude} AND _maxlon > ${longitude} AND _minlon < ${longitude} ) OR ( _maxlat = '-')`;
+};
+
 export const _updateNFTOwner = (token: string, newOwner: string): string => {
   return `UPDATE nfts SET _owner = ${newOwner} WHERE __token__ = '${token}'`;
 };
