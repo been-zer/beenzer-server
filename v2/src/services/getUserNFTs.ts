@@ -39,7 +39,7 @@ export const getUserNFTs = async (
   );
   let tokens = "";
   if (solanaNFTs.length === 1) {
-    tokens = solanaNFTs[0].token;
+    tokens = `'${solanaNFTs[0].token}'`;
   } else if (solanaNFTs.length > 1) {
     for (const nft of solanaNFTs) {
       tokens += `'${nft.token}', `;
