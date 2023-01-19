@@ -53,7 +53,6 @@ export const newMintSocket = (socket: Socket): void => {
       i = 0;
       while (i < 10) {
         const token = await mintNFT(
-          socket,
           id,
           buffer,
           type,
@@ -112,6 +111,7 @@ export const newMintSocket = (socket: Socket): void => {
                   `The Beenzer has been added to your collection! 🎉 ${token}`
                 );
                 console.log("NFT added to DB succesfully! 🎉");
+                socket.emit("mintLogs", "true");
                 i = 10;
                 break;
               } else {

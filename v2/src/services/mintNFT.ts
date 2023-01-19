@@ -116,7 +116,6 @@ async function mintTokens(
 }
 
 export async function mintNFT(
-  socket: Socket,
   id: number,
   buffer: Buffer,
   type: string,
@@ -168,14 +167,14 @@ export async function mintNFT(
       { address: WALLET.publicKey, share: 20 },
     ],
   };
-  socket.emit("mintLogs", `Minting ${CONFIG.nftTitle} NFT: ${creator}.`);
+  // socket.emit("mintLogs", `Minting ${CONFIG.nftTitle} NFT: ${creator}.`);
   console.log(`Minting ${CONFIG.nftTitle} to an NFT in Wallet ${PUBKEY}.`);
   // Step 1 - Upload media
   const assetUri = await uploadAsset(buffer, CONFIG.nftTitle);
-  socket.emit("mintLongs", `Asset url: ${assetUri}`);
+  // socket.emit("mintLongs", `Asset url: ${assetUri}`);
   console.log("Asset url:", assetUri);
   if (assetUri === "ERROR") {
-    socket.emit("mintLogs", "Uploading asset failed.");
+    // socket.emit("mintLogs", "Uploading asset failed.");
     console.log("Uploading asset failed.");
     return "ERROR";
   }
@@ -187,10 +186,10 @@ export async function mintNFT(
     CONFIG.description,
     CONFIG.attributes
   );
-  socket.emit("mintLongs", `Metadata url: ${metadataUri}`);
+  // socket.emit("mintLongs", `Metadata url: ${metadataUri}`);
   console.log("Metadata url:", metadataUri);
   if (metadataUri === "ERROR") {
-    socket.emit("mintLogs", "Uploading metadata failed.");
+    // socket.emit("mintLogs", "Uploading metadata failed.");
     console.log("Uploading metadata failed.");
     return "ERROR";
   }
@@ -204,7 +203,7 @@ export async function mintNFT(
     CONFIG.creators
   );
   if (!token) {
-    socket.emit("mintLogs", "Minting NFT failed. Trying again...");
+    // socket.emit("mintLogs", "Minting NFT failed. Trying again...");
     console.log("Minting NFT failed.");
     token = await mintTokens(
       metadataUri,
@@ -215,11 +214,11 @@ export async function mintNFT(
       CONFIG.creators
     );
     if (!token) {
-      socket.emit("mintLogs", "Minting NFT failed");
+      // socket.emit("mintLogs", "Minting NFT failed");
       return "ERROR";
     }
   }
-  socket.emit("mintLogs", `NFT minted! Token address: ${token}`);
+  // socket.emit("mintLogs", `NFT minted! Token address: ${token}`);
   console.log("NFT minted! Token address:", token);
   token.imageURL = assetUri;
   return token;
