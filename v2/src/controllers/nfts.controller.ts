@@ -12,6 +12,7 @@ import {
   _getNFTsLength,
   _getNFTsByOwner,
   _getUserNFTs,
+  _getNFTsByTokens,
   _getAllNFTs,
   _getMapNFTs,
   _newOwner,
@@ -130,7 +131,7 @@ export async function getNFTsByOwner(owner: string): Promise<any> {
   }
 }
 
-export async function getUserNFTs(owner: string): Promise<any> {
+export async function getUserNFTsDB(owner: string): Promise<any> {
   try {
     const nfts: Array<object> = [];
     const tokens: Array<string> = [];
@@ -141,6 +142,17 @@ export async function getUserNFTs(owner: string): Promise<any> {
       nfts.push(nft[0]);
     }
     return nfts;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getNFTsByTokens(tokens: Array<string>): Promise<any> {
+  try {
+    const data = await db.query(_getNFTsByTokens(tokens));
+    const rows = data.rows;
+    return rows;
   } catch (error) {
     console.log(error);
     return false;

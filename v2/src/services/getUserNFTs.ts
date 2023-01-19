@@ -1,5 +1,6 @@
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { getNFTsByTokens } from "../controllers/nfts.controller";
 import request from "request";
 
 const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
@@ -27,6 +28,23 @@ interface Trait {
 }
 
 export const getUserNFTs = async (
+  _pubkey: string,
+  _solanaConnection: Connection = SOLANA_CONNECTION,
+  _keypair: Keypair = Keypair.generate()
+) => {
+  const solanaNFTs = await getUserNFTsSolana(
+    _pubkey,
+    _solanaConnection,
+    _keypair
+  );
+  const tokens: string[] = [];
+  for (const nft of solanaNFTs) {
+    tokens.push(nft.token);
+  }
+  return await getNFTsByTokens(tokens);
+};
+
+export const getUserNFTsSolana = async (
   _pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION,
   _keypair: Keypair = Keypair.generate()
