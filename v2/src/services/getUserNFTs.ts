@@ -76,8 +76,8 @@ export const getUserNFTsSolana = async (
     const mint = rawNFT.mintAddress.toBase58();
     const supply = await _solanaConnection.getTokenSupply(new PublicKey(mint));
     const nftRow = {
-      token: rawNFT.address.toBase58() as string,
-      mint: mint as string,
+      token: mint as string,
+      mint: rawNFT.address.toBase58() as string,
       symbol: rawNFT.symbol as string,
       supply: supply.value.uiAmount as number,
       royalty: rawNFT.sellerFeeBasisPoints as number, // base 100 ex: 1000 = 10%
