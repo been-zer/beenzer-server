@@ -59,6 +59,7 @@ export async function newNFT(
   maxLon: number,
   minLon: number
 ): Promise<boolean> {
+  console.log("Token address:", token);
   if (token != "ERROR" && token.length > 0) {
     try {
       const date = getDate();
