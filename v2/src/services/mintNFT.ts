@@ -134,7 +134,7 @@ export async function mintNFT(
 ): Promise<any> {
   const nftName = async () => {
     if (id !== -1) {
-      return `BEENZER #${Number(id) + 1}` as string;
+      return `BEENZER #${Number(id)}` as string;
     } else {
       console.log("ERROR: NFT id undefined!!!");
       return "ERROR";

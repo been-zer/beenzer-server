@@ -40,7 +40,7 @@ export const newMintSocket = (socket: Socket): void => {
         }
         i++;
       }
-      const id = await getNFTCounter();
+      const id = (await getNFTCounter()) + 1;
       socket.emit("mintLogs", `Minting BEENZER #${id}...`);
       console.log("BEENZER #", id);
       console.log(
