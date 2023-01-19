@@ -41,7 +41,7 @@ export const getUserNFTs = async (
   for (const nft of solanaNFTs) {
     tokens += `'${nft.token}', `;
   }
-  return await getNFTsByTokens(tokens.slice(0, -1));
+  return await getNFTsByTokens(tokens.slice(0, -2));
 };
 
 export const getUserNFTsSolana = async (
