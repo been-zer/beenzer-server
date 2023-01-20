@@ -78,7 +78,7 @@ export const newMintSocket = (socket: Socket): void => {
         } else {
           socket.emit(
             "mintLogs",
-            `BEENZER #${id} minted succesfully! Token address: ${token}, Supply: ${supply}`
+            `BEENZER #${id} minted succesfully! ⛏️ Token address: ${token}, Supply: ${supply}`
           );
           console.log(
             "NFT minted succesfully! Solscan:",
@@ -106,8 +106,8 @@ export const newMintSocket = (socket: Socket): void => {
                     username,
                     token.imageURL,
                     type,
-                    description,
                     "BEENZER #" + String(id),
+                    description,
                     city,
                     latitude,
                     longitude,
@@ -127,7 +127,6 @@ export const newMintSocket = (socket: Socket): void => {
                     `BEENZER #${id} has been added to your collection! 🎉`
                   );
                   socket.emit("mintLogs", "true");
-                  socket.emit("mintLogs", true);
                   console.log("NFT added to DB succesfully! 🎉");
                   i = 10;
                   break;
