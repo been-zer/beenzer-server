@@ -1,3 +1,6 @@
+// import ffmpeg from "fluent-ffmpeg";
+// import ffmpegGif from "ffmpeg-gif";
+// import { FfmpegCommandOptions } from "fluent-ffmpeg";
 import gifify from "gifify";
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -73,14 +76,24 @@ export const concatPubKeys = (pubkey: string, pubkey2: string): string => {
   }
 };
 
-export const videoToGif = async (
-  buffer: Buffer,
-  from: number = 0,
-  to: number = 10
-): Promise<Buffer> => {
+export const videoToGif = async (buffer: Buffer): Promise<Buffer> => {
   const options = {
-    from: from,
-    to: to,
+    fps: 10,
+    width: 320,
+    quality: 10,
   };
   return await gifify(buffer, options);
 };
+
+// export const convertToGif = (buffer: Buffer): unknown => {
+//   ffmpeg.setFfmpegPath(ffmpegGif.path);
+//   try {
+//     ffmpeg(buffer as FfmpegCommandOptions)
+//       .outputOptions(["-pix_fmt rgb24", "-r 10", "-s 320x340"])
+//       .save("output.gif");
+//     return buffer;
+//   } catch (error) {
+//     console.log(error);
+//     return "ERROR: convertToGif failed!";
+//   }
+// };
