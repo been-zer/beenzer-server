@@ -4,7 +4,9 @@ import {
   getMessages,
   newMessage,
   likeMessage,
+  unLikeMessage,
   addEmoji,
+  delEmoji,
 } from "../controllers/messages.controller";
 
 export const getMessagesSocket = (socket: Socket): void => {
@@ -38,7 +40,18 @@ export const likeMessageSocket = (socket: Socket): void => {
       if (pubkey.length > 22 && pubkey2.length > 22) {
         const table = concatPubKeys(pubkey, pubkey2);
         socket.emit("likeMessageRes", await likeMessage(table, timestamp));
-        // socket.emit("getMessagesRes", await getMessages(table));
+      }
+    }
+  );
+};
+
+export const unLikeMessageSocket = (socket: Socket): void => {
+  socket.on(
+    "unLikeMessage",
+    async (pubkey: string, pubkey2: string, timestamp: number) => {
+      if (pubkey.length > 22 && pubkey2.length > 22) {
+        const table = concatPubKeys(pubkey, pubkey2);
+        socket.emit("unLikeMessageRes", await unLikeMessage(table, timestamp));
       }
     }
   );
@@ -56,7 +69,23 @@ export const addEmojiSocket = (socket: Socket): void => {
       if (pubkey.length > 22 && pubkey2.length > 22) {
         const table = concatPubKeys(pubkey, pubkey2);
         socket.emit("addEmojiRes", await addEmoji(table, timestamp, emoji));
-        // socket.emit("getMessagesRes", await getMessages(table));
+      }
+    }
+  );
+};
+
+export const delEmojiSocket = (socket: Socket): void => {
+  socket.on(
+    "delEmoji",
+    async (
+      pubkey: string,
+      pubkey2: string,
+      timestamp: number,
+      emoji: string
+    ) => {
+      if (pubkey.length > 22 && pubkey2.length > 22) {
+        const table = concatPubKeys(pubkey, pubkey2);
+        socket.emit("delEmojiRes", await delEmoji(table, timestamp, emoji));
       }
     }
   );
@@ -66,7 +95,9 @@ const messagesSocket = (socket: Socket) => {
   getMessagesSocket(socket);
   newMessageSocket(socket);
   likeMessageSocket(socket);
+  unLikeMessageSocket(socket);
   addEmojiSocket(socket);
+  delEmojiSocket(socket);
 };
 
 export default messagesSocket;

@@ -6,7 +6,9 @@ import {
   _newMessage,
   _getMessages,
   _likeMessage,
+  _unLikeMessage,
   _addEmoji,
+  _delEmoji,
 } from "./messages.queries";
 
 const db: Client = messagesDB;
@@ -78,6 +80,19 @@ export async function likeMessage(
   }
 }
 
+export async function unLikeMessage(
+  table: string,
+  timestamp: number
+): Promise<Boolean> {
+  try {
+    await db.query(_unLikeMessage(table, Math.floor(timestamp)));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 export async function addEmoji(
   table: string,
   timestamp: number,
@@ -85,6 +100,20 @@ export async function addEmoji(
 ): Promise<Boolean> {
   try {
     await db.query(_addEmoji(table, Math.floor(timestamp), emoji));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function delEmoji(
+  table: string,
+  timestamp: number,
+  emoji: string
+): Promise<Boolean> {
+  try {
+    await db.query(_delEmoji(table, Math.floor(timestamp), emoji));
     return true;
   } catch (error) {
     console.log(error);
