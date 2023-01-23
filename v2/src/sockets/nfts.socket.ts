@@ -150,7 +150,9 @@ export const newMintSocket = (socket: Socket): void => {
 
 export const videoToGifSocket = (socket: Socket): void => {
   socket.on("videoToGif", async (video: Buffer) => {
-    socket.emit("videoToGifRes", await videoToGif(video, 0, 5));
+    const gif = await videoToGif(video, 0, 5);
+    console.log("GIF", gif);
+    socket.emit("videoToGifRes", gif);
   });
 };
 
