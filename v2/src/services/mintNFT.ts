@@ -9,9 +9,7 @@ import {
   toBigNumber,
 } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { Buffer } from "buffer";
 import { getDate, getTime, sleep } from "../utils";
-// import { Socket } from "socket.io";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -47,8 +45,9 @@ async function uploadAsset(data: any, fileName: string) {
 }
 
 async function uploadMetadata(
-  imgUri: any,
-  imgType: string,
+  imageUri: string,
+  assetUri: string,
+  assetType: string,
   nftName: string,
   description: string,
   attributes: { trait_type: string; value: string }[]
@@ -58,13 +57,13 @@ async function uploadMetadata(
     const { uri } = await METAPLEX.nfts().uploadMetadata({
       name: nftName,
       description: description,
-      image: imgUri,
+      image: imageUri || assetUri,
       attributes: attributes,
       properties: {
         files: [
           {
-            type: imgType,
-            uri: imgUri,
+            type: assetType,
+            uri: assetUri,
           },
         ],
       },
@@ -117,7 +116,7 @@ async function mintTokens(
 
 export async function mintNFT(
   id: number,
-  buffer: Buffer,
+  asset: Buffer,
   type: string,
   supply: number,
   creator: string,
@@ -130,7 +129,8 @@ export async function mintNFT(
   maxLat: number,
   minLat: number,
   maxLon: number,
-  minLon: number
+  minLon: number,
+  nftImage: Buffer = Buffer.alloc(0) // Optional
 ): Promise<any> {
   const nftName = async () => {
     if (id !== -1) {
@@ -170,7 +170,15 @@ export async function mintNFT(
   // socket.emit("mintLogs", `Minting ${CONFIG.nftTitle} NFT: ${creator}.`);
   console.log(`Minting ${CONFIG.nftTitle} to an NFT in Wallet ${PUBKEY}.`);
   // Step 1 - Upload media
-  const assetUri = await uploadAsset(buffer, CONFIG.nftTitle);
+  const assetUri = await uploadAsset(
+    asset,
+    `${CONFIG.nftTitle}.${type.split("/")[1]}`
+  );
+  let imageUri = assetUri;
+  if (nftImage) {
+    console.log("BUFFEEEEEEER NOOOOOT EMPTYYYYYYY!!!!!");
+    imageUri = await uploadAsset(nftImage, CONFIG.nftTitle);
+  }
   // socket.emit("mintLongs", `Asset url: ${assetUri}`);
   console.log("Asset url:", assetUri);
   if (assetUri === "ERROR") {
@@ -180,6 +188,7 @@ export async function mintNFT(
   }
   // Step 2 - Upload metadata
   const metadataUri = await uploadMetadata(
+    imageUri,
     assetUri,
     CONFIG.nftType,
     CONFIG.nftTitle,
@@ -203,6 +212,7 @@ export async function mintNFT(
     CONFIG.creators
   );
   if (!token) {
+    sleep(3000);
     // socket.emit("mintLogs", "Minting NFT failed. Trying again...");
     console.log("Minting NFT failed.");
     token = await mintTokens(
