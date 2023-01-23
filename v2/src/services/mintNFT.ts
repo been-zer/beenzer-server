@@ -153,7 +153,7 @@ export async function mintNFT(
       { trait_type: "CITY", value: city },
       { trait_type: "LATITUDE", value: String(latitude) },
       { trait_type: "LONGITUDE", value: String(longitude) },
-      { trait_type: "DISTANCE", value: distance },
+      { trait_type: "VISIBILITY", value: distance },
       { trait_type: "MAX LAT", value: String(maxLat) },
       { trait_type: "MIN LAT", value: String(minLat) },
       { trait_type: "MAX LON", value: String(maxLon) },
