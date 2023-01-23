@@ -71,7 +71,7 @@ export const newMintSocket = (socket: Socket): void => {
           maxLon,
           minLon
         );
-        if (!token && token == "ERROR") {
+        if (!token || token == "ERROR") {
           sleep(3000);
           i++;
           continue;
@@ -166,11 +166,18 @@ export const getMapNFTsSocket = (socket: Socket): void => {
   });
 };
 
+export const uploadVideoSocket = (socket: Socket): void => {
+  socket.on("uploadVideo", (obj: any) => {
+    console.log("UploadVideo", obj);
+  });
+};
+
 const nftsSocket = (socket: Socket): void => {
   newMintSocket(socket);
   getUserNFTsSocket(socket);
   getAllNFTsSocket(socket);
   getMapNFTsSocket(socket);
+  uploadVideoSocket(socket);
 };
 
 export default nftsSocket;
