@@ -73,10 +73,14 @@ export const concatPubKeys = (pubkey: string, pubkey2: string): string => {
   }
 };
 
-export const videoToGif = async (buffer: Buffer): Promise<Buffer> => {
+export const videoToGif = async (
+  buffer: Buffer,
+  from: number = 0,
+  to: number = 10
+): Promise<Buffer> => {
   const options = {
-    from: 30,
-    to: 35,
+    from: from,
+    to: to,
   };
   return await gifify(buffer, options);
 };

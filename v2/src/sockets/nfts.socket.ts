@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { sleep } from "../utils";
+import { sleep, videoToGif } from "../utils";
 import { mintNFT } from "../services/mintNFT";
 import { sendNFT } from "../services/sendNFT";
 import { getUserNFTs } from "../services/getUserNFTs";
@@ -17,7 +17,7 @@ export const newMintSocket = (socket: Socket): void => {
   socket.on(
     "newMint",
     async (
-      buffer: Buffer,
+      asset: Buffer,
       type: string,
       creator: string,
       supply: number,
@@ -30,7 +30,8 @@ export const newMintSocket = (socket: Socket): void => {
       maxLat: number,
       minLat: number,
       maxLon: number,
-      minLon: number
+      minLon: number,
+      image: Buffer
     ) => {
       let i = 0;
       while (i < TRIES) {
@@ -45,7 +46,7 @@ export const newMintSocket = (socket: Socket): void => {
       console.log("BEENZER #", id);
       console.log(
         "Got newMint socket...",
-        buffer,
+        asset,
         type,
         creator,
         description,
@@ -56,7 +57,7 @@ export const newMintSocket = (socket: Socket): void => {
       while (i < TRIES) {
         const token = await mintNFT(
           id,
-          buffer,
+          asset,
           type,
           supply,
           creator,
@@ -69,7 +70,8 @@ export const newMintSocket = (socket: Socket): void => {
           maxLat,
           minLat,
           maxLon,
-          minLon
+          minLon,
+          image
         );
         if (!token || token == "ERROR") {
           if (i == TRIES - 1) {
@@ -144,6 +146,12 @@ export const newMintSocket = (socket: Socket): void => {
       }
     }
   );
+};
+
+export const videoToGifSocket = (socket: Socket): void => {
+  socket.on("videoToGif", async (video: Buffer) => {
+    socket.emit("videoToGifRes", await videoToGif(video, 0, 5));
+  });
 };
 
 export const getUserNFTsSocket = (socket: Socket): void => {
