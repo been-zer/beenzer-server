@@ -189,6 +189,7 @@ export const uploadVideoSocket = (socket: Socket): void => {
 
 const nftsSocket = (socket: Socket): void => {
   newMintSocket(socket);
+  videoToGifSocket(socket);
   getUserNFTsSocket(socket);
   getAllNFTsSocket(socket);
   getMapNFTsSocket(socket);
