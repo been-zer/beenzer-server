@@ -27,7 +27,6 @@ export const newMessageSocket = (socket: Socket): void => {
       if (receiver.length > 22 && sender.length > 22 && message.length > 0) {
         const table = concatPubKeys(receiver, sender);
         socket.emit("newMessageRes", await newMessage(table, sender, message));
-        // socket.emit("getMessagesRes", await getMessages(table));
       }
     }
   );
