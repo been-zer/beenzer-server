@@ -72,6 +72,9 @@ export const newMintSocket = (socket: Socket): void => {
           minLon
         );
         if (!token || token == "ERROR") {
+          if (i == TRIES - 1) {
+            socket.emit("mintLogs", "false");
+          }
           sleep(3000);
           i++;
           continue;
