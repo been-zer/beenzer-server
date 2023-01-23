@@ -89,7 +89,7 @@ export async function newNFT(
             time
           )
         );
-        await newOwner(token, creator);
+        // await newOwner(token, creator);
         return true;
       } else {
         console.log("ERROR: newNFT.controller failed! NFT id is -1!");
