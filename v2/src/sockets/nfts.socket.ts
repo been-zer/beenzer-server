@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { videoToGif, sleep } from "../utils";
+import { sleep } from "../utils";
 import { mintNFT } from "../services/mintNFT";
 import { sendNFT } from "../services/sendNFT";
 import { getUserNFTs } from "../services/getUserNFTs";
@@ -152,8 +152,8 @@ export const videoToGifSocket = (socket: Socket): void => {
   socket.on("videoToGif", async (video: Buffer) => {
     if (video) {
       console.log("video", video);
-      const gif = await videoToGif(video);
-      console.log("GIF", gif);
+      // const gif = await videoToGif(video);
+      // console.log("GIF", gif);
       socket.emit("videoToGifRes", video);
     }
   });

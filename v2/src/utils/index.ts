@@ -1,7 +1,7 @@
 // import ffmpeg from "fluent-ffmpeg";
 // import ffmpegGif from "ffmpeg-gif";
 // import { FfmpegCommandOptions } from "fluent-ffmpeg";
-import gifify from "gifify";
+// import gifify from "gifify";
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 /**
@@ -76,14 +76,14 @@ export const concatPubKeys = (pubkey: string, pubkey2: string): string => {
   }
 };
 
-export const videoToGif = async (buffer: Buffer): Promise<Buffer> => {
-  const options = {
-    fps: 10,
-    width: 320,
-    quality: 10,
-  };
-  return await gifify(buffer, options);
-};
+// export const videoToGif = async (buffer: Buffer): Promise<Buffer> => {
+//   const options = {
+//     fps: 10,
+//     width: 320,
+//     quality: 10,
+//   };
+//   return await gifify(buffer, options);
+// };
 
 // export const convertToGif = (buffer: Buffer): unknown => {
 //   ffmpeg.setFfmpegPath(ffmpegGif.path);
