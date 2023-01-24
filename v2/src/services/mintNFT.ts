@@ -44,6 +44,22 @@ async function uploadAsset(data: any, fileName: string) {
   }
 }
 
+async function uploadImage(data: any, fileName: string) {
+  console.log(`Step 1 - Uploading Image to Arweave...`);
+  try {
+    const imgBuffer = Buffer.from(data, "utf8");
+    const imgMetaplexFile = toMetaplexFile(imgBuffer, fileName);
+    const imgUri = await METAPLEX.storage().upload(imgMetaplexFile);
+    return imgUri;
+  } catch (err) {
+    if (String(err).includes("funds")) {
+      console.log("Not enough funds in the master wallet!!!");
+    }
+    console.log(err);
+    return "ERROR";
+  }
+}
+
 async function uploadMetadata(
   imageUri: string,
   assetUri: string,
@@ -101,7 +117,7 @@ async function mintTokens(
         isMutable: false,
         maxSupply: toBigNumber(supply),
       });
-      console.log(`   Mint Success!🎉 Tries: ${i + 1}`);
+      console.log(`   Mint Success! ⛏️ Tries: ${i + 1}`);
       console.log(
         `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
       );
@@ -176,10 +192,9 @@ export async function mintNFT(
     asset,
     `${CONFIG.nftTitle}.${type.split("/")[1]}`
   );
-  let imageUri = assetUri;
+  let imageUri = "";
   if (nftImage) {
-    console.log("BUFFEEEEEEER NOOOOOT EMPTYYYYYYY!!!!!");
-    imageUri = await uploadAsset(nftImage, CONFIG.nftTitle + ".png");
+    imageUri = await uploadImage(nftImage, CONFIG.nftTitle + ".gif");
   }
   // socket.emit("mintLongs", `Asset url: ${assetUri}`);
   console.log("Asset url:", assetUri);

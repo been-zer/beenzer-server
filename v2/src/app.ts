@@ -1,9 +1,9 @@
 // import and run server
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import dotenv from 'dotenv';
+import express, { Request, Response } from "express";
+import cors from "cors";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import dotenv from "dotenv";
 dotenv.config();
 
 /**
@@ -17,8 +17,8 @@ export const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.get('/', (req: Request, res: Response) => {
-    res.send('<h1>Beenzer Server</h1>');
+app.get("/", (req: Request, res: Response) => {
+  res.send("<h1>Beenzer Server</h1>");
 });
 
 /**
@@ -38,12 +38,13 @@ export const server: any = createServer(app);
 export const io: any = new Server(server, {
   cors: {
     origin: [
-      '*', 
-      '139.47.123.176',
-      '139.47.123.176:8080',
-      'http://localhost:8080',
+      "*",
+      "139.47.123.176",
+      "139.47.123.176:8080",
+      "http://localhost:8080",
     ],
-    methods: ['GET', 'POST']
+    methods: ["GET", "POST"],
   },
   maxHttpBufferSize: 1e9, // 0.93 gigabyte
+  pingTimeout: 20,
 });

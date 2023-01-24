@@ -20,6 +20,10 @@ export const socketConnect = (io: Server): void => {
       console.log(usersConnected, "users connected.");
       socket.emit("nUsers", usersConnected);
     });
+    // Errors
+    socket.on("error", (err: any) => {
+      console.log("socket error", err);
+    });
     // Sockets
     userSocket(socket);
     messagesSocket(socket);
