@@ -76,24 +76,13 @@ export const concatPubKeys = (pubkey: string, pubkey2: string): string => {
   }
 };
 
-// export const videoToGif = async (buffer: Buffer): Promise<Buffer> => {
-//   const options = {
-//     fps: 10,
-//     width: 320,
-//     quality: 10,
-//   };
-//   return await gifify(buffer, options);
-// };
-
-// export const convertToGif = (buffer: Buffer): unknown => {
-//   ffmpeg.setFfmpegPath(ffmpegGif.path);
-//   try {
-//     ffmpeg(buffer as FfmpegCommandOptions)
-//       .outputOptions(["-pix_fmt rgb24", "-r 10", "-s 320x340"])
-//       .save("output.gif");
-//     return buffer;
-//   } catch (error) {
-//     console.log(error);
-//     return "ERROR: convertToGif failed!";
-//   }
-// };
+export const randomString = (length: number): string => {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};

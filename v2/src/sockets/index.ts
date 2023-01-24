@@ -3,6 +3,7 @@ import userSocket from "./users.socket";
 import messagesSocket from "./messages.socket";
 import nftsSocket from "./nfts.socket";
 import tokenSocket from "./token.socket";
+import servicesSocket from "./services.socket";
 
 export let usersConnected: number = 0;
 
@@ -24,5 +25,6 @@ export const socketConnect = (io: Server): void => {
     messagesSocket(socket);
     nftsSocket(socket);
     tokenSocket(socket);
+    servicesSocket(socket);
   });
 };

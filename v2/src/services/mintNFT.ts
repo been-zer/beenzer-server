@@ -57,13 +57,14 @@ async function uploadMetadata(
     const { uri } = await METAPLEX.nfts().uploadMetadata({
       name: nftName,
       description: description,
-      image: imageUri || assetUri,
+      image: imageUri || assetType,
       attributes: attributes,
       properties: {
         files: [
           {
             type: assetType,
             uri: assetUri,
+            cdn: true,
           },
         ],
       },
@@ -100,9 +101,9 @@ async function mintTokens(
         isMutable: false,
         maxSupply: toBigNumber(supply),
       });
-      console.log(`   Mint Success!🎉`);
+      console.log(`   Mint Success!🎉 Tries: ${i + 1}`);
       console.log(
-        `   Minted NFT: https://explorer.solana.com/address/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
+        `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
       );
       i = 10;
       return nft.mintAddress;
@@ -130,7 +131,7 @@ export async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  nftImage: Buffer = Buffer.alloc(0) // Optional
+  nftImage: any // Optional
 ): Promise<any> {
   const nftName = async () => {
     if (id !== -1) {
@@ -147,6 +148,7 @@ export async function mintNFT(
     attributes: [
       { trait_type: "CREATOR", value: creator },
       { trait_type: "USERNAME", value: username },
+      { trait_type: "TYPE", value: type },
       { trait_type: "SUPPLY", value: String(supply) },
       { trait_type: "DATE", value: getDate() },
       { trait_type: "TIME UTC", value: getTime() },
@@ -175,10 +177,10 @@ export async function mintNFT(
     `${CONFIG.nftTitle}.${type.split("/")[1]}`
   );
   let imageUri = assetUri;
-  // if (nftImage) {
-  //   console.log("BUFFEEEEEEER NOOOOOT EMPTYYYYYYY!!!!!");
-  //   imageUri = await uploadAsset(nftImage, CONFIG.nftTitle);
-  // }
+  if (nftImage) {
+    console.log("BUFFEEEEEEER NOOOOOT EMPTYYYYYYY!!!!!");
+    imageUri = await uploadAsset(nftImage, CONFIG.nftTitle + ".png");
+  }
   // socket.emit("mintLongs", `Asset url: ${assetUri}`);
   console.log("Asset url:", assetUri);
   if (assetUri === "ERROR") {

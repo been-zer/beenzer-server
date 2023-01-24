@@ -148,17 +148,6 @@ export const newMintSocket = (socket: Socket): void => {
   );
 };
 
-export const videoToGifSocket = (socket: Socket): void => {
-  socket.on("videoToGif", async (video: Buffer) => {
-    if (video) {
-      console.log("video", video);
-      // const gif = await videoToGif(video);
-      // console.log("GIF", gif);
-      socket.emit("videoToGifRes", video);
-    }
-  });
-};
-
 export const getUserNFTsSocket = (socket: Socket): void => {
   socket.on("getUserNFTs", async (pubkey: string) => {
     if (pubkey.length > 22) {
@@ -191,7 +180,6 @@ export const uploadVideoSocket = (socket: Socket): void => {
 
 const nftsSocket = (socket: Socket): void => {
   newMintSocket(socket);
-  videoToGifSocket(socket);
   getUserNFTsSocket(socket);
   getAllNFTsSocket(socket);
   getMapNFTsSocket(socket);
