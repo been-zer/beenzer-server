@@ -104,6 +104,7 @@ async function uploadMetadata(
         name: nftName,
         description: description,
         image: imageUri || assetType,
+        symbol: "BEENZER",
         attributes: attributes,
         properties: {
           files: [

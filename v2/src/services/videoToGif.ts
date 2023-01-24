@@ -10,7 +10,11 @@ export async function videoToGif(
 ): Promise<Buffer> {
   // create a temporary file to save the video buffer
   const tempFile = randomString(11);
-  const videoFilePath = path.resolve(__dirname, "temp", tempFile + ".mp4");
+  const videoFilePath: string = path.resolve(
+    __dirname,
+    "temp",
+    tempFile + ".mp4"
+  );
   try {
     fs.writeFileSync(videoFilePath, videoBuffer);
     const gifBuffer = await new Promise((resolve, reject) => {

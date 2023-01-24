@@ -46,7 +46,7 @@ export const newMintSocket = (socket: Socket): void => {
           if (id) {
             socket.emit("mintLogs", `Minting ${nftFile} BEENZER #${id}...`);
             console.log(
-              `Minting ${nftFile} EENZER #${id}...`,
+              `Minting ${nftFile} BEENZER #${id}...`,
               `ID tries: ${i}`
             );
             i = TRIES;
@@ -72,7 +72,7 @@ export const newMintSocket = (socket: Socket): void => {
         minLat,
         maxLon,
         minLon,
-        [],
+        false,
         TRIES
       );
       if (token && token != "ERROR") {

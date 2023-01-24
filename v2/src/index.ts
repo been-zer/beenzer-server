@@ -4,10 +4,8 @@ import { getTime } from './utils';
 import getBalances from './services/getBalances';
 
 server.listen(process.env.PORT, () => {
-
   console.log('Server running on port ', process.env.PORT);
   getBalances();
-
   setInterval(() => {
     const time = getTime();
     if (time.split(':')[2] == '00') {
@@ -21,9 +19,6 @@ server.listen(process.env.PORT, () => {
       }
     }
   }, 1000)
-
   socketConnect(io);
-
   console.log(process.version);
-
-})
+});
