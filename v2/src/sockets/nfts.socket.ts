@@ -30,9 +30,10 @@ export const newMintSocket = (socket: Socket): void => {
       maxLat: number,
       minLat: number,
       maxLon: number,
-      minLon: number,
-      image: Buffer
+      minLon: number
+      // image: Buffer
     ) => {
+      console.log("newMint", username, creator);
       const nftFile = type.split("/")[0] || "unknown";
       let id = 0;
       let i = 0;
@@ -71,7 +72,7 @@ export const newMintSocket = (socket: Socket): void => {
         minLat,
         maxLon,
         minLon,
-        image,
+        [],
         TRIES
       );
       if (token && token != "ERROR") {
@@ -111,11 +112,14 @@ export const newMintSocket = (socket: Socket): void => {
                 "mintLogs",
                 `BEENZER #${id} has been added to your collection! 🎉`
               );
-              console.log(`newNFT tries: ${j}`);
+              console.log(`newNFT tries: ${j + 1}`);
               socket.emit("mintLogs", "true");
               j = TRIES;
               break;
             } else {
+              if (j == TRIES - 1) {
+                console.log("newNFT failed. Last try!!!");
+              }
               sleep(1000);
               j++;
             }

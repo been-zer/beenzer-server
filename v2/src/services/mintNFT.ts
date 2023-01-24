@@ -156,7 +156,7 @@ async function mintTokens(
         isMutable: false,
         maxSupply: toBigNumber(supply),
       });
-      console.log(`   Mint Success! ⛏️ Tries: ${_tries + 1}`);
+      console.log(`   Mint Success! ⛏️ Tries: ${i + 1}`);
       console.log(
         `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
       );

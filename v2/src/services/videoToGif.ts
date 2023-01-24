@@ -31,7 +31,7 @@ export async function videoToGif(
     return gifBuffer as Promise<Buffer>;
   } catch (err) {
     console.error(err);
-    // fs.unlinkSync(videoFilePath);
+    fs.unlinkSync(videoFilePath);
     return Buffer.alloc(0);
   }
 }
