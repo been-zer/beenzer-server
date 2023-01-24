@@ -175,10 +175,10 @@ export async function mintNFT(
     `${CONFIG.nftTitle}.${type.split("/")[1]}`
   );
   let imageUri = assetUri;
-  if (nftImage) {
-    console.log("BUFFEEEEEEER NOOOOOT EMPTYYYYYYY!!!!!");
-    imageUri = await uploadAsset(nftImage, CONFIG.nftTitle);
-  }
+  // if (nftImage) {
+  //   console.log("BUFFEEEEEEER NOOOOOT EMPTYYYYYYY!!!!!");
+  //   imageUri = await uploadAsset(nftImage, CONFIG.nftTitle);
+  // }
   // socket.emit("mintLongs", `Asset url: ${assetUri}`);
   console.log("Asset url:", assetUri);
   if (assetUri === "ERROR") {
