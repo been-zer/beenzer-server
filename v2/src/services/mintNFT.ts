@@ -17,7 +17,6 @@ const secret = String(process.env.MASTER_WALLET_KEYPAIR).split(",") as any;
 const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
 const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL as string);
 const WALLET = Keypair.fromSecretKey(new Uint8Array(secret));
-const PUBKEY = process.env.MASTER_WALLET as string;
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
   .use(keypairIdentity(WALLET))
   .use(
@@ -28,34 +27,62 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
     })
   );
 
-async function uploadAsset(data: any, fileName: string) {
+async function uploadAsset(
+  data: any,
+  fileName: string,
+  _tries: number = 10
+): Promise<any> {
   console.log(`Step 1 - Uploading Asset to Arweave...`);
-  try {
-    const imgBuffer = Buffer.from(data, "utf8");
-    const imgMetaplexFile = toMetaplexFile(imgBuffer, fileName);
-    const imgUri = await METAPLEX.storage().upload(imgMetaplexFile);
-    return imgUri;
-  } catch (err) {
-    if (String(err).includes("funds")) {
-      console.log("Not enough funds in the master wallet!!!");
+  let i = 0;
+  while (i < _tries) {
+    try {
+      const assetBuffer = Buffer.from(data, "utf8");
+      const assetMetaplexFile = toMetaplexFile(assetBuffer, fileName);
+      const assetUri = await METAPLEX.storage().upload(assetMetaplexFile);
+      console.log("Asset url:", assetUri);
+      if (assetUri === "ERROR") {
+        console.log("Uploading asset failed.");
+        continue;
+      }
+      return assetUri;
+    } catch (err) {
+      if (String(err).includes("funds")) {
+        console.log("Not enough funds in the master wallet!!!");
+      }
+      console.log(err);
+      sleep(3000);
+      i++;
     }
-    console.log(err);
-    return "ERROR";
   }
+  return "ERROR";
 }
 
-async function uploadImage(data: any, fileName: string) {
+async function uploadImage(
+  data: any,
+  fileName: string,
+  _tries: number = 10
+): Promise<any> {
   console.log(`Step 1 - Uploading Image to Arweave...`);
-  try {
-    const imgBuffer = Buffer.from(data, "utf8");
-    const imgMetaplexFile = toMetaplexFile(imgBuffer, fileName);
-    const imgUri = await METAPLEX.storage().upload(imgMetaplexFile);
-    return imgUri;
-  } catch (err) {
-    if (String(err).includes("funds")) {
-      console.log("Not enough funds in the master wallet!!!");
+  let i = 0;
+  while (i < _tries) {
+    try {
+      const imgBuffer = Buffer.from(data, "utf8");
+      const imgMetaplexFile = toMetaplexFile(imgBuffer, fileName);
+      const imgUri = await METAPLEX.storage().upload(imgMetaplexFile);
+      console.log("Image url:", imgUri);
+      if (imgUri === "ERROR") {
+        console.log("Uploading image failed.");
+        continue;
+      }
+      return imgUri;
+    } catch (err) {
+      if (String(err).includes("funds")) {
+        console.log("Not enough funds in the master wallet!!!");
+      }
+      console.log(err);
+      sleep(3000);
+      i++;
     }
-    console.log(err);
     return "ERROR";
   }
 }
@@ -66,33 +93,44 @@ async function uploadMetadata(
   assetType: string,
   nftName: string,
   description: string,
-  attributes: { trait_type: string; value: string }[]
-) {
+  attributes: { trait_type: string; value: string }[],
+  _tries: number = 10
+): Promise<any> {
   console.log(`Step 2 - Uploading Metadata to Arweave...`);
-  try {
-    const { uri } = await METAPLEX.nfts().uploadMetadata({
-      name: nftName,
-      description: description,
-      image: imageUri || assetType,
-      attributes: attributes,
-      properties: {
-        files: [
-          {
-            type: assetType,
-            uri: assetUri,
-            cdn: true,
-          },
-        ],
-      },
-    });
-    return uri;
-  } catch (err) {
-    if (String(err).includes("funds")) {
-      console.log("Not enough funds in the master wallet!!!");
+  let i = 0;
+  while (i < _tries) {
+    try {
+      const { uri } = await METAPLEX.nfts().uploadMetadata({
+        name: nftName,
+        description: description,
+        image: imageUri || assetType,
+        attributes: attributes,
+        properties: {
+          files: [
+            {
+              type: assetType,
+              uri: assetUri,
+              cdn: true,
+            },
+          ],
+        },
+      });
+      console.log("Metadata url:", uri);
+      if (uri === "ERROR") {
+        console.log("Uploading metadata failed.");
+        continue;
+      }
+      return uri;
+    } catch (err) {
+      if (String(err).includes("funds")) {
+        console.log("Not enough funds in the master wallet!!!");
+      }
+      console.log(err);
+      sleep(3000);
+      i++;
     }
-    console.log(err);
-    return "ERROR";
   }
+  return "ERROR";
 }
 
 async function mintTokens(
@@ -101,12 +139,13 @@ async function mintTokens(
   supply: number,
   sellerFee: number,
   symbol: string,
-  creators: { address: PublicKey; share: number }[]
+  creators: { address: PublicKey; share: number }[],
+  _tries: number = 10
 ): Promise<any> {
   console.log(`Step 3 - Minting your BEENZER NFT in Solana...`);
   let nft: CreateNftOutput;
   let i = 0;
-  while (i < 10) {
+  while (i < _tries) {
     try {
       nft = await METAPLEX.nfts().create({
         uri: metadataUri,
@@ -117,18 +156,19 @@ async function mintTokens(
         isMutable: false,
         maxSupply: toBigNumber(supply),
       });
-      console.log(`   Mint Success! ⛏️ Tries: ${i + 1}`);
+      console.log(`   Mint Success! ⛏️ Tries: ${_tries + 1}`);
       console.log(
         `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
       );
       i = 10;
       return nft.mintAddress;
     } catch (err) {
-      console.log(err);
-      sleep(8000);
+      console.log(`Minting NFT failed!!! ${_tries + 1}`);
+      sleep(5000);
       i++;
     }
   }
+  return "ERROR";
 }
 
 export async function mintNFT(
@@ -147,13 +187,14 @@ export async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  nftImage: any // Optional
+  nftImage: any, // Optional
+  _tries: number = 10
 ): Promise<any> {
   const nftName = async () => {
-    if (id !== -1) {
+    if (id > 0) {
       return `BEENZER #${Number(id)}` as string;
     } else {
-      console.log("ERROR: NFT id undefined!!!");
+      console.log("ERROR: NFT id wrong!!!");
       return "ERROR";
     }
   };
@@ -185,68 +226,45 @@ export async function mintNFT(
       { address: WALLET.publicKey, share: 20 },
     ],
   };
-  // socket.emit("mintLogs", `Minting ${CONFIG.nftTitle} NFT: ${creator}.`);
-  console.log(`Minting ${CONFIG.nftTitle} to an NFT in Wallet ${PUBKEY}.`);
-  // Step 1 - Upload media
-  const assetUri = await uploadAsset(
-    asset,
-    `${CONFIG.nftTitle}.${type.split("/")[1]}`
-  );
-  let imageUri = "";
-  if (nftImage) {
-    imageUri = await uploadImage(nftImage, CONFIG.nftTitle + ".gif");
-  }
-  // socket.emit("mintLongs", `Asset url: ${assetUri}`);
-  console.log("Asset url:", assetUri);
-  if (assetUri === "ERROR") {
-    // socket.emit("mintLogs", "Uploading asset failed.");
-    console.log("Uploading asset failed.");
-    return "ERROR";
-  }
-  // Step 2 - Upload metadata
-  const metadataUri = await uploadMetadata(
-    imageUri,
-    assetUri,
-    CONFIG.nftType,
-    CONFIG.nftTitle,
-    CONFIG.description,
-    CONFIG.attributes
-  );
-  // socket.emit("mintLongs", `Metadata url: ${metadataUri}`);
-  console.log("Metadata url:", metadataUri);
-  if (metadataUri === "ERROR") {
-    // socket.emit("mintLogs", "Uploading metadata failed.");
-    console.log("Uploading metadata failed.");
-    return "ERROR";
-  }
-  // Step 3 - Mint NFT
-  let token = await mintTokens(
-    metadataUri,
-    CONFIG.nftTitle,
-    CONFIG.supply,
-    CONFIG.sellerFeeBasisPoints,
-    CONFIG.symbol,
-    CONFIG.creators
-  );
-  if (!token) {
-    sleep(3000);
-    // socket.emit("mintLogs", "Minting NFT failed. Trying again...");
-    console.log("Minting NFT failed.");
-    token = await mintTokens(
-      metadataUri,
-      CONFIG.nftTitle,
-      CONFIG.supply,
-      CONFIG.sellerFeeBasisPoints,
-      CONFIG.symbol,
-      CONFIG.creators
+  if (asset) {
+    // Step 1 - Upload media
+    const assetUri = await uploadAsset(
+      asset,
+      `${CONFIG.nftTitle}.${type.split("/")[1]}`,
+      _tries
     );
-    if (!token) {
-      // socket.emit("mintLogs", "Minting NFT failed");
-      return "ERROR";
+    let imageUri = assetUri;
+    if (nftImage) {
+      imageUri = await uploadImage(nftImage, CONFIG.nftTitle + ".gif", _tries);
+    }
+    if (assetUri && imageUri && assetUri !== "ERROR" && imageUri !== "ERROR") {
+      // Step 2 - Upload metadata
+      const metadataUri = await uploadMetadata(
+        imageUri,
+        assetUri,
+        CONFIG.nftType,
+        CONFIG.nftTitle,
+        CONFIG.description,
+        CONFIG.attributes,
+        _tries
+      );
+      if (metadataUri && metadataUri !== "ERROR") {
+        // Step 3 - Mint NFT
+        let token = await mintTokens(
+          metadataUri,
+          CONFIG.nftTitle,
+          CONFIG.supply,
+          CONFIG.sellerFeeBasisPoints,
+          CONFIG.symbol,
+          CONFIG.creators,
+          _tries
+        );
+        if (token && token !== "ERROR") {
+          token.imageURL = imageUri;
+          return token;
+        }
+      }
     }
   }
-  // socket.emit("mintLogs", `NFT minted! Token address: ${token}`);
-  console.log("NFT minted! Token address:", token.toBase58());
-  token.imageURL = assetUri;
-  return token;
+  return "ERROR";
 }

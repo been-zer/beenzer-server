@@ -38,6 +38,10 @@ export async function sendToken(
   const signTransaction = "processed";
   const amount = _amount * Math.pow(10, _decimals);
 
+  // console.log(`3 - Fetching Number of Decimals for Mint: ${token}`);
+  // const numberDecimals = 0; // await getNumberDecimals(MINT_ADDRESS);
+  // console.log(`    Number of Decimals: ${numberDecimals}`);
+
   try {
     const toTokenAccount = await getOrCreateAssociatedTokenAccount(
       SOLANA_CONNECTION,

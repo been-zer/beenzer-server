@@ -90,6 +90,7 @@ export async function newNFT(
           )
         );
         // await newOwner(token, creator);
+        console.log(`${name} added to DB succesfully! 🎉`);
         return true;
       } else {
         console.log("ERROR: newNFT.controller failed! NFT id is -1!");
@@ -187,8 +188,7 @@ export async function getMapNFTs(
 export async function getNFTCounter(): Promise<number> {
   try {
     const data = await db.query(_getNFTCounter());
-    const rows = Number(data.rows[0]._n);
-    return rows;
+    return Number(data.rows[0]._n);
   } catch (error) {
     console.log(error);
     return -1;
