@@ -23,9 +23,7 @@ export async function sendNFT(
   token: string,
   supply: number
 ) {
-  console.log(
-    `Sending ${supply} ${token.toString()} from ${WALLET.publicKey.toString()} to ${destination}.`
-  );
+  console.log(`Sending ${supply} ${token.toString()} to ${destination}...`);
 
   //Step 1
   console.log(`1 - Getting Source Token Account`);
@@ -71,11 +69,11 @@ export async function sendNFT(
     }
   }
   //Step 3
-  console.log(`3 - Fetching Number of Decimals for Mint: ${token}`);
+  // console.log(`3 - Fetching Number of Decimals for Mint: ${token}`);
   const numberDecimals = 0; // await getNumberDecimals(MINT_ADDRESS);
   // console.log(`    Number of Decimals: ${numberDecimals}`);
   //Step 4
-  console.log(`4 - Creating and Sending Transaction`);
+  console.log(`3 - Creating and Sending Transaction`);
 
   let k = 0;
   while (k < 10) {
