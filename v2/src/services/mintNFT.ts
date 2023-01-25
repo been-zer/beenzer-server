@@ -157,14 +157,14 @@ async function mintTokens(
         isMutable: false,
         maxSupply: toBigNumber(supply),
       });
-      console.log(`   ⛏️ Mint Success! Tries: ${i + 1}`);
+      console.log(`⛏️  Mint Success! Tries: ${i + 1}`);
       console.log(
         `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
       );
       i = 10;
       return nft.mintAddress;
     } catch (err) {
-      console.log(`Minting NFT failed!!! ${_tries + 1}`);
+      console.log(`Minting NFT failed!!! ${i + 1}`);
       sleep(5000);
       i++;
     }
@@ -236,7 +236,7 @@ export async function mintNFT(
     );
     let imageUri = assetUri;
     if (type.split("/")[0] === "video") {
-      const gif = await videoToGif(asset);
+      const gif = await videoToGif(asset, 3, 10);
       imageUri = await uploadImage(gif, CONFIG.nftTitle + ".gif", _tries);
     }
     if (assetUri && imageUri && assetUri !== "ERROR" && imageUri !== "ERROR") {

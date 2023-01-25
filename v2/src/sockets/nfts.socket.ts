@@ -46,10 +46,7 @@ export const newMintSocket = (socket: Socket): void => {
           id = (await getNFTCounter()) + 1;
           if (id) {
             socket.emit("mintLogs", `Minting ${nftFile} BEENZER #${id}...`);
-            console.log(
-              `Minting ${nftFile} BEENZER #${id}...`,
-              `ID tries: ${i}`
-            );
+            console.log(`Minting ${nftFile} BEENZER #${id}... Tries: ${i + 1}`);
             i = TRIES;
             break;
           }
@@ -89,6 +86,7 @@ export const newMintSocket = (socket: Socket): void => {
           const name = `${collection} #${id}`;
           let j = 0;
           while (j < TRIES) {
+            console.log(`Adding ${name} to DB... Tries: ${j + 1}`);
             if (
               await newNFT(
                 id,
@@ -114,7 +112,6 @@ export const newMintSocket = (socket: Socket): void => {
                 "mintLogs",
                 `🎉 BEENZER #${id} has been added to your collection!`
               );
-              console.log(`newNFT tries: ${j + 1}`);
               socket.emit("mintLogs", "true");
               j = TRIES;
               break;

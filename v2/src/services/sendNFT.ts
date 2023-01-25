@@ -97,7 +97,7 @@ export async function sendNFT(
             );
             console.log(
               "\x1b[32m", //Green Text
-              `   🚀 Transaction Success! Tries: ${k + 1}`,
+              `🚀  Transaction Success! Tries: ${k + 1}`,
               `\n    https://explorer.solana.com/tx/${signature}?cluster=mainnet-beta`
             );
             if (signature) {
