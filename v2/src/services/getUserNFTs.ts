@@ -1,10 +1,8 @@
+import request from "request";
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { getNFTsByTokens } from "../controllers/nfts.controller";
-import request from "request";
-
-const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
-const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL as string);
+import { SOLANA_CONNECTION } from "./solanaConnection";
 
 export interface NFT {
   token: string;

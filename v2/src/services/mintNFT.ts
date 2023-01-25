@@ -8,17 +8,16 @@ import {
   toMetaplexFile,
   toBigNumber,
 } from "@metaplex-foundation/js";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { getDate, getTime, sleep } from "../utils";
-import dotenv from "dotenv";
-dotenv.config();
+import {
+  SOLANA_CONNECTION,
+  SOLANA_RPC_URL,
+  MASTER_KEYPAIR,
+} from "./solanaConnection";
 
-const secret = String(process.env.MASTER_WALLET_KEYPAIR).split(",") as any;
-const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
-const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL as string);
-const WALLET = Keypair.fromSecretKey(new Uint8Array(secret));
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
-  .use(keypairIdentity(WALLET))
+  .use(keypairIdentity(MASTER_KEYPAIR))
   .use(
     bundlrStorage({
       address: `https://node1.bundlr.network`,
@@ -224,7 +223,7 @@ export async function mintNFT(
     supply: supply,
     creators: [
       { address: new PublicKey(creator), share: 80 },
-      { address: WALLET.publicKey, share: 20 },
+      { address: MASTER_KEYPAIR.publicKey, share: 20 },
     ],
   };
   if (asset) {

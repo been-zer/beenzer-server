@@ -1,11 +1,7 @@
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { Connection } from "@solana/web3.js";
+import { SOLANA_CONNECTION, TOKEN } from "./solanaConnection";
 
-const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
-const TOKEN = process.env.TOKEN as string;
-const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL);
-
-export const getTokenHolders = async ( _token: string = TOKEN ) => {
+export const getTokenHolders = async (_token: string = TOKEN) => {
   const accounts = await SOLANA_CONNECTION.getProgramAccounts(
     TOKEN_PROGRAM_ID, // new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
     {
@@ -26,8 +22,6 @@ export const getTokenHolders = async ( _token: string = TOKEN ) => {
       ],
     }
   );
-  console.log(
-    `Found ${accounts.length} BEEN account(s) for mint ${_token}`
-  );
+  console.log(`Found ${accounts.length} BEEN account(s) for mint ${_token}`);
   return accounts;
 };

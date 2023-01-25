@@ -1,10 +1,7 @@
 // sendToken.ts
-// import payer_secret from "../keys/payer.json";
 import {
-  Connection,
-  Transaction,
   PublicKey,
-  Keypair,
+  Transaction,
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import {
@@ -12,8 +9,13 @@ import {
   getOrCreateAssociatedTokenAccount,
   createTransferInstruction,
 } from "@solana/spl-token";
-import dotenv from "dotenv";
-dotenv.config();
+import {
+  SOLANA_CONNECTION,
+  MASTER_KEYPAIR,
+  TOKEN_ACCOUNT_PUBLICKEY,
+  TOKEN_CREATOR_PUBLICKEY,
+  MASTER_PUBLICKEY,
+} from "./solanaConnection";
 
 export async function sendToken(
   _destination: PublicKey,
@@ -21,31 +23,12 @@ export async function sendToken(
   _amount: number = 1,
   _decimals: number = 0
 ) {
-  const payer_secret = String(process.env.MASTER_WALLET_KEYPAIR).split(
-    ","
-  ) as any;
-  const PAYER = Keypair.fromSecretKey(new Uint8Array(payer_secret));
-  const SOLANA_RPC_URL: string = process.env.SOLANA_RPC_URL as string;
-  const SOLANA_CONNECTION: Connection = new Connection(
-    SOLANA_RPC_URL as string
-  );
-  const TOKEN_ACCOUNT: PublicKey = new PublicKey(
-    process.env.TOKEN_ACCOUNT as string
-  );
-  const TOKEN_OWNER: PublicKey = new PublicKey(
-    process.env.TOKEN_OWNER as string
-  );
   const signTransaction = "processed";
   const amount = _amount * Math.pow(10, _decimals);
-
-  // console.log(`3 - Fetching Number of Decimals for Mint: ${token}`);
-  // const numberDecimals = 0; // await getNumberDecimals(MINT_ADDRESS);
-  // console.log(`    Number of Decimals: ${numberDecimals}`);
-
   try {
     const toTokenAccount = await getOrCreateAssociatedTokenAccount(
       SOLANA_CONNECTION,
-      PAYER,
+      MASTER_KEYPAIR,
       _token,
       _destination,
       true,
@@ -53,19 +36,19 @@ export async function sendToken(
     );
     const tx = new Transaction().add(
       createTransferInstruction(
-        TOKEN_ACCOUNT,
+        TOKEN_ACCOUNT_PUBLICKEY,
         toTokenAccount.address,
-        TOKEN_OWNER,
+        TOKEN_CREATOR_PUBLICKEY,
         amount,
-        [PAYER],
+        [MASTER_KEYPAIR],
         TOKEN_PROGRAM_ID
       )
     );
     const blockHash = await SOLANA_CONNECTION.getLatestBlockhash();
-    tx.feePayer = PAYER.publicKey;
+    tx.feePayer = MASTER_PUBLICKEY;
     tx.recentBlockhash = blockHash.blockhash;
     const signature = await sendAndConfirmTransaction(SOLANA_CONNECTION, tx, [
-      PAYER,
+      MASTER_KEYPAIR,
     ]);
     console.log(
       "\x1b[32m",

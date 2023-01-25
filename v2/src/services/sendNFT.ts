@@ -3,20 +3,16 @@ import {
   createTransferInstruction,
 } from "@solana/spl-token";
 import {
-  Connection,
-  Keypair,
   PublicKey,
   sendAndConfirmTransaction,
   Transaction,
 } from "@solana/web3.js";
-import dotenv from "dotenv";
+import {
+  SOLANA_CONNECTION,
+  MASTER_KEYPAIR,
+  MASTER_PUBLICKEY,
+} from "./solanaConnection";
 import { sleep } from "../utils";
-dotenv.config();
-
-const secret = String(process.env.MASTER_WALLET_KEYPAIR).split(",") as any;
-const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
-const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL);
-const WALLET = Keypair.fromSecretKey(new Uint8Array(secret));
 
 export async function sendNFT(
   destination: string,
@@ -34,9 +30,9 @@ export async function sendNFT(
       try {
         sourceAccount = await getOrCreateAssociatedTokenAccount(
           SOLANA_CONNECTION,
-          WALLET,
+          MASTER_KEYPAIR,
           new PublicKey(token),
-          WALLET.publicKey
+          MASTER_PUBLICKEY
         );
         console.log(
           `    Source Account: ${sourceAccount.address.toString()}`,
@@ -59,7 +55,7 @@ export async function sendNFT(
         try {
           destinationAccount = await getOrCreateAssociatedTokenAccount(
             SOLANA_CONNECTION,
-            WALLET,
+            MASTER_KEYPAIR,
             new PublicKey(token),
             new PublicKey(destination)
           );
@@ -86,7 +82,7 @@ export async function sendNFT(
               createTransferInstruction(
                 sourceAccount.address,
                 destinationAccount.address,
-                WALLET.publicKey,
+                MASTER_PUBLICKEY,
                 Math.floor(supply)
               )
             );
@@ -97,7 +93,7 @@ export async function sendNFT(
             const signature = await sendAndConfirmTransaction(
               SOLANA_CONNECTION,
               tx,
-              [WALLET]
+              [MASTER_KEYPAIR]
             );
             console.log(
               "\x1b[32m", //Green Text

@@ -1,19 +1,18 @@
-import { Connection, PublicKey } from "@solana/web3.js";
+import { SOLANA_CONNECTION, TOKEN_PUBLICKEY } from "./solanaConnection";
 
-const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL as string;
-const TOKEN = new PublicKey(process.env.TOKEN as string);
-const SOLANA_CONNECTION = new Connection(SOLANA_RPC_URL);
-
-export async function getTokenAccounts(wallet: string) {    
+export async function getTokenAccounts(wallet: string) {
   const accounts = await SOLANA_CONNECTION.getProgramAccounts(
-    TOKEN, //new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
+    TOKEN_PUBLICKEY //new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
   );
-  console.log(`Found ${accounts.length} token account(s) for wallet ${wallet}.`);
+  console.log(
+    `Found ${accounts.length} token account(s) for wallet ${wallet}.`
+  );
   accounts.forEach((account, i) => {
     //Parse the account data
-    const parsedAccountInfo:any = account.account.data;
-    const mintAddress:string = parsedAccountInfo["parsed"]["info"]["mint"];
-    const tokenBalance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
+    const parsedAccountInfo: any = account.account.data;
+    const mintAddress: string = parsedAccountInfo["parsed"]["info"]["mint"];
+    const tokenBalance: number =
+      parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
     //Log results
     console.log(`Token Account No. ${i + 1}: ${account.pubkey.toString()}`);
     console.log(`--Token Mint: ${mintAddress}`);
