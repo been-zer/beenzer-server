@@ -90,7 +90,7 @@ export async function newNFT(
           )
         );
         // await newOwner(token, creator);
-        console.log(`${name} added to DB succesfully! 🎉`);
+        console.log(`🎉 ${name} added to DB succesfully!`);
         return true;
       } else {
         console.log("ERROR: newNFT.controller failed! NFT id is -1!");

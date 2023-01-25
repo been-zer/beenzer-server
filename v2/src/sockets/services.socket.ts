@@ -6,7 +6,10 @@ export const videoToGifSocket = (socket: Socket): void => {
   socket.on("videoToGif", async (video: Buffer) => {
     if (video) {
       console.log("video", video);
-      fs.writeFileSync("temp/test.mp4", video);
+      // fs.readFileSync("../../../__tests__");
+      fs.writeFileSync("temp/test.mp4", video, {
+        encoding: "utf8",
+      });
       const gif = await videoToGif(video);
       console.log("GIF", gif);
       fs.writeFileSync("temp/test.gif", gif);

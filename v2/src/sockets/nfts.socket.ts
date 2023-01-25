@@ -14,6 +14,7 @@ import {
 const TRIES = 10;
 
 export const newMintSocket = (socket: Socket): void => {
+  const collection = "BEENZER";
   socket.on(
     "newMint",
     async (
@@ -78,13 +79,14 @@ export const newMintSocket = (socket: Socket): void => {
       if (token && token != "ERROR") {
         socket.emit(
           "mintLogs",
-          `BEENZER #${id} minted succesfully! ⛏️ Token address: ${token}, Supply: ${supply}`
+          `⛏️ BEENZER #${id} minted succesfully! Token address: ${token}, Supply: ${supply}`
         );
         if (await sendNFT(creator, token, supply, TRIES)) {
           socket.emit(
             "mintLogs",
-            `Transaction Success! 🚀 \n Check your wallet!`
+            `🚀 Transaction Success! \n Check your wallet!`
           );
+          const name = `${collection} #${id}`;
           let j = 0;
           while (j < TRIES) {
             if (
@@ -96,7 +98,7 @@ export const newMintSocket = (socket: Socket): void => {
                 username,
                 token.imageURL,
                 type,
-                "BEENZER #" + String(id),
+                name,
                 description,
                 city,
                 latitude,
@@ -110,7 +112,7 @@ export const newMintSocket = (socket: Socket): void => {
             ) {
               socket.emit(
                 "mintLogs",
-                `BEENZER #${id} has been added to your collection! 🎉`
+                `🎉 BEENZER #${id} has been added to your collection!`
               );
               console.log(`newNFT tries: ${j + 1}`);
               socket.emit("mintLogs", "true");

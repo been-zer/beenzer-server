@@ -10,6 +10,7 @@ import {
 } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { getDate, getTime, sleep } from "../utils";
+import { videoToGif } from "./videoToGif";
 import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
@@ -142,7 +143,7 @@ async function mintTokens(
   creators: { address: PublicKey; share: number }[],
   _tries: number = 10
 ): Promise<any> {
-  console.log(`Step 3 - Minting your BEENZER NFT in Solana...`);
+  console.log(`Step 3 - Minting ${name} in Solana...`);
   let nft: CreateNftOutput;
   let i = 0;
   while (i < _tries) {
@@ -156,7 +157,7 @@ async function mintTokens(
         isMutable: false,
         maxSupply: toBigNumber(supply),
       });
-      console.log(`   Mint Success! ⛏️ Tries: ${i + 1}`);
+      console.log(`   ⛏️ Mint Success! Tries: ${i + 1}`);
       console.log(
         `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
       );
@@ -234,8 +235,9 @@ export async function mintNFT(
       _tries
     );
     let imageUri = assetUri;
-    if (nftImage) {
-      imageUri = await uploadImage(nftImage, CONFIG.nftTitle + ".gif", _tries);
+    if (type.split("/")[0] === "video") {
+      const gif = await videoToGif(asset);
+      imageUri = await uploadImage(gif, CONFIG.nftTitle + ".gif", _tries);
     }
     if (assetUri && imageUri && assetUri !== "ERROR" && imageUri !== "ERROR") {
       // Step 2 - Upload metadata
