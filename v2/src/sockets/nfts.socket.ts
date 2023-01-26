@@ -138,13 +138,19 @@ export const mintNFTSocket = (socket: Socket): void => {
 export const printNFTSocket = (socket: Socket): void => {
   socket.on("printNFT", async (token: string, pubkey: string) => {
     if (token.length > 22 && pubkey.length > 22) {
-      socket.emit("printLogs", `🖨️ Printing NFT ${token}...`);
-      const nftPrint = await printNFT(
-        new PublicKey(token),
-        new PublicKey(pubkey),
-        TRIES
-      );
-      socket.emit("printNFT", nftPrint);
+      let msg = `🖨️ Printing NFT ${token}...`;
+      socket.emit("printLogs", msg);
+      console.log("printLogs", msg);
+      if (await printNFT(new PublicKey(token), new PublicKey(pubkey), TRIES)) {
+        msg = `✅ - Printed NFT ${token} into ${pubkey} successfully!`;
+        socket.emit("printLogs", msg);
+        console.log("printLogs", msg);
+        socket.emit("printLogs", "true");
+      } else {
+        msg = `❌ - Transaction not confirmed!`;
+        socket.emit("printLogs", msg);
+        console.log("printLogs", msg);
+      }
     }
   });
 };
