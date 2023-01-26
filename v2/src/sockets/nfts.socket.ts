@@ -16,9 +16,9 @@ import dotenv from "dotenv";
 dotenv.config();
 const TRIES = Number(process.env.ASYNC_TRIES);
 
-export const newMintSocket = (socket: Socket): void => {
+export const mintNFTSocket = (socket: Socket): void => {
   socket.on(
-    "newMint",
+    "mintNFT",
     async (
       asset: Buffer,
       type: string,
@@ -36,7 +36,7 @@ export const newMintSocket = (socket: Socket): void => {
       minLon: number,
       image: Buffer | boolean | undefined
     ) => {
-      console.log("newMint", username, creator);
+      console.log("mintNFT", username, creator);
       const nftFile = type.split("/")[0] || "unknown";
       let id = 0;
       let i = 0;
@@ -135,6 +135,20 @@ export const newMintSocket = (socket: Socket): void => {
   );
 };
 
+export const printNFTSocket = (socket: Socket): void => {
+  socket.on("printNFT", async (token: string, pubkey: string) => {
+    if (token.length > 22 && pubkey.length > 22) {
+      socket.emit("printLogs", `🖨️ Printing NFT ${token}...`);
+      const nftPrint = await printNFT(
+        new PublicKey(token),
+        new PublicKey(pubkey),
+        TRIES
+      );
+      socket.emit("printNFT", nftPrint);
+    }
+  });
+};
+
 export const getUserNFTsSocket = (socket: Socket): void => {
   socket.on("getUserNFTs", async (pubkey: string) => {
     if (pubkey.length > 22) {
@@ -166,7 +180,8 @@ export const uploadVideoSocket = (socket: Socket): void => {
 };
 
 const nftsSocket = (socket: Socket): void => {
-  newMintSocket(socket);
+  mintNFTSocket(socket);
+  printNFTSocket(socket);
   getUserNFTsSocket(socket);
   getAllNFTsSocket(socket);
   getMapNFTsSocket(socket);
