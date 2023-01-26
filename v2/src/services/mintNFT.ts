@@ -191,8 +191,8 @@ async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  _nftImage: Buffer,
-  _collection: PublicKey,
+  _nftImage: Buffer, // Optional
+  _collection: PublicKey, // Optional
   _tries: number = 10 // Optional
 ): Promise<any> {
   const nftName = async () => {
