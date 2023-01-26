@@ -15,13 +15,14 @@ import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
   MASTER_KEYPAIR,
+  METAPLEX_BUNDLR_URI,
 } from "./solanaConnection";
 
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
   .use(keypairIdentity(MASTER_KEYPAIR))
   .use(
     bundlrStorage({
-      address: `https://node1.bundlr.network`,
+      address: METAPLEX_BUNDLR_URI,
       providerUrl: SOLANA_RPC_URL,
       timeout: 360000,
     })
