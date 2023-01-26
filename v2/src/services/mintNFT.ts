@@ -28,11 +28,11 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
     })
   );
 
-async function uploadAsset(
+export async function uploadAsset(
   data: any,
   fileName: string,
   _tries: number = 10
-): Promise<any> {
+): Promise<string> {
   console.log(`Step 1 - Uploading Asset to Arweave...`);
   let i = 0;
   while (i < _tries) {
@@ -58,11 +58,11 @@ async function uploadAsset(
   return "ERROR";
 }
 
-async function uploadImage(
+export async function uploadImage(
   data: any,
   fileName: string,
   _tries: number = 10
-): Promise<any> {
+): Promise<string> {
   console.log(`Step 1 - Uploading Image to Arweave...`);
   let i = 0;
   while (i < _tries) {
@@ -84,11 +84,11 @@ async function uploadImage(
       sleep(3000);
       i++;
     }
-    return "ERROR";
   }
+  return "ERROR";
 }
 
-async function uploadMetadata(
+export async function uploadMetadata(
   imageUri: string,
   assetUri: string,
   assetType: string,
@@ -96,7 +96,7 @@ async function uploadMetadata(
   description: string,
   attributes: { trait_type: string; value: string }[],
   _tries: number = 10
-): Promise<any> {
+): Promise<string> {
   console.log(`Step 2 - Uploading Metadata to Arweave...`);
   let i = 0;
   while (i < _tries) {
@@ -135,7 +135,7 @@ async function uploadMetadata(
   return "ERROR";
 }
 
-async function mintTokens(
+export async function mintToken(
   metadataUri: string,
   name: string,
   supply: number,
@@ -143,7 +143,7 @@ async function mintTokens(
   symbol: string,
   creators: { address: PublicKey; share: number }[],
   _tries: number = 10
-): Promise<any> {
+): Promise<PublicKey | string> {
   console.log(`Step 3 - Minting ${name} in Solana...`);
   let nft: CreateNftOutput;
   let i = 0;
@@ -173,7 +173,7 @@ async function mintTokens(
   return "ERROR";
 }
 
-export async function mintNFT(
+async function mintNFT(
   id: number,
   asset: Buffer,
   symbol: string,
@@ -267,7 +267,7 @@ export async function mintNFT(
       );
       if (metadataUri && metadataUri !== "ERROR") {
         // Step 3 - Mint Master Edition
-        let token = await mintTokens(
+        let token = await mintToken(
           metadataUri,
           METADATA.nftTitle,
           METADATA.maxSupply,
@@ -277,7 +277,7 @@ export async function mintNFT(
           _tries
         );
         if (token && token !== "ERROR") {
-          token.imageURL = imageUri;
+          // token.imageURL = imageUri;
           return token;
         }
       }
@@ -285,3 +285,5 @@ export async function mintNFT(
   }
   return "ERROR";
 }
+
+export default mintNFT;

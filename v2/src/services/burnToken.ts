@@ -12,7 +12,7 @@ import { SOLANA_CONNECTION, MASTER_KEYPAIR } from "./solanaConnection";
 export async function burnToken(
   token: PublicKey,
   _quantity: number = 1,
-  _decimals: number = 0,
+  _decimals: number = 2,
   _tries: number = 10
 ): Promise<boolean> {
   let i = 0;
