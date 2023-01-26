@@ -176,6 +176,7 @@ async function mintTokens(
 export async function mintNFT(
   id: number,
   asset: Buffer,
+  symbol: string,
   type: string,
   supply: number,
   creator: string,
@@ -189,18 +190,21 @@ export async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  nftImage: any, // Optional
-  _tries: number = 10
+  _nftImage: any, // Optional
+  _tries: number = 10 // Optional
 ): Promise<any> {
   const nftName = async () => {
     if (id > 0) {
-      return `BEENZER #${Number(id)}` as string;
+      return `${symbol} #${Number(id)}` as string;
     } else {
       console.log("ERROR: NFT id wrong!!!");
       return "ERROR";
     }
   };
-  const CONFIG = {
+  const date = getDate();
+  const year = date.slice(0, 4);
+  const time = getTime();
+  const METADATA = {
     nftType: type,
     nftTitle: await nftName(),
     description: description,
@@ -209,8 +213,8 @@ export async function mintNFT(
       { trait_type: "USERNAME", value: username },
       { trait_type: "TYPE", value: type },
       { trait_type: "SUPPLY", value: String(supply) },
-      { trait_type: "DATE", value: getDate() },
-      { trait_type: "TIME UTC", value: getTime() },
+      { trait_type: "DATE", value: date },
+      { trait_type: "TIME UTC", value: time },
       { trait_type: "CITY", value: city },
       { trait_type: "LATITUDE", value: String(latitude) },
       { trait_type: "LONGITUDE", value: String(longitude) },
@@ -221,8 +225,12 @@ export async function mintNFT(
       { trait_type: "MIN LON", value: String(minLon) },
     ],
     sellerFeeBasisPoints: 1000, // 1000 bp = 10% royalties
-    symbol: "BEENZER",
-    supply: supply,
+    symbol: symbol,
+    edition: `${symbol} ${year}`,
+    collection: new PublicKey("jhsaha"),
+    maxSupply: supply,
+    isCollection: true,
+    isMutabe: false,
     creators: [
       { address: new PublicKey(creator), share: 80 },
       { address: MASTER_KEYPAIR.publicKey, share: 20 },
@@ -232,34 +240,40 @@ export async function mintNFT(
     // Step 1 - Upload media
     const assetUri = await uploadAsset(
       asset,
-      `${CONFIG.nftTitle}.${type.split("/")[1]}`,
+      `${METADATA.nftTitle}.${type.split("/")[1]}`,
       _tries
     );
     let imageUri = assetUri;
     if (type.split("/")[0] === "video") {
       const gif = await videoToGif(asset, 3, 10);
-      imageUri = await uploadImage(gif, CONFIG.nftTitle + ".gif", _tries);
+      imageUri = await uploadImage(gif, METADATA.nftTitle + ".gif", _tries);
+    } else if (_nftImage) {
+      imageUri = await uploadImage(
+        _nftImage,
+        METADATA.nftTitle + ".png",
+        _tries
+      );
     }
     if (assetUri && imageUri && assetUri !== "ERROR" && imageUri !== "ERROR") {
       // Step 2 - Upload metadata
       const metadataUri = await uploadMetadata(
         imageUri,
         assetUri,
-        CONFIG.nftType,
-        CONFIG.nftTitle,
-        CONFIG.description,
-        CONFIG.attributes,
+        METADATA.nftType,
+        METADATA.nftTitle,
+        METADATA.description,
+        METADATA.attributes,
         _tries
       );
       if (metadataUri && metadataUri !== "ERROR") {
-        // Step 3 - Mint NFT
+        // Step 3 - Mint Master Edition
         let token = await mintTokens(
           metadataUri,
-          CONFIG.nftTitle,
-          CONFIG.supply,
-          CONFIG.sellerFeeBasisPoints,
-          CONFIG.symbol,
-          CONFIG.creators,
+          METADATA.nftTitle,
+          METADATA.maxSupply,
+          METADATA.sellerFeeBasisPoints,
+          METADATA.symbol,
+          METADATA.creators,
           _tries
         );
         if (token && token !== "ERROR") {

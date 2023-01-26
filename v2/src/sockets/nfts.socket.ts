@@ -11,10 +11,10 @@ import {
   getMapNFTs,
 } from "../controllers/nfts.controller";
 
+const SYMBOL = "BEENZER";
 const TRIES = 10;
 
 export const newMintSocket = (socket: Socket): void => {
-  const collection = "BEENZER";
   socket.on(
     "newMint",
     async (
@@ -45,8 +45,10 @@ export const newMintSocket = (socket: Socket): void => {
         if (await addNFTCounter()) {
           id = (await getNFTCounter()) + 1;
           if (id) {
-            socket.emit("mintLogs", `Minting ${nftFile} BEENZER #${id}...`);
-            console.log(`Minting ${nftFile} BEENZER #${id}... Tries: ${i + 1}`);
+            socket.emit("mintLogs", `Minting ${nftFile} ${SYMBOL} #${id}...`);
+            console.log(
+              `Minting ${nftFile} ${SYMBOL} #${id}... Tries: ${i + 1}`
+            );
             i = TRIES;
             break;
           }
@@ -58,6 +60,7 @@ export const newMintSocket = (socket: Socket): void => {
         id,
         asset,
         type,
+        SYMBOL,
         supply,
         creator,
         username,
@@ -83,7 +86,7 @@ export const newMintSocket = (socket: Socket): void => {
             "mintLogs",
             `🚀 Transaction Success! \n Check your wallet!`
           );
-          const name = `${collection} #${id}`;
+          const name = `${SYMBOL} #${id}`;
           let j = 0;
           while (j < TRIES) {
             console.log(`Adding ${name} to DB... Tries: ${j + 1}`);
