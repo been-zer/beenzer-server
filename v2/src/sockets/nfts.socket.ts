@@ -12,8 +12,9 @@ import {
   getAllNFTs,
   getMapNFTs,
 } from "../controllers/nfts.controller";
-
-const TRIES = 10;
+import dotenv from "dotenv";
+dotenv.config();
+const TRIES = Number(process.env.ASYNC_TRIES);
 
 export const newMintSocket = (socket: Socket): void => {
   socket.on(
