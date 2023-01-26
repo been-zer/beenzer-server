@@ -27,63 +27,67 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 
 export async function printNFT(
   originalNFT: PublicKey,
-  destination: PublicKey
-): Promise<PrintNewEditionOutput | boolean | string> {
-  try {
-    const nftMaster: Nft | Sft | any = await METAPLEX.nfts().findByMint({
-      mintAddress: originalNFT,
-      loadJsonMetadata: true,
-    });
-    let supply: number;
-    let maxSupply: number;
-    let freeSupply = 0;
-    if (nftMaster) {
-      supply = Number(nftMaster.edition.supply);
-      maxSupply = Number(nftMaster.edition.maxSupply);
-      freeSupply = maxSupply - supply;
-    } else {
-      const msg =
-        "Master Edition NFT doesn't found! Probably is already burned.";
-      console.log(msg);
-      return msg;
-    }
-    if (!freeSupply) {
-      console.log(
-        "Trying to print a 0 free supply NFT! 🔥 Burning master editon NFT!"
-      );
-      if (await burnNFT(originalNFT)) {
-        return true;
+  destination: PublicKey,
+  _tries: number = 10
+): Promise<boolean> {
+  let i = 0;
+  while (i < _tries) {
+    try {
+      const nftMaster: Nft | Sft | any = await METAPLEX.nfts().findByMint({
+        mintAddress: originalNFT,
+        loadJsonMetadata: true,
+      });
+      let supply: number;
+      let maxSupply: number;
+      let freeSupply = 0;
+      if (nftMaster) {
+        supply = Number(nftMaster.edition.supply);
+        maxSupply = Number(nftMaster.edition.maxSupply);
+        freeSupply = maxSupply - supply;
       } else {
+        console.log(
+          "Master Edition NFT doesn't found! Probably is already burned."
+        );
         return false;
       }
-    }
-    console.log(
-      `🖨️ Printing new NFT edition from ${originalNFT.toBase58()}...`,
-      `Current supply ${supply + 1} from maxSupply ${maxSupply}`
-    );
-    const nftCopy: PrintNewEditionOutput =
-      await METAPLEX.nfts().printNewEdition({
-        originalMint: originalNFT,
-        newOwner: destination,
-      });
-    if (nftCopy) {
-      if (freeSupply === 1) {
-        burnNFT(originalNFT);
+      if (!freeSupply) {
+        console.log(
+          "Trying to print a 0 free supply NFT! 🔥 Burning master editon NFT!"
+        );
+        if (await burnNFT(originalNFT)) {
+          return true;
+        } else {
+          return false;
+        }
       }
-      return nftCopy;
-    } else {
-      console.log("❌ - Printing failed for unkown reason! Check logs.");
-      return false;
+      console.log(
+        `🖨️ Printing new NFT edition from ${originalNFT.toBase58()}...`,
+        `Current supply ${supply + 1} from maxSupply ${maxSupply}`
+      );
+      const nftCopy: PrintNewEditionOutput =
+        await METAPLEX.nfts().printNewEdition({
+          originalMint: originalNFT,
+          newOwner: destination,
+        });
+      if (nftCopy) {
+        if (freeSupply === 1) {
+          burnNFT(originalNFT);
+        }
+        console.log(
+          "✅ Succefully printed new NFT edition!",
+          `Tries: ${i + 1}`
+        );
+        return true;
+      }
+    } catch (err) {
+      if (String(err).includes("max supply")) {
+        console.log("Trying to print a full supply NFT!");
+      }
+      console.log("❌ - Printing failed for unkown reason! Check logs.", err);
+      i++;
     }
-  } catch (err) {
-    if (String(err).includes("max supply")) {
-      const msg = "Trying to print a full supply NFT!";
-      console.log(msg);
-      return msg;
-    }
-    console.log(err);
-    return String(err);
   }
+  return false;
 }
 
 // printNFT(

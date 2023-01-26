@@ -1,7 +1,8 @@
 import { Socket } from "socket.io";
+import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../utils";
 import { mintNFT } from "../services/mintNFT";
-import { sendNFT } from "../services/sendNFT";
+import { printNFT } from "../services/printNFT";
 import { getUserNFTs } from "../services/getUserNFTs";
 import {
   addNFTCounter,
@@ -81,7 +82,7 @@ export const newMintSocket = (socket: Socket): void => {
           "mintLogs",
           `⛏️ BEENZER #${id} minted succesfully! Token address: ${token}, Supply: ${supply}`
         );
-        if (await sendNFT(creator, token, supply, TRIES)) {
+        if (await printNFT(token, new PublicKey(creator), TRIES)) {
           socket.emit(
             "mintLogs",
             `🚀 Transaction Success! \n Check your wallet!`
