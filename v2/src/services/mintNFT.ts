@@ -93,6 +93,7 @@ export async function uploadMetadata(
   imageUri: string,
   assetUri: string,
   assetType: string,
+  symbol: string,
   nftName: string,
   description: string,
   attributes: { trait_type: string; value: string }[],
@@ -106,7 +107,7 @@ export async function uploadMetadata(
         name: nftName,
         description: description,
         image: imageUri || assetType,
-        symbol: "BEENZER",
+        symbol: symbol,
         attributes: attributes,
         properties: {
           files: [
@@ -192,7 +193,7 @@ async function mintNFT(
   maxLon: number,
   minLon: number,
   _nftImage: Buffer, // Optional
-  _collection: PublicKey, // Optional
+  _collection: PublicKey = MASTER_COLLECTION, // Optional
   _tries: number = 10 // Optional
 ): Promise<any> {
   const nftName = async () => {
@@ -229,7 +230,7 @@ async function mintNFT(
     sellerFeeBasisPoints: 1000, // 1000 bp = 10% royalties
     symbol: symbol,
     edition: `${symbol} ${year}`,
-    collection: new PublicKey("jhsaha"),
+    collection: _collection,
     maxSupply: supply,
     isCollection: true,
     isMutabe: false,
@@ -262,6 +263,7 @@ async function mintNFT(
         imageUri,
         assetUri,
         METADATA.nftType,
+        METADATA.symbol,
         METADATA.nftTitle,
         METADATA.description,
         METADATA.attributes,
