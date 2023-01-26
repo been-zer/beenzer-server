@@ -192,7 +192,7 @@ async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  _nftImage: Buffer, // Optional
+  _nftImage: Buffer | boolean = false, // Optional
   _collection: PublicKey = MASTER_COLLECTION, // Optional
   _tries: number = 10 // Optional
 ): Promise<any> {

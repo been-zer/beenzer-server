@@ -25,7 +25,7 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
     })
   );
 
-export async function printNFT(
+async function printNFT(
   originalNFT: PublicKey,
   destination: PublicKey,
   _tries: number = 10
@@ -90,7 +90,4 @@ export async function printNFT(
   return false;
 }
 
-// printNFT(
-//   new PublicKey("E63AdnWPKJcF2fdTvp1yz74KQ3z7NWAvMCjM5n7MJXB6"),
-//   new PublicKey("3o7UynEE8fwboPydXEvU2xTuB1n9xXLgcCMw3FuzrH7A")
-// );
+export default printNFT;

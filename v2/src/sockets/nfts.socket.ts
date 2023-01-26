@@ -1,8 +1,9 @@
 import { Socket } from "socket.io";
 import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../utils";
-import { mintNFT } from "../services/mintNFT";
-import { printNFT } from "../services/printNFT";
+import { SYMBOL, MASTER_COLLECTION } from "../services/solanaConnection";
+import mintNFT from "../services/mintNFT";
+import printNFT from "../services/printNFT";
 import { getUserNFTs } from "../services/getUserNFTs";
 import {
   addNFTCounter,
@@ -12,7 +13,6 @@ import {
   getMapNFTs,
 } from "../controllers/nfts.controller";
 
-const SYMBOL = "BEENZER";
 const TRIES = 10;
 
 export const newMintSocket = (socket: Socket): void => {
@@ -75,6 +75,7 @@ export const newMintSocket = (socket: Socket): void => {
         maxLon,
         minLon,
         false,
+        MASTER_COLLECTION,
         TRIES
       );
       if (token && token != "ERROR") {
