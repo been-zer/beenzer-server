@@ -14,6 +14,7 @@ import { videoToGif } from "./videoToGif";
 import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
+  MASTER_COLLECTION,
   MASTER_KEYPAIR,
   METAPLEX_BUNDLR_URI,
 } from "./solanaConnection";
@@ -190,7 +191,8 @@ async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  _nftImage: any, // Optional
+  _nftImage: Buffer,
+  _collection: PublicKey,
   _tries: number = 10 // Optional
 ): Promise<any> {
   const nftName = async () => {
@@ -247,7 +249,7 @@ async function mintNFT(
     if (type.split("/")[0] === "video") {
       const gif = await videoToGif(asset, 3, 10);
       imageUri = await uploadImage(gif, METADATA.nftTitle + ".gif", _tries);
-    } else if (_nftImage) {
+    } else if (type.split("/")[0] === "audio") {
       imageUri = await uploadImage(
         _nftImage,
         METADATA.nftTitle + ".png",

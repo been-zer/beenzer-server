@@ -13,6 +13,8 @@ export const MASTER_SECRET = String(process.env.MASTER_WALLET_KEYPAIR)
 export const MASTER_KEYPAIR = Keypair.fromSecretKey(
   new Uint8Array(MASTER_SECRET)
 );
+// Master NFT Collection
+export const MASTER_COLLECTION = new PublicKey(String(process.env.MASTER_COLLECTION));
 // Main token
 export const TOKEN = String(process.env.TOKEN);
 export const TOKEN_PUBLICKEY = new PublicKey(TOKEN);
