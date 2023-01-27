@@ -279,7 +279,6 @@ async function mintNFT(
           _tries
         );
         if (token && token !== "ERROR") {
-          // token.imageURL = imageUri;
           return token;
         }
       }
