@@ -168,7 +168,7 @@ export async function mintToken(
       i = 10;
       return nft.mintAddress;
     } catch (err) {
-      console.log(`Minting NFT failed!!! ${i + 1}`);
+      console.log(`Minting NFT failed!!! Tries: ${i + 1}`);
       sleep(5000);
       i++;
     }
