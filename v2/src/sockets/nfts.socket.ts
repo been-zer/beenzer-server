@@ -1,7 +1,11 @@
 import { Socket } from "socket.io";
 import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../utils";
-import { SYMBOL, MASTER_COLLECTION } from "../services/solanaConnection";
+import {
+  SYMBOL,
+  MASTER_COLLECTION,
+  MASTER_PUBLICKEY,
+} from "../services/solanaConnection";
 import mintNFT from "../services/mintNFT";
 import printNFT from "../services/printNFT";
 import { getUserNFTs } from "../services/getUserNFTs";
@@ -82,6 +86,8 @@ export const mintNFTSocket = (socket: Socket): void => {
         _image,
         _mintCcy,
         MASTER_COLLECTION,
+        MASTER_PUBLICKEY,
+        false,
         TRIES
       );
       if (token && token != "ERROR") {

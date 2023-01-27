@@ -1,9 +1,12 @@
-import fs from "fs";
+import { PublicKey } from "@solana/web3.js";
 import { MASTER_PUBLICKEY } from "./solanaConnection";
 import { uploadImage, uploadMetadata, mintToken } from "./mintNFT";
-import { PublicKey } from "@solana/web3.js";
+import fs from "fs";
+
+const imageBuffer = fs.readFileSync("src/assets/logo.png");
 
 export async function mintCollection(
+  buffer: Buffer = imageBuffer,
   name: string = "BEENZER COLLECTION",
   symbol: string = "BEENZER",
   website: string = "https://beenzer.app",
@@ -15,7 +18,7 @@ export async function mintCollection(
   discord: string = "https://discord.gg/Ta9X6zbg",
   telegram: string = "https://t.me/+VgZorKQGP0gwY2Fk",
   tiktok: string = "https://tiktok.com/beenzer_app",
-  youtube: string = "https://www.youtube.com/@beenzer",
+  youtube: string = "https://youtube.com/@beenzer",
   creators: { address: PublicKey; share: number }[] = [
     { address: MASTER_PUBLICKEY, share: 100 },
   ],
@@ -24,8 +27,7 @@ export async function mintCollection(
   let i = 0;
   while (i < _tries) {
     try {
-      const imageBuffer = fs.readFileSync("../assets/logo.png");
-      const imageUri = await uploadImage(imageBuffer, name + ".png", _tries);
+      const imageUri = await uploadImage(buffer, name + ".png", _tries);
       const attributes = [
         { trait_type: "WEBSITE", value: website },
         { trait_type: "DAO", value: dao },
@@ -56,7 +58,6 @@ export async function mintCollection(
         creators,
         _tries
       );
-      console.log(token);
       return token;
     } catch (err) {
       console.log(err);
@@ -65,3 +66,5 @@ export async function mintCollection(
   }
   return false;
 }
+
+mintCollection();

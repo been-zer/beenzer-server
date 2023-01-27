@@ -17,6 +17,7 @@ import {
   MASTER_COLLECTION,
   MASTER_KEYPAIR,
   METAPLEX_BUNDLR_URI,
+  MASTER_PUBLICKEY,
 } from "./solanaConnection";
 
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
@@ -162,7 +163,7 @@ export async function mintToken(
       });
       console.log(`⛏️  Mint Success! Tries: ${i + 1}`);
       console.log(
-        `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}?cluster=mainnet-beta`
+        `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}`
       );
       i = 10;
       return nft.mintAddress;
@@ -196,6 +197,8 @@ async function mintNFT(
   _nftImage: Buffer | boolean = false, // Optional
   _mintCcy: string = "SOL", // Optional
   _collection: PublicKey = MASTER_COLLECTION, // Optional
+  _collectionAuthority: PublicKey = MASTER_PUBLICKEY, // Optional
+  _collectionIsSized: boolean = false, // Optional
   _tries: number = 10 // Optional
 ): Promise<any> {
   const date = getDate();
@@ -224,15 +227,18 @@ async function mintNFT(
     ],
     sellerFeeBasisPoints: 1000, // 1000 bp = 10% royalties
     symbol: symbol,
-    edition: `${symbol} ${year}`,
-    collection: _collection,
     maxSupply: supply,
     isCollection: true,
+    collection: _collection,
+    collectionAuthority: _collectionAuthority,
+    collectionIsSized: _collectionIsSized,
+    isVerified: true,
     isMutabe: false,
     creators: [
       { address: new PublicKey(creator), share: 80 },
       { address: MASTER_KEYPAIR.publicKey, share: 20 },
     ],
+    year: String(year),
   };
   if (asset) {
     // Step 1 - Upload media
