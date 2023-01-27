@@ -85,8 +85,8 @@ export const mintNFTSocket = (socket: Socket): void => {
         minLon,
         _image,
         _mintCcy,
-        MASTER_COLLECTION,
-        MASTER_PUBLICKEY,
+        MASTER_COLLECTION, // collection
+        MASTER_PUBLICKEY, // owner
         false,
         TRIES
       );
