@@ -193,8 +193,8 @@ async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  _ccy: string = "SOL", // Optional
   _nftImage: Buffer | boolean = false, // Optional
+  _mintCcy: string = "SOL", // Optional
   _collection: PublicKey = MASTER_COLLECTION, // Optional
   _tries: number = 10 // Optional
 ): Promise<any> {
@@ -218,7 +218,7 @@ async function mintNFT(
       { trait_type: "USERNAME", value: username },
       { trait_type: "TYPE", value: type },
       { trait_type: "SUPPLY", value: String(supply) },
-      { trait_type: "FLOOR", value: `${floor} ${_ccy}` },
+      { trait_type: "FLOOR", value: `${floor} ${_mintCcy}` },
       { trait_type: "DATE", value: date },
       { trait_type: "TIME UTC", value: time },
       { trait_type: "CITY", value: city },
