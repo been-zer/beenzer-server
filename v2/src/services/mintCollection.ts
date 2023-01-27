@@ -1,23 +1,26 @@
 import fs from "fs";
-import { uploadImage, uploadMetadata } from "./mintNFT";
+import { MASTER_PUBLICKEY } from "./solanaConnection";
+import { uploadImage, uploadMetadata, mintToken } from "./mintNFT";
+import { PublicKey } from "@solana/web3.js";
 
 export async function mintCollection(
-  name: string,
-  symbol: string,
-  website: string,
-  dao: string,
-  market: string,
-  description: string,
-  twitter: string,
-  instagram: string,
-  discord: string,
-  telegram: string,
-  tiktok: string,
-  youtube: string,
-  magiceden: string,
-  opensea: string,
+  name: string = "BEENZER COLLECTION",
+  symbol: string = "BEENZER",
+  website: string = "https://beenzer.app",
+  dao: string = "https://dao.beenzer.app",
+  market: string = "https://market.beenzer.app",
+  description: string = "Beenzer Collection is the NFT Master for BEENZER #♾️ verified collection. Check our links to be part of the best web3 community! 💚",
+  twitter: string = "https://twitter.com/beenzer_app",
+  instagram: string = "https://instagram.com/beenzer_app",
+  discord: string = "https://discord.gg/Ta9X6zbg",
+  telegram: string = "https://t.me/+VgZorKQGP0gwY2Fk",
+  tiktok: string = "https://tiktok.com/beenzer_app",
+  youtube: string = "https://www.youtube.com/@beenzer",
+  creators: { address: PublicKey; share: number }[] = [
+    { address: MASTER_PUBLICKEY, share: 100 },
+  ],
   _tries: number = 10
-): Promise<boolean> {
+): Promise<PublicKey | string | boolean> {
   let i = 0;
   while (i < _tries) {
     try {
@@ -33,8 +36,6 @@ export async function mintCollection(
         { trait_type: "TELEGRAM", value: telegram },
         { trait_type: "TIKTOK", value: tiktok },
         { trait_type: "YOUTUBE", value: youtube },
-        { trait_type: "MAGIC_EDEN", value: magiceden },
-        { trait_type: "OPEN_SEA", value: opensea },
       ];
       const metadataUri = await uploadMetadata(
         imageUri,
@@ -43,11 +44,20 @@ export async function mintCollection(
         symbol,
         name,
         description,
-        {}
+        attributes,
+        _tries
       );
-
+      const token = await mintToken(
+        metadataUri,
+        name,
+        0,
+        0,
+        symbol,
+        creators,
+        _tries
+      );
       console.log(token);
-      return true;
+      return token;
     } catch (err) {
       console.log(err);
       i++;
