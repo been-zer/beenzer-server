@@ -165,7 +165,7 @@ export async function mintToken(
       console.log(
         `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}`
       );
-      i = 10;
+      i = _tries;
       return nft.mintAddress;
     } catch (err) {
       console.log(`Minting NFT failed!!! Tries: ${i + 1}`);
