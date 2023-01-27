@@ -11,8 +11,8 @@ import {
   SOLANA_CONNECTION,
   MASTER_KEYPAIR,
   MASTER_PUBLICKEY,
-} from "./solanaConnection";
-import { sleep } from "../utils";
+} from "../solanaConnection";
+import { sleep } from "../../utils";
 
 export async function sendNFT(
   destination: string,

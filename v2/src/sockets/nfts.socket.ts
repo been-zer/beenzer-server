@@ -6,9 +6,9 @@ import {
   MASTER_COLLECTION,
   MASTER_PUBLICKEY,
 } from "../services/solanaConnection";
-import mintNFT from "../services/mintNFT";
-import printNFT from "../services/printNFT";
-import { getUserNFTs } from "../services/getUserNFTs";
+import mintNFT from "../services/nfts/mintNFT";
+import printNFT from "../services/nfts/printNFT";
+import { getUserNFTs } from "../services/nfts/getUserNFTs";
 import {
   addNFTCounter,
   getNFTCounter,

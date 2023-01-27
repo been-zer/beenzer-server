@@ -1,14 +1,16 @@
 import fs from "fs";
-import { mintNFT } from "./mintNFT";
+import mintNFT from "./mintNFT";
 
 const video = fs.readFileSync("./src/services/13.mp4");
 const gif = fs.readFileSync("./src/services/out.gif");
 
 mintNFT(
-  6969,
+  "BEENZER test",
   video,
+  "BEENZER",
   "video/mp4",
-  1,
+  0,
+  0,
   "2TyAp92s7TEksnycmYY2Fk5i1j5anwFTqECyuFMVhomP",
   "alex",
   "video test",

@@ -9,8 +9,8 @@ import {
   toBigNumber,
 } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
-import { getDate, getTime, sleep } from "../utils";
-import { videoToGif } from "./videoToGif";
+import { getDate, getTime, sleep } from "../../utils";
+import { videoToGif } from "../videoToGif";
 import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
@@ -18,7 +18,7 @@ import {
   MASTER_KEYPAIR,
   METAPLEX_BUNDLR_URI,
   MASTER_PUBLICKEY,
-} from "./solanaConnection";
+} from "../solanaConnection";
 
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
   .use(keypairIdentity(MASTER_KEYPAIR))

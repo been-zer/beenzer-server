@@ -15,7 +15,7 @@ import {
   MASTER_KEYPAIR,
   METAPLEX_BUNDLR_URI,
   MARKETPLACE_PUBKEY,
-} from "./solanaConnection";
+} from "../solanaConnection";
 
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
   .use(keypairIdentity(MASTER_KEYPAIR))

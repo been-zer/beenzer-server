@@ -15,7 +15,7 @@ import {
   TOKEN_PUBLICKEY,
   TOKEN_ACCOUNT_PUBLICKEY,
   TOKEN_CREATOR,
-} from "./solanaConnection";
+} from "../solanaConnection";
 
 export const sendToken = async (
   _pubkey: string,

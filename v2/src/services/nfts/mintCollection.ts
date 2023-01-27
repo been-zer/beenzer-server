@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { MASTER_PUBLICKEY } from "./solanaConnection";
+import { MASTER_PUBLICKEY } from "../solanaConnection";
 import { uploadImage, uploadMetadata, mintToken } from "./mintNFT";
 import fs from "fs";
 

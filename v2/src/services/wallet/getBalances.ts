@@ -1,5 +1,5 @@
 import { PublicKey, TokenAccountsFilter } from "@solana/web3.js";
-import { SOLANA_CONNECTION, MASTER_PUBLICKEY } from "./solanaConnection";
+import { SOLANA_CONNECTION, MASTER_PUBLICKEY } from "../solanaConnection";
 
 export async function balanceSOL(_publicKey: PublicKey): Promise<number> {
   try {

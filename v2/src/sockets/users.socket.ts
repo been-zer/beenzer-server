@@ -19,7 +19,7 @@ import {
   createMessages,
   // deleteMessages
 } from "../controllers/messages.controller";
-import { getUserNFTs } from "../services/getUserNFTs";
+import { getUserNFTs } from "../services/nfts/getUserNFTs";
 
 export const newConnectionSocket = (socket: Socket): void => {
   socket.on("newConnection", async (pubkey: string) => {

@@ -7,11 +7,12 @@ import {
   createBurnCheckedInstruction,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import { SOLANA_CONNECTION, MASTER_KEYPAIR } from "./solanaConnection";
+import { SOLANA_CONNECTION, MASTER_KEYPAIR } from "../solanaConnection";
 
-export async function burnNFT(
+export async function burnToken(
   token: PublicKey,
   _quantity: number = 1,
+  _decimals: number = 2,
   _tries: number = 10
 ): Promise<boolean> {
   let i = 0;
@@ -27,8 +28,8 @@ export async function burnNFT(
         account, // PublicKey of Owner's Associated Token Account
         token, // Public Key of the Token Mint Address
         MASTER_KEYPAIR.publicKey, // Public Key of Owner's Wallet
-        _quantity, // Number of tokens to burn
-        0 // Number of Decimals of the Token Mint
+        _quantity * 10 ** _decimals, // Number of tokens to burn
+        _decimals // Number of Decimals of the Token Mint
       );
       console.log(`✅ - Burn instruction created!`);
       console.log(`Step 2 - Creating Transaction Instructions...`);
@@ -54,7 +55,7 @@ export async function burnNFT(
         throw new Error("❌ - Transaction not confirmed.");
       }
       console.log(
-        "🔥 NFT BURNED!🔥",
+        "🔥 TOKEN BURNED!🔥",
         `Tries: ${i + 1}`,
         "\n",
         `https://solscan.io/${txid}?cluster=mainnet`

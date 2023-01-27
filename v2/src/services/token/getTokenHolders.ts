@@ -1,5 +1,5 @@
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { SOLANA_CONNECTION, TOKEN } from "./solanaConnection";
+import { SOLANA_CONNECTION, TOKEN } from "../solanaConnection";
 
 export const getTokenHolders = async (_token: string = TOKEN) => {
   const accounts = await SOLANA_CONNECTION.getProgramAccounts(

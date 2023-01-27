@@ -1,4 +1,4 @@
-import { SOLANA_CONNECTION, TOKEN_PUBLICKEY } from "./solanaConnection";
+import { SOLANA_CONNECTION, TOKEN_PUBLICKEY } from "../solanaConnection";
 
 export async function getTokenAccounts(wallet: string) {
   const accounts = await SOLANA_CONNECTION.getProgramAccounts(
