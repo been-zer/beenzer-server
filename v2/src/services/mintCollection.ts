@@ -28,7 +28,7 @@ export async function mintCollection(
       const imageUri = await uploadImage(imageBuffer, name + ".png", _tries);
       const attributes = [
         { trait_type: "WEBSITE", value: website },
-        { trait_type: "DAO_APP", value: dao },
+        { trait_type: "DAO", value: dao },
         { trait_type: "MARKET", value: market },
         { trait_type: "TWITTER", value: twitter },
         { trait_type: "INSTAGRAM", value: instagram },
