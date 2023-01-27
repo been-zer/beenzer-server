@@ -172,16 +172,54 @@ export const printNFTSocket = (socket: Socket): void => {
       let msg = `🖨️ Printing NFT ${token}...`;
       socket.emit("printLogs", msg);
       console.log("printLogs", msg);
-      if (await printNFT(new PublicKey(token), new PublicKey(pubkey), TRIES)) {
-        msg = `✅ - Printed NFT ${token} into ${pubkey} successfully!`;
-        socket.emit("printLogs", msg);
-        console.log("printLogs", msg);
-        socket.emit("printLogs", "true");
-      } else {
-        msg = `❌ - Transaction not confirmed!`;
-        socket.emit("printLogs", msg);
-        console.log("printLogs", msg);
-      }
+      const copy = await printNFT(
+        new PublicKey(token),
+        new PublicKey(pubkey),
+        TRIES
+      );
+      console.log(copy);
+      // if (copy) {
+      //   while (i < TRIES) {
+      //     let i = 0;
+
+      //     if (
+      //       await newNFT(
+      //         id,
+      //         copy.toBase58(),
+      //         edition,
+      //         supply,
+      //         floor,
+      //         _mintCcy,
+      //         creator,
+      //         username,
+      //         token.imageURL,
+      //         type,
+      //         name,
+      //         description,
+      //         city,
+      //         latitude,
+      //         longitude,
+      //         distance,
+      //         maxLat,
+      //         minLat,
+      //         maxLon,
+      //         minLon
+      //       )
+      //     ) {
+      //       socket.emit(
+      //         "mintLogs",
+      //         `🎉 ${name} has been added to your collection!`
+      //       );
+      //       socket.emit("mintLogs", "true");
+      //       i = TRIES;
+      //       break;
+      //     }
+      //   }
+      // } else {
+      //   msg = `❌ - Transaction not confirmed!`;
+      //   socket.emit("printLogs", msg);
+      //   console.log("printLogs", msg);
+      // }
     }
   });
 };
