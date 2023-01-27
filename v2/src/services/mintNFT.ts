@@ -210,9 +210,9 @@ async function mintNFT(
   const year = date.slice(0, 4);
   const time = getTime();
   const METADATA = {
-    nftType: type,
     nftTitle: await nftName(),
     description: description,
+    nftType: type,
     attributes: [
       { trait_type: "CREATOR", value: creator },
       { trait_type: "USERNAME", value: username },

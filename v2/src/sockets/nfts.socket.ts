@@ -62,8 +62,8 @@ export const mintNFTSocket = (socket: Socket): void => {
       const token = await mintNFT(
         id,
         asset,
-        type,
         SYMBOL,
+        type,
         supply,
         floor,
         creator,
