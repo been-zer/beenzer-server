@@ -58,9 +58,20 @@ async function printNFT(
         console.log(
           "Trying to print a 0 free supply NFT! 🔥 Burning master editon NFT!"
         );
-        if (await burnNFT(originalNFT)) {
-          return true;
+        if (_whenMaxSupply === "BURN") {
+          if (await burnNFT(originalNFT)) {
+            return true;
+          }
+        } else if (_whenMaxSupply === "SEND") {
+          if (
+            await sendNFT(_destinationWallet, originalNFT.toBase58(), 1, _tries)
+          ) {
+            return true;
+          }
         } else {
+          console.log(
+            "❌ - ERROR: Unknown _whenMaxSupply value! Please, leave it empty for default value - SEND, or insert BURN to burn the Master Edition when last print operation is done."
+          );
           return false;
         }
       }
@@ -76,13 +87,19 @@ async function printNFT(
       if (nftCopy) {
         if (freeSupply === 1) {
           if (_whenMaxSupply === "BURN") {
-            burnNFT(originalNFT);
+            await burnNFT(originalNFT);
           } else if (_whenMaxSupply === "SEND") {
-            sendNFT(_destinationWallet, originalNFT.toBase58(), 1, _tries);
+            await sendNFT(
+              _destinationWallet,
+              originalNFT.toBase58(),
+              1,
+              _tries
+            );
           } else {
             console.log(
               "❌ - ERROR: Unknown _whenMaxSupply value! Please, leave it empty for default value - SEND, or insert BURN to burn the Master Edition when last print operation is done."
             );
+            return false;
           }
         }
         console.log(
