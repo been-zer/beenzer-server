@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { videoToGif } from "../services/videoToGif";
+import { videoToGif } from "../videoToGif";
 import fs from "fs";
 
 export const videoToGifSocket = (socket: Socket): void => {

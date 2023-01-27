@@ -1,21 +1,21 @@
 import { Socket } from "socket.io";
 import { PublicKey } from "@solana/web3.js";
-import { sleep } from "../utils";
+import { sleep } from "../../utils";
 import {
   SYMBOL,
   MASTER_COLLECTION,
   MASTER_PUBLICKEY,
-} from "../services/solanaConnection";
-import mintNFT from "../services/nfts/mintNFT";
-import printNFT from "../services/nfts/printNFT";
-import { getUserNFTs } from "../services/nfts/getUserNFTs";
+} from "../solanaConnection";
+import mintNFT from "../nfts/mintNFT";
+import printNFT from "../nfts/printNFT";
+import { getUserNFTs } from "../nfts/getUserNFTs";
 import {
   addNFTCounter,
   getNFTCounter,
   newNFT,
   getAllNFTs,
   getMapNFTs,
-} from "../controllers/nfts.controller";
+} from "../../controllers/nfts.controller";
 import dotenv from "dotenv";
 dotenv.config();
 const TRIES = Number(process.env.ASYNC_TRIES);

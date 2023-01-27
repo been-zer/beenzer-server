@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { concatPubKeys } from "../utils";
+import { concatPubKeys } from "../../utils";
 import {
   getMessages,
   newMessage,
@@ -7,7 +7,7 @@ import {
   unLikeMessage,
   addEmoji,
   delEmoji,
-} from "../controllers/messages.controller";
+} from "../../controllers/messages.controller";
 
 export const getMessagesSocket = (socket: Socket): void => {
   socket.on("getMessages", async (pubkey: string, pubkey2: string) => {

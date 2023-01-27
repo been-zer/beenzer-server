@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { sqlFilter, concatPubKeys } from "../utils";
+import { sqlFilter, concatPubKeys } from "../../utils";
 import {
   isNewUser,
   isUserName,
@@ -14,12 +14,12 @@ import {
   removeFriend,
   getUsersFlags,
   isFriend,
-} from "../controllers/users.controller";
+} from "../../controllers/users.controller";
 import {
   createMessages,
   // deleteMessages
-} from "../controllers/messages.controller";
-import { getUserNFTs } from "../services/nfts/getUserNFTs";
+} from "../../controllers/messages.controller";
+import { getUserNFTs } from "../nfts/getUserNFTs";
 
 export const newConnectionSocket = (socket: Socket): void => {
   socket.on("newConnection", async (pubkey: string) => {

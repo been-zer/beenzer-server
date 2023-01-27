@@ -1,11 +1,11 @@
 import { Socket } from "socket.io";
-import { getTokenHolders } from "../services/token/getTokenHolders";
+import { getTokenHolders } from "../token/getTokenHolders";
 import {
   getTokenTransactions,
   // getTokenHolders,
   addTokenTransaction,
   addTokenHolder,
-} from "../controllers/token.controller";
+} from "../../controllers/token.controller";
 
 export const getTokenTransactionsSocket = (socket: Socket): void => {
   socket.on("getTokenTransactions", async () => {

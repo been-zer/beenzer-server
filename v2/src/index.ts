@@ -1,7 +1,7 @@
 import { server, io } from "./app";
-import { socketConnect } from "./sockets";
-import { getTime } from "./utils";
+import { socketConnect } from "./services/sockets";
 import getBalances from "./services/wallet/getBalances";
+import { getTime } from "./utils";
 
 server.listen(process.env.PORT, () => {
   console.log("Server running on port ", process.env.PORT);
