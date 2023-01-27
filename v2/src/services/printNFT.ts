@@ -8,11 +8,13 @@ import {
 } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { burnNFT } from "./burnNFT";
+import { sendNFT } from "./sendNFT";
 import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
   MASTER_KEYPAIR,
   METAPLEX_BUNDLR_URI,
+  MARKETPLACE_PUBKEY,
 } from "./solanaConnection";
 
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
@@ -28,7 +30,9 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 async function printNFT(
   originalNFT: PublicKey,
   destination: PublicKey,
-  _tries: number = 10
+  _tries: number = 10, // Optinal
+  _whenMaxSupply = "SEND", // or BURN master edition
+  _destinationWallet = MARKETPLACE_PUBKEY // if SEND, destination wallet pubkey
 ): Promise<boolean> {
   let i = 0;
   while (i < _tries) {
@@ -71,7 +75,15 @@ async function printNFT(
         });
       if (nftCopy) {
         if (freeSupply === 1) {
-          burnNFT(originalNFT);
+          if (_whenMaxSupply === "BURN") {
+            burnNFT(originalNFT);
+          } else if (_whenMaxSupply === "SEND") {
+            sendNFT(_destinationWallet, originalNFT.toBase58(), 1, _tries);
+          } else {
+            console.log(
+              "❌ - ERROR: Unknown _whenMaxSupply value! Please, leave it empty for default value - SEND, or insert BURN to burn the Master Edition when last print operation is done."
+            );
+          }
         }
         console.log(
           "✅ Succefully printed new NFT edition!",
