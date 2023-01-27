@@ -3,7 +3,7 @@ import { MASTER_PUBLICKEY } from "../solanaConnection";
 import { uploadImage, uploadMetadata, mintToken } from "./mintNFT";
 import fs from "fs";
 
-const imageBuffer = fs.readFileSync("src/assets/logo.png");
+const imageBuffer = fs.readFileSync("./src/assets/logo.png");
 
 export async function mintCollection(
   buffer: Buffer = imageBuffer,
