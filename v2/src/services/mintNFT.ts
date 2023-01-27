@@ -176,7 +176,7 @@ export async function mintToken(
 }
 
 async function mintNFT(
-  id: number,
+  name: string,
   asset: Buffer,
   symbol: string,
   type: string,
@@ -198,19 +198,11 @@ async function mintNFT(
   _collection: PublicKey = MASTER_COLLECTION, // Optional
   _tries: number = 10 // Optional
 ): Promise<any> {
-  const nftName = async () => {
-    if (id > 0) {
-      return `${symbol} #${Number(id)}` as string;
-    } else {
-      console.log("ERROR: NFT id wrong!!!");
-      return "ERROR";
-    }
-  };
   const date = getDate();
   const year = date.slice(0, 4);
   const time = getTime();
   const METADATA = {
-    nftTitle: await nftName(),
+    name: name,
     description: description,
     nftType: type,
     attributes: [
@@ -246,19 +238,15 @@ async function mintNFT(
     // Step 1 - Upload media
     const assetUri = await uploadAsset(
       asset,
-      `${METADATA.nftTitle}.${type.split("/")[1]}`,
+      `${METADATA.name}.${type.split("/")[1]}`,
       _tries
     );
     let imageUri = assetUri;
     if (type.split("/")[0] === "video") {
       const gif = await videoToGif(asset, 3, 10);
-      imageUri = await uploadImage(gif, METADATA.nftTitle + ".gif", _tries);
+      imageUri = await uploadImage(gif, METADATA.name + ".gif", _tries);
     } else if (type.split("/")[0] === "audio") {
-      imageUri = await uploadImage(
-        _nftImage,
-        METADATA.nftTitle + ".png",
-        _tries
-      );
+      imageUri = await uploadImage(_nftImage, METADATA.name + ".png", _tries);
     }
     if (assetUri && imageUri && assetUri !== "ERROR" && imageUri !== "ERROR") {
       // Step 2 - Upload metadata
@@ -267,7 +255,7 @@ async function mintNFT(
         assetUri,
         METADATA.nftType,
         METADATA.symbol,
-        METADATA.nftTitle,
+        METADATA.name,
         METADATA.description,
         METADATA.attributes,
         _tries
@@ -276,7 +264,7 @@ async function mintNFT(
         // Step 3 - Mint Master Edition
         let token = await mintToken(
           metadataUri,
-          METADATA.nftTitle,
+          METADATA.name,
           METADATA.maxSupply,
           METADATA.sellerFeeBasisPoints,
           METADATA.symbol,

@@ -33,7 +33,7 @@ async function printNFT(
   _tries: number = 10, // Optinal
   _whenMaxSupply = "SEND", // or BURN master edition
   _destinationWallet = MARKETPLACE_PUBKEY // if SEND, destination wallet pubkey
-): Promise<boolean> {
+): Promise<Nft | boolean> {
   let i = 0;
   while (i < _tries) {
     try {
@@ -75,9 +75,10 @@ async function printNFT(
           return false;
         }
       }
+      const edition = Number(supply) + 1;
       console.log(
         `🖨️ Printing new NFT edition from ${originalNFT.toBase58()}...`,
-        `Current supply ${supply + 1} from maxSupply ${maxSupply}`
+        `Current supply ${edition} from maxSupply ${maxSupply}`
       );
       const nftCopy: PrintNewEditionOutput =
         await METAPLEX.nfts().printNewEdition({
@@ -85,6 +86,7 @@ async function printNFT(
           newOwner: destination,
         });
       if (nftCopy) {
+        nftMaster.edition = edition;
         if (freeSupply === 1) {
           if (_whenMaxSupply === "BURN") {
             await burnNFT(originalNFT);
@@ -106,7 +108,7 @@ async function printNFT(
           "✅ Succefully printed new NFT edition!",
           `Tries: ${i + 1}`
         );
-        return true;
+        return nftMaster;
       }
     } catch (err) {
       if (String(err).includes("max supply")) {

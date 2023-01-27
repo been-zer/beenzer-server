@@ -60,8 +60,9 @@ export const mintNFTSocket = (socket: Socket): void => {
         sleep(1000);
         i++;
       }
+      const name = `${SYMBOL} #${id}`;
       const token = await mintNFT(
-        id,
+        name,
         asset,
         SYMBOL,
         type,
@@ -86,14 +87,12 @@ export const mintNFTSocket = (socket: Socket): void => {
       if (token && token != "ERROR") {
         socket.emit(
           "mintLogs",
-          `⛏️ BEENZER #${id} minted succesfully! Token address: ${token}, Supply: ${supply}`
+          `⛏️ ${name} minted succesfully! Token address: ${token}, Supply: ${supply}`
         );
-        if (await printNFT(token, new PublicKey(creator), TRIES)) {
-          socket.emit(
-            "mintLogs",
-            `🚀 Transaction Success! \n Check your wallet!`
-          );
-          const name = `${SYMBOL} #${id}`;
+        const copy: any = await printNFT(token, new PublicKey(creator), TRIES);
+        if (copy) {
+          socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
+          const edition = Number(copy.edition) || 0;
           let j = 0;
           while (j < TRIES) {
             console.log(`Adding ${name} to DB... Tries: ${j + 1}`);
@@ -101,7 +100,10 @@ export const mintNFTSocket = (socket: Socket): void => {
               await newNFT(
                 id,
                 token.toBase58(),
+                0,
                 supply,
+                floor,
+                _mintCcy,
                 creator,
                 username,
                 token.imageURL,
@@ -118,13 +120,38 @@ export const mintNFTSocket = (socket: Socket): void => {
                 minLon
               )
             ) {
-              socket.emit(
-                "mintLogs",
-                `🎉 BEENZER #${id} has been added to your collection!`
-              );
-              socket.emit("mintLogs", "true");
-              j = TRIES;
-              break;
+              if (
+                await newNFT(
+                  id,
+                  token.toBase58(),
+                  edition,
+                  supply,
+                  floor,
+                  _mintCcy,
+                  creator,
+                  username,
+                  token.imageURL,
+                  type,
+                  name,
+                  description,
+                  city,
+                  latitude,
+                  longitude,
+                  distance,
+                  maxLat,
+                  minLat,
+                  maxLon,
+                  minLon
+                )
+              ) {
+                socket.emit(
+                  "mintLogs",
+                  `🎉 ${name} has been added to your collection!`
+                );
+                socket.emit("mintLogs", "true");
+                j = TRIES;
+                break;
+              }
             } else {
               if (j == TRIES - 1) {
                 console.log("newNFT failed. Last try!!!");

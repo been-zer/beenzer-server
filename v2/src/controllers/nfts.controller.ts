@@ -44,7 +44,10 @@ export async function getNFT(token: string): Promise<any> {
 export async function newNFT(
   id: number,
   token: string,
+  edition: number = 1,
   supply: number = 1,
+  floor: number = 1,
+  ccy: string = "SOL",
   creator: string,
   username: string,
   asset: string,
@@ -70,7 +73,10 @@ export async function newNFT(
           _newNFT(
             id,
             token,
+            edition,
             supply,
+            floor,
+            ccy,
             creator,
             username,
             asset,
