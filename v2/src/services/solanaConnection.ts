@@ -35,5 +35,5 @@ export const TOKEN_CREATOR_PUBLICKEY = new PublicKey(TOKEN_CREATOR);
 // Metaplex
 export const METAPLEX_BUNDLR_URI = "https://node1.bundlr.network";
 // Marketplace
-export const MARKETPLACE_PUBKEY = String(process.env.MARKET_WALLET);
+export const MARKETPLACE_PUBKEY = String(process.env.MARKETPLACE_WALLET);
 export const MARKETPLACE_PUBLICKEY = new PublicKey(MARKETPLACE_PUBKEY);
