@@ -40,6 +40,7 @@ export const mintNFTSocket = (socket: Socket): void => {
       maxLon: number,
       minLon: number,
       _image: Buffer | boolean = false, // Optional
+      _royalties: number = 1000, // Optional
       _mintCcy: string = "SOL" // Optional
     ) => {
       console.log("mintNFT", username, creator);
@@ -83,6 +84,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         minLat,
         maxLon,
         minLon,
+        _royalties,
         _image,
         _mintCcy,
         MASTER_COLLECTION, // collection

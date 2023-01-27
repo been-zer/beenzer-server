@@ -194,6 +194,7 @@ async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
+  _royalties: number = 1000, // Optional
   _nftImage: Buffer | boolean = false, // Optional
   _mintCcy: string = "SOL", // Optional
   _collection: PublicKey = MASTER_COLLECTION, // Optional
@@ -225,7 +226,7 @@ async function mintNFT(
       { trait_type: "MAX LON", value: String(maxLon) },
       { trait_type: "MIN LON", value: String(minLon) },
     ],
-    sellerFeeBasisPoints: 1000, // 1000 bp = 10% royalties
+    sellerFeeBasisPoints: _royalties, // 1000 bp = 10% royalties
     symbol: symbol,
     maxSupply: supply,
     isCollection: true,
@@ -236,7 +237,7 @@ async function mintNFT(
     isMutabe: false,
     creators: [
       { address: new PublicKey(creator), share: 80 },
-      { address: MASTER_KEYPAIR.publicKey, share: 20 },
+      { address: MASTER_PUBLICKEY, share: 20 },
     ],
     year: String(year),
   };
