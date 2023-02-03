@@ -12,7 +12,7 @@ export async function mintCollection(
   website: string = "https://beenzer.app",
   dao: string = "https://dao.beenzer.app",
   market: string = "https://market.beenzer.app",
-  description: string = "Beenzer Collection is the NFT Master Edition for BEENZER #♾️ official NFTs. Check our links to be part of the best web3 community! 💚",
+  description: string = "Beenzer Collection is the NFT Master Edition for BEENZER official NFTs. Check our links to be part of the best web3 community! 💚",
   twitter: string = "https://twitter.com/beenzer_app",
   instagram: string = "https://instagram.com/beenzer_app",
   discord: string = "https://discord.gg/Ta9X6zbg",
