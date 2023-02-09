@@ -98,7 +98,11 @@ export const mintNFTSocket = (socket: Socket): void => {
           "mintLogs",
           `⛏️ ${name} minted succesfully! Token address: ${token}, Supply: ${supply}`
         );
-        const copy: any = await printNFT(token, new PublicKey(creator), TRIES);
+        const copy: any = await printNFT(
+          token.token,
+          new PublicKey(creator),
+          TRIES
+        );
         if (copy) {
           socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
           // const edition = Number(copy.edition) || 0;

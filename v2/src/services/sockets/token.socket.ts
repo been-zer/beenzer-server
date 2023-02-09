@@ -1,8 +1,8 @@
 import { Socket } from "socket.io";
 import { getTokenHolders } from "../token/getTokenHolders";
 import {
-  getTokenTransactions,
   // getTokenHolders,
+  getTokenTransactions,
   addTokenTransaction,
   addTokenHolder,
 } from "../../controllers/token.controller";
