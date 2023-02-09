@@ -19,6 +19,7 @@ import {
 } from "../../controllers/nfts.controller";
 import dotenv from "dotenv";
 dotenv.config();
+
 const TRIES = Number(process.env.ASYNC_TRIES);
 
 export const mintNFTSocket = (socket: Socket): void => {
