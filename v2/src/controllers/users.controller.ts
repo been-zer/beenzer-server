@@ -33,8 +33,9 @@ const db: Client = usersDB;
 export async function getUser(pubkey: string): Promise<object | boolean> {
   try {
     const data = await db.query(_getUser(pubkey));
-    const rows = data.rows;
-    return rows[0];
+    const user = data.rows[0];
+    console.log("userInfo", user);
+    return user;
   } catch (error) {
     console.log(error);
     return false;
