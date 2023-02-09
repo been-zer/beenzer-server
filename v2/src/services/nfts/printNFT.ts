@@ -31,10 +31,11 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 async function printNFT(
   originalNFT: PublicKey,
   destination: PublicKey,
-  _tries: number = 10, // Optinal
+  _tries: number = 10, // Optional
   _returnEdition: boolean = false, // Optional
-  _whenMaxSupply = "SEND", // or BURN master edition
-  _destinationWallet = MARKETPLACE_PUBKEY // if SEND, destination wallet pubkey
+  _whenMaxSupply = "SEND", // or BURN Master Edition
+  _destinationWallet = MARKETPLACE_PUBKEY, // if SEND, destination wallet pubkey
+  _logs: boolean = false // Optional. Print Error logs
 ): Promise<NFT | number | boolean> {
   let i = 0;
   while (i < _tries) {
@@ -118,9 +119,15 @@ async function printNFT(
     } catch (err) {
       if (String(err).includes("max supply")) {
         console.log("Trying to print a full supply NFT!");
+        return false;
       }
-      console.log("❌ - Printing failed for unkown reason! Check logs.", err);
+      if (_logs) {
+        console.log("\nERROR:\n", err);
+      }
       i++;
+      console.log(
+        `❌ - Printing failed for unkown reason! Check logs. Tries: ${i}`
+      );
     }
   }
   return false;
