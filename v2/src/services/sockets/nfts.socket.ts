@@ -88,8 +88,8 @@ export const mintNFTSocket = (socket: Socket): void => {
         _royalties,
         _image,
         _mintCcy,
-        MASTER_COLLECTION, // collection
-        MASTER_PUBLICKEY, // owner
+        MASTER_COLLECTION, // NFT collection
+        MASTER_PUBLICKEY, // Owner (payer)
         false,
         TRIES
       );
