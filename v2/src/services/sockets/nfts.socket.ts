@@ -104,7 +104,6 @@ export const mintNFTSocket = (socket: Socket): void => {
           // const edition = Number(copy.edition) || 0;
           let j = 0;
           while (j < 2) {
-            console.log(`Adding ${name} to DB... Tries: ${j + 1}`);
             if (
               await newNFT(
                 id,
@@ -207,7 +206,7 @@ export const printNFTSocket = (socket: Socket): void => {
           }
         }
       } else {
-        msg = `❌ - Transaction not confirmed!`;
+        msg = `❌ - Print Edition failed!! Check Error logs.`;
         socket.emit("printLogs", msg);
         console.log("printLogs", msg);
       }

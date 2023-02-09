@@ -71,6 +71,7 @@ export async function newNFT(
   if (token != "ERROR" && token.length > 0) {
     let i = 0;
     while (i < _tries) {
+      console.log(`Adding ${name} to DB... Tries: ${i + 1}`);
       try {
         const date = getDate();
         const time = getTime();
