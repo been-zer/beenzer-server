@@ -28,7 +28,7 @@ export const _newNFT = (
   date: string,
   time: string
 ): string => {
-  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${edition}, ${supply}, ${floor}, ${ccy}, '${creator}', '${username}', '${asset}', '${type}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
+  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${edition}, ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${asset}', '${type}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
 };
 
 export const _newOwner = (token: string, owner: string): string => {
