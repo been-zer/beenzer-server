@@ -27,7 +27,6 @@ export const newConnectionSocket = (socket: Socket): void => {
     const isNew = await isNewUser(pubkey);
     console.log("isnew:", isNew);
     socket.emit("isNewUser", isNew);
-    await userDataSocket(socket, pubkey);
   });
 };
 
@@ -47,7 +46,6 @@ export const newUserSocket = async (socket: Socket): Promise<void> => {
           if (await newUser(pubkey, regexUser, appuser)) {
             socket.emit("newUserCreated", true);
             console.log("New user created!", regexUser, pubkey);
-            await userDataSocket(socket, pubkey);
           } else {
             console.log("New user creation failed.");
             socket.emit("newUserCreated", false);
@@ -64,18 +62,6 @@ export const usernameExistsSocket = (socket: Socket) => {
     const userNameAv = await isUserName(regexUser);
     socket.emit("userNameAv", userNameAv);
   });
-};
-
-export const userDataSocket = async (
-  socket: Socket,
-  pubkey: string
-): Promise<void> => {
-  const userInfo = await getUser(pubkey);
-  socket.emit("userInfo", userInfo);
-  const userNFTs = await getUserNFTs(pubkey);
-  socket.emit("userNFTs", userNFTs);
-  const userFriends = await getUserFriends(pubkey);
-  socket.emit("userFriends", userFriends);
 };
 
 export const searchUsersSocket = (socket: Socket): void => {
@@ -195,3 +181,17 @@ const userSocket = (socket: Socket): void => {
 };
 
 export default userSocket;
+
+// Deprecated:
+
+export const sendUserProfileSocket = async (
+  socket: Socket,
+  pubkey: string
+): Promise<void> => {
+  const userInfo = await getUser(pubkey);
+  socket.emit("userInfo", userInfo);
+  const userNFTs = await getUserNFTs(pubkey);
+  socket.emit("userNFTs", userNFTs);
+  const userFriends = await getUserFriends(pubkey);
+  socket.emit("userFriends", userFriends);
+};
