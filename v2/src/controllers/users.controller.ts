@@ -34,8 +34,7 @@ export async function getUser(pubkey: string): Promise<object | boolean> {
   try {
     const data = await db.query(_getUser(pubkey));
     const user = data.rows[0];
-    console.log("userInfo", user);
-    return user;
+    return user as object;
   } catch (error) {
     console.log(error);
     return false;
