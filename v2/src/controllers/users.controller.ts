@@ -148,7 +148,9 @@ export async function isFriend(
   }
 }
 
-export async function getUserFollows(pubkey: string): Promise<any> {
+export async function getUserFollows(
+  pubkey: string
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_getUserFollows(pubkey));
     const rows = data.rows;
@@ -159,7 +161,7 @@ export async function getUserFollows(pubkey: string): Promise<any> {
     const follows = [];
     for (const publickey of pubkeys) {
       const user = await getUser(publickey);
-      follows.push(user);
+      follows.push(user as object);
     }
     return follows;
   } catch (error) {
@@ -168,7 +170,9 @@ export async function getUserFollows(pubkey: string): Promise<any> {
   }
 }
 
-export async function getUserFollowers(pubkey: string): Promise<any> {
+export async function getUserFollowers(
+  pubkey: string
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_getUserFollowers(pubkey));
     const rows = data.rows;
@@ -179,7 +183,7 @@ export async function getUserFollowers(pubkey: string): Promise<any> {
     const followers = [];
     for (const publickey of pubkeys) {
       const user = await getUser(publickey);
-      followers.push(user);
+      followers.push(user as object);
     }
     return followers;
   } catch (error) {
@@ -188,7 +192,9 @@ export async function getUserFollowers(pubkey: string): Promise<any> {
   }
 }
 
-export async function getUserFriends(pubkey: string): Promise<any> {
+export async function getUserFriends(
+  pubkey: string
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_getUserFriends(pubkey));
     const rows = data.rows;
@@ -210,7 +216,7 @@ export async function getUserFriends(pubkey: string): Promise<any> {
     const friends = [];
     for (const publickey of matches) {
       const user = await getUser(publickey);
-      friends.push(user);
+      friends.push(user as object);
     }
     return friends;
   } catch (error) {
@@ -219,7 +225,9 @@ export async function getUserFriends(pubkey: string): Promise<any> {
   }
 }
 
-export async function getFriends(pubkey: string): Promise<any> {
+export async function getFriends(
+  pubkey: string
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_getFriends(pubkey));
     const rows = data.rows;
@@ -230,7 +238,9 @@ export async function getFriends(pubkey: string): Promise<any> {
   }
 }
 
-export async function searchUsers(search: string): Promise<any> {
+export async function searchUsers(
+  search: string
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_searchUsers(search));
     const rows = data.rows;
@@ -241,7 +251,7 @@ export async function searchUsers(search: string): Promise<any> {
   }
 }
 
-export async function getUsersFlags(): Promise<any> {
+export async function getUsersFlags(): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_usersFlags());
     const rows = data.rows;
