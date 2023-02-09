@@ -1,7 +1,7 @@
 import { nftSchema, ownerSchema, transactionsSchema } from "./nfts.schemas";
 
-export const _getNFT = (token: string): string => {
-  return `SELECT * FROM nfts WHERE __token__ = '${token}'`;
+export const _getNFT = (token: string, edition: number): string => {
+  return `SELECT * FROM nfts WHERE __token__ = '${token}' AND __edition__ = ${edition}`;
 };
 
 export const _newNFT = (
@@ -13,8 +13,10 @@ export const _newNFT = (
   ccy: string = "SOL",
   creator: string,
   username: string,
+  image: string,
   asset: string,
   type: string,
+  metadata: string,
   name: string,
   description: string,
   city: string,
@@ -28,7 +30,7 @@ export const _newNFT = (
   date: string,
   time: string
 ): string => {
-  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${edition}, ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${asset}', '${type}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
+  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${edition}, ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${image}', '${asset}', '${type}', '${metadata}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
 };
 
 export const _newOwner = (token: string, owner: string): string => {

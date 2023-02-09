@@ -30,9 +30,9 @@ import { getDate, getTime } from "../utils";
  */
 const db: Client = nftsDB;
 
-export async function getNFT(token: string): Promise<any> {
+export async function getNFT(token: string, edition: number): Promise<any> {
   try {
-    const data = await db.query(_getNFT(token));
+    const data = await db.query(_getNFT(token, edition));
     const rows = data.rows;
     return rows;
   } catch (error) {
@@ -50,8 +50,10 @@ export async function newNFT(
   ccy: string = "SOL",
   creator: string,
   username: string,
+  image: string,
   asset: string,
   type: string,
+  metadata: string,
   name: string,
   description: string,
   city: string,
@@ -61,55 +63,63 @@ export async function newNFT(
   maxLat: number,
   minLat: number,
   maxLon: number,
-  minLon: number
+  minLon: number,
+  _tries = 10,
+  _logs = false
 ): Promise<boolean> {
   console.log("Token address:", token);
   if (token != "ERROR" && token.length > 0) {
-    try {
-      const date = getDate();
-      const time = getTime();
-      if (id != -1) {
-        await db.query(
-          _newNFT(
-            id,
-            token,
-            edition,
-            supply,
-            floor,
-            ccy,
-            creator,
-            username,
-            asset,
-            type,
-            name,
-            description,
-            city,
-            latitude,
-            longitude,
-            visbility,
-            maxLat,
-            minLat,
-            maxLon,
-            minLon,
-            date,
-            time
-          )
-        );
-        // await newOwner(token, creator);
-        console.log(`🎉 ${name} added to DB succesfully!`);
-        return true;
-      } else {
-        console.log("ERROR: newNFT.controller failed! NFT id is -1!");
-        return false;
+    let i = 0;
+    while (i < _tries) {
+      try {
+        const date = getDate();
+        const time = getTime();
+        if (id != -1) {
+          await db.query(
+            _newNFT(
+              id,
+              token,
+              edition,
+              supply,
+              floor,
+              ccy,
+              creator,
+              username,
+              image,
+              asset,
+              type,
+              metadata,
+              name,
+              description,
+              city,
+              latitude,
+              longitude,
+              visbility,
+              maxLat,
+              minLat,
+              maxLon,
+              minLon,
+              date,
+              time
+            )
+          );
+          // await newOwner(token, creator);
+          console.log(`🎉 ${name} added to DB succesfully!`);
+          return true;
+        }
+      } catch (error) {
+        if (String(error).includes("duplicate")) {
+          console.log("ERROR: NFT token already exists!");
+          return false;
+        }
+        if (_logs) {
+          console.log(error);
+        }
+        i++;
+        console.log("ERROR: newNFT controller failed! Tries: ", i);
       }
-    } catch (error) {
-      if (String(error).includes("duplicate")) {
-        console.log("ERROR: NFT token already exists!");
-        return false;
-      }
-      console.log(error);
-      return false;
     }
+    return false;
   }
   console.log(
     "ERROR: newNFT.controller failed! Token address input is ERROR or wrong!"
@@ -145,7 +155,7 @@ export async function getUserNFTsDB(owner: string): Promise<any> {
     const nftsList = await getNFTsByOwner(owner);
     nftsList.forEach((owner: any) => tokens.push(owner._token));
     for (let i = 0; i < tokens.length; i++) {
-      const nft = await getNFT(tokens[i]);
+      const nft = await getNFT(tokens[i], -1); // -1 = all available editions
       nfts.push(nft[0]);
     }
     return nfts;

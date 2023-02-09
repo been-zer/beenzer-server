@@ -279,7 +279,7 @@ async function mintNFT(
           _tries
         );
         if (token && token !== "ERROR") {
-          return token;
+          return { token, imageUri, assetUri, metadataUri };
         }
       }
     }
