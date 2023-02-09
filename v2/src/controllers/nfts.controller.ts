@@ -3,6 +3,7 @@ import { nftsDB } from "./db.connections";
 import {
   _getNFT,
   _newNFT,
+  _newEdition,
   _updateNFTOwner,
   _updateNFTLikes,
   _createNFTtransactions,
@@ -44,7 +45,6 @@ export async function getNFT(token: string, edition: number): Promise<any> {
 export async function newNFT(
   id: number,
   token: string,
-  edition: number = 1,
   supply: number = 1,
   floor: number = 1,
   ccy: string = "SOL",
@@ -80,7 +80,6 @@ export async function newNFT(
             _newNFT(
               id,
               token,
-              edition,
               supply,
               floor,
               ccy,
@@ -104,7 +103,6 @@ export async function newNFT(
               time
             )
           );
-          // await newOwner(token, creator);
           console.log(`🎉 ${name} added to DB succesfully!`);
           return true;
         }
@@ -125,6 +123,27 @@ export async function newNFT(
   console.log(
     "ERROR: newNFT.controller failed! Token address input is ERROR or wrong!"
   );
+  return false;
+}
+
+export async function newEdition(
+  token: string,
+  edition: number,
+  owner: string,
+  _tries = 10
+): Promise<boolean> {
+  if (token != "ERROR" && token.length > 0) {
+    let i = 0;
+    while (i < _tries) {
+      try {
+        await db.query(_newEdition(token, edition, owner));
+        return true;
+      } catch (error) {
+        console.log(error);
+        i++;
+      }
+    }
+  }
   return false;
 }
 

@@ -35,7 +35,6 @@ export const getUserNFTs = async (
     _solanaConnection,
     _keypair
   );
-  console.log("EOEOOE", solanaNFTs);
   let tokens = "";
   if (solanaNFTs.length === 1) {
     tokens = `'${solanaNFTs[0].token}'`;

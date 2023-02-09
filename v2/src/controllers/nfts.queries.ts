@@ -7,7 +7,6 @@ export const _getNFT = (token: string, edition: number): string => {
 export const _newNFT = (
   id: number,
   token: string,
-  edition: number = 1,
   supply: number = 1,
   floor: number = 1,
   ccy: string = "SOL",
@@ -30,7 +29,15 @@ export const _newNFT = (
   date: string,
   time: string
 ): string => {
-  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${edition}, ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${image}', '${asset}', '${type}', '${metadata}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
+  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${image}', '${asset}', '${type}', '${metadata}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
+};
+
+export const _newEdition = (
+  token: string,
+  edition: number,
+  owner: string
+): string => {
+  return `INSERT INTO editions (${ownerSchema}) VALUES ('${token}', ${edition}, '${owner}', ${Date.now()}, ${Date.now()})`;
 };
 
 export const _newOwner = (token: string, owner: string): string => {

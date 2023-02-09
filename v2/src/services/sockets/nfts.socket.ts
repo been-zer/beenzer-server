@@ -13,6 +13,7 @@ import {
   addNFTCounter,
   getNFTCounter,
   newNFT,
+  newEdition,
   getAllNFTs,
   getMapNFTs,
   getNFT,
@@ -106,52 +107,44 @@ export const mintNFTSocket = (socket: Socket): void => {
         );
         if (copy) {
           socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
-          // const edition = Number(copy.edition) || 0;
-          let j = 0;
-          while (j < 2) {
-            if (
-              await newNFT(
-                id,
-                token.token.toBase58(),
-                j,
-                supply,
-                floor,
-                _mintCcy,
-                creator,
-                username,
-                token.imageUri,
-                token.assetUri,
-                type,
-                token.metadataUri,
-                name,
-                description,
-                city,
-                latitude,
-                longitude,
-                visbility,
-                maxLat,
-                minLat,
-                maxLon,
-                minLon,
-                TRIES,
-                false // print logs
-              )
-            ) {
-              if (j === 0) {
-                socket.emit(
-                  "mintLogs",
-                  `🎉 ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
-                );
-              } else if (j === 1) {
-                socket.emit(
-                  "mintLogs",
-                  `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
-                );
-                socket.emit("mintLogs", "true");
-                break;
-              }
-              j++;
-            }
+          if (
+            await newNFT(
+              id,
+              token.token.toBase58(),
+              supply,
+              floor,
+              _mintCcy,
+              creator,
+              username,
+              token.imageUri,
+              token.assetUri,
+              type,
+              token.metadataUri,
+              name,
+              description,
+              city,
+              latitude,
+              longitude,
+              visbility,
+              maxLat,
+              minLat,
+              maxLon,
+              minLon,
+              TRIES,
+              false // print logs
+            )
+          ) {
+            socket.emit(
+              "mintLogs",
+              `🎉 ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
+            );
+          }
+          if (await newEdition(token.token.toBase58(), 1, creator, TRIES)) {
+            socket.emit(
+              "mintLogs",
+              `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
+            );
+            socket.emit("mintLogs", "true");
           }
         }
       }
@@ -162,58 +155,29 @@ export const mintNFTSocket = (socket: Socket): void => {
 export const printNFTSocket = (socket: Socket): void => {
   socket.on("printNFT", async (token: string, pubkey: string) => {
     if (token.length > 22 && pubkey.length > 22) {
-      let msg = `🖨️ Printing NFT ${token}...`;
+      const msg = `🖨️ Printing NFT ${token}...`;
       socket.emit("printLogs", msg);
       console.log("printLogs", msg);
       const edition = await printNFT(
         new PublicKey(token),
         new PublicKey(pubkey),
         TRIES,
-        true // return edition
+        true // Return Edition int
       );
       if (Number(edition) > 1) {
-        const masterEdition = await getNFT(token, 0); // 0 = Master Edition
-        if (masterEdition) {
-          if (
-            await newNFT(
-              masterEdition[0]._id_,
-              masterEdition[0].__token__,
-              Number(edition),
-              masterEdition[0]._supply,
-              masterEdition[0]._floor,
-              masterEdition[0]._mintCcy,
-              masterEdition[0]._creator,
-              masterEdition[0]._username,
-              masterEdition[0]._image,
-              masterEdition[0]._asset,
-              masterEdition[0]._type,
-              masterEdition[0]._metadata,
-              masterEdition[0]._name,
-              masterEdition[0]._description,
-              masterEdition[0]._city,
-              masterEdition[0]._latitude,
-              masterEdition[0]._longitude,
-              masterEdition[0]._visbility,
-              masterEdition[0]._maxLat,
-              masterEdition[0]._minLat,
-              masterEdition[0]._maxLon,
-              masterEdition[0]._minLon,
-              TRIES
-            )
-          ) {
-            socket.emit(
-              "printLogs",
-              `🎉 ${name} Edition ${Number(
-                edition
-              )} has been printed succesfully!`
-            );
-            socket.emit("mintLogs", "true");
-          }
+        if (await newEdition(token, Number(edition), pubkey, TRIES)) {
+          socket.emit(
+            "printLogs",
+            `🎉 ${name} Edition ${Number(
+              edition
+            )} has been printed succesfully!`
+          );
+          socket.emit("mintLogs", "true");
         }
       } else {
-        msg = `❌ - Print Edition failed!! Check Error logs.`;
-        socket.emit("printLogs", msg);
-        console.log("printLogs", msg);
+        const msgErr = `❌ - Print Edition failed!! Check Error logs.`;
+        socket.emit("printLogs", msgErr);
+        console.log("printLogs", msgErr);
       }
     }
   });
