@@ -41,7 +41,7 @@ export async function getUser(pubkey: string): Promise<object | boolean> {
   }
 }
 
-export async function isUserName(username: string): Promise<any> {
+export async function isUserName(username: string): Promise<boolean> {
   let user: any;
   try {
     user = await db.query(_isUserName(username));
