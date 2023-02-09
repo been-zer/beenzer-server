@@ -30,7 +30,7 @@ import {
 
 const db: Client = usersDB;
 
-export async function getUser(pubkey: string): Promise<any> {
+export async function getUser(pubkey: string): Promise<object | boolean> {
   try {
     const data = await db.query(_getUser(pubkey));
     const rows = data.rows;
@@ -158,7 +158,7 @@ export async function getUserFollows(pubkey: string): Promise<any> {
     const follows = [];
     for (const publickey of pubkeys) {
       const user = await getUser(publickey);
-      follows.push(user[0]);
+      follows.push(user);
     }
     return follows;
   } catch (error) {
@@ -178,7 +178,7 @@ export async function getUserFollowers(pubkey: string): Promise<any> {
     const followers = [];
     for (const publickey of pubkeys) {
       const user = await getUser(publickey);
-      followers.push(user[0]);
+      followers.push(user);
     }
     return followers;
   } catch (error) {
@@ -209,7 +209,7 @@ export async function getUserFriends(pubkey: string): Promise<any> {
     const friends = [];
     for (const publickey of matches) {
       const user = await getUser(publickey);
-      friends.push(user[0]);
+      friends.push(user);
     }
     return friends;
   } catch (error) {
