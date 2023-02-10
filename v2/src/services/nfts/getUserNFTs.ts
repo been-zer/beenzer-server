@@ -1,18 +1,23 @@
 import request from "request";
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { getNFTsByTokens } from "../../controllers/nfts.controller";
+import {
+  getNFTsByTokens,
+  getEditionsByOwner,
+} from "../../controllers/nfts.controller";
 import { SOLANA_CONNECTION } from "../solanaConnection";
 
 export interface NFT {
   token: string;
   mint: string;
   symbol: string;
+  amount: number;
   supply: number;
   royalty: number;
   creators: Creator[];
   name: string;
   description: string;
+  image_uri: string;
   asset_uri: string;
   metadata: Trait[];
 }
@@ -49,13 +54,13 @@ export const getUserNFTs = async (
 };
 
 export const getUserNFTsSolana = async (
-  _pubkey: string,
+  pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION,
   _keypair: Keypair = Keypair.generate()
 ): Promise<NFT[]> => {
   const metaplex = new Metaplex(_solanaConnection);
   metaplex.use(keypairIdentity(_keypair));
-  const owner = new PublicKey(_pubkey);
+  const owner = new PublicKey(pubkey);
   const rawNFTs = (await metaplex
     .nfts()
     .findAllByOwner({ owner })) as Array<any>;
@@ -78,6 +83,7 @@ export const getUserNFTsSolana = async (
       token: mint as string,
       mint: rawNFT.address.toBase58() as string,
       symbol: rawNFT.symbol as string,
+      amount: 1,
       supply: supply.value.uiAmount as number,
       royalty: rawNFT.sellerFeeBasisPoints as number, // base 100 ex: 1000 = 10%
       creators: rawNFT.creators.map((x: { address: string; share: number }) => {
@@ -85,7 +91,9 @@ export const getUserNFTsSolana = async (
       }) as Creator[],
       name: metadata.name as string,
       description: metadata.description as string,
-      asset_uri: metadata.image as string,
+      image_uri: metadata.image as string,
+      asset_uri: metadata.properties.files.uri as string,
+      type: metadata.properties.files.type as string,
       metadata: metadata.attributes.map(
         (x: { trait_type: string; value: number }) => {
           return { type: x.trait_type, value: x.value };
@@ -93,6 +101,16 @@ export const getUserNFTsSolana = async (
       ) as Trait[],
     };
     NFTs.push(nftRow as NFT);
+  }
+  const ownerEditions = await getEditionsByOwner(pubkey);
+  if (ownerEditions) {
+    NFTs.forEach((nft: NFT) => {
+      Array(ownerEditions).forEach((edi: any) => {
+        if (edi.__token__ == nft.token) {
+          nft.amount++;
+        }
+      });
+    });
   }
   return NFTs;
 };

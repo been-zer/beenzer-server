@@ -16,7 +16,6 @@ import {
   newEdition,
   getAllNFTs,
   getMapNFTs,
-  getNFT,
 } from "../../controllers/nfts.controller";
 import dotenv from "dotenv";
 dotenv.config();

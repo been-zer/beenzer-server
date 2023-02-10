@@ -4,6 +4,7 @@ import {
   _getNFT,
   _newNFT,
   _newEdition,
+  _getEditionsByOwner,
   _updateNFTOwner,
   _updateNFTLikes,
   _createNFTtransactions,
@@ -145,6 +146,19 @@ export async function newEdition(
     }
   }
   return false;
+}
+
+export async function getEditionsByOwner(
+  owner: string
+): Promise<Array<object> | boolean> {
+  try {
+    const data = await db.query(_getEditionsByOwner(owner));
+    const rows = data.rows;
+    return rows;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export async function newOwner(token: string, owner: string): Promise<boolean> {
