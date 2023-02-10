@@ -145,7 +145,8 @@ export async function mintToken(
   sellerFee: number,
   symbol: string,
   creators: { address: PublicKey; share: number }[],
-  _tries: number = 10
+  _tries: number = 10,
+  _errLogs: boolean = false
 ): Promise<PublicKey | string> {
   console.log(`Step 3 - Minting ${name} in Solana...`);
   let nft: CreateNftOutput;
@@ -169,6 +170,9 @@ export async function mintToken(
       return nft.mintAddress;
     } catch (err) {
       console.log(`Minting NFT failed!!! Tries: ${i + 1}`);
+      if (_errLogs) {
+        console.log("\nERROR\n", err);
+      }
       sleep(5000);
       i++;
     }
@@ -200,7 +204,8 @@ async function mintNFT(
   _collection: PublicKey = MASTER_COLLECTION, // Optional
   _collectionAuthority: PublicKey = MASTER_PUBLICKEY, // Optional
   _collectionIsSized: boolean = false, // Optional
-  _tries: number = 10 // Optional
+  _tries: number = 10, // Optional
+  _errLogs: boolean = false // Optional
 ): Promise<any> {
   const date = getDate();
   const year = date.slice(0, 4);
@@ -276,7 +281,8 @@ async function mintNFT(
           METADATA.sellerFeeBasisPoints,
           METADATA.symbol,
           METADATA.creators,
-          _tries
+          _tries,
+          _errLogs
         );
         if (token && token !== "ERROR") {
           return { token, imageUri, assetUri, metadataUri };

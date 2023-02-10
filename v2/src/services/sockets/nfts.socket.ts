@@ -92,8 +92,9 @@ export const mintNFTSocket = (socket: Socket): void => {
         _mintCcy,
         MASTER_COLLECTION, // NFT collection
         MASTER_PUBLICKEY, // Owner (payer)
-        false,
-        TRIES
+        false, // It is not a Sized Collection
+        TRIES,
+        true // Print Error logs
       );
       if (token.token && token != "ERROR") {
         socket.emit(
