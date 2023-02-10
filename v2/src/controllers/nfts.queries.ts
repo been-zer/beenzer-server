@@ -1,4 +1,9 @@
-import { nftSchema, ownerSchema, transactionsSchema } from "./nfts.schemas";
+import {
+  nftSchema,
+  editionSchema,
+  ownerSchema,
+  transactionsSchema,
+} from "./nfts.schemas";
 
 export const _getNFT = (token: string, edition: number): string => {
   return `SELECT * FROM nfts WHERE __token__ = '${token}' AND __edition__ = ${edition}`;
@@ -37,7 +42,7 @@ export const _newEdition = (
   edition: number,
   owner: string
 ): string => {
-  return `INSERT INTO editions (${ownerSchema}) VALUES ('${token}', ${edition}, '${owner}', ${Date.now()}, ${Date.now()})`;
+  return `INSERT INTO editions (${editionSchema}) VALUES ('${token}', ${edition}, '${owner}', ${Date.now()}, ${Date.now()})`;
 };
 
 export const _getEditionsByOwner = (owner: string): string => {
