@@ -54,7 +54,7 @@ export const getUserNFTs = async (
   console.log("\nWallet NFTs\n", solanaNFTs);
   // Get user NFTs from DB (Master Editions)
   const userNFTs = await getNFTsByTokens(tokens);
-  console.log("\nUser NFTs\n", userNFTs);
+  // console.log("\nUser NFTs\n", userNFTs);
   // Get NFTs amounts by Editions.
   const userEditions = await getEditionsByOwner(pubkey);
   if (userEditions) {
@@ -66,8 +66,8 @@ export const getUserNFTs = async (
       });
     });
   }
-  console.log("\nUser Editions\n", userEditions);
-  console.log("\nUser NFTs 2\n", userNFTs);
+  // console.log("\nUser Editions\n", userEditions);
+  // console.log("\nUser NFTs 2\n", userNFTs);
   if (userNFTs) {
     return userNFTs;
   }
