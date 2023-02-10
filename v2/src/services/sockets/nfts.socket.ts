@@ -178,7 +178,7 @@ export const printNFTSocket = (socket: Socket): void => {
               edition
             )} has been printed succesfully!`
           );
-          socket.emit("mintLogs", "true");
+          socket.emit("printLogs", "true");
         }
       } else {
         const msgErr = `❌ - Print Edition failed!! Check Error logs.`;

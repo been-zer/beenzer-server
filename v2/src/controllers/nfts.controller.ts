@@ -139,6 +139,7 @@ export async function newEdition(
     while (i < _tries) {
       try {
         await db.query(_newEdition(token, edition, owner));
+        console.log(`🎉 ${token} Edition ${edition} added to DB succesfully!`);
         return true;
       } catch (error) {
         if (_errLogs) {

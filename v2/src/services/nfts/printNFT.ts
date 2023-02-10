@@ -80,7 +80,7 @@ async function printNFT(
       }
       const edition = Number(supply) + 1;
       console.log(
-        `🖨️ Printing new NFT edition from ${originalNFT.toBase58()}...`,
+        `🖨️  Printing new NFT edition from ${originalNFT.toBase58()}...`,
         `Current supply ${edition} from maxSupply ${maxSupply}`
       );
       const nftCopy: PrintNewEditionOutput =
