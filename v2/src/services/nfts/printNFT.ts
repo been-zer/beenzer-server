@@ -35,7 +35,7 @@ async function printNFT(
   _returnEdition: boolean = false, // Optional
   _whenMaxSupply = "SEND", // or BURN Master Edition
   _destinationWallet = MARKETPLACE_PUBKEY, // if SEND, destination wallet pubkey
-  _logs: boolean = false // Optional. Print Error logs
+  _errLogs: boolean = false // Optional. Print Error logs
 ): Promise<NFT | number | boolean> {
   let i = 0;
   while (i < _tries) {
@@ -121,7 +121,7 @@ async function printNFT(
         console.log("Trying to print a full supply NFT!");
         return false;
       }
-      if (_logs) {
+      if (_errLogs) {
         console.log("\nERROR:\n", err);
       }
       i++;

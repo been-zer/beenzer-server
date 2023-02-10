@@ -3,6 +3,7 @@ import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../../utils";
 import {
   SYMBOL,
+  MARKETPLACE_PUBKEY,
   MASTER_COLLECTION,
   MASTER_PUBLICKEY,
 } from "../solanaConnection";
@@ -99,12 +100,12 @@ export const mintNFTSocket = (socket: Socket): void => {
           "mintLogs",
           `⛏️ ${name} minted succesfully! Token address: ${token}, Supply: ${supply}`
         );
-        const copy: any = await printNFT(
-          token.token,
+        const firstEdition: any = await printNFT(
+          new PublicKey(token.token),
           new PublicKey(creator),
           TRIES
         );
-        if (copy) {
+        if (firstEdition) {
           socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
           if (
             await newNFT(
@@ -161,7 +162,10 @@ export const printNFTSocket = (socket: Socket): void => {
         new PublicKey(token),
         new PublicKey(pubkey),
         TRIES,
-        true // Return Edition int
+        true, // Return Edition int
+        "SEND", // When max supply send to marketplace
+        MARKETPLACE_PUBKEY,
+        true // Print error logs
       );
       if (Number(edition) > 1) {
         if (await newEdition(token, Number(edition), pubkey, TRIES)) {
