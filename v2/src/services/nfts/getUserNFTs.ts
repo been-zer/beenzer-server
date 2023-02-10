@@ -31,15 +31,17 @@ interface Trait {
 }
 
 export const getUserNFTs = async (
-  _pubkey: string,
+  pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION,
   _keypair: Keypair = Keypair.generate()
 ): Promise<Array<any>> => {
+  // Get wallet's NFTs from Solana network
   const solanaNFTs = await getUserNFTsSolana(
-    _pubkey,
+    pubkey,
     _solanaConnection,
     _keypair
   );
+  // Pepare tokens query for DB: "token[0], token[1], token[n]..."
   let tokens = "";
   if (solanaNFTs.length === 1) {
     tokens = `'${solanaNFTs[0].token}'`;
@@ -48,7 +50,22 @@ export const getUserNFTs = async (
       tokens += `'${nft.token}', `;
     }
     tokens = tokens.slice(0, -2);
-    return await getNFTsByTokens(tokens);
+  }
+  // Get user NFTs from DB (Master Editions)
+  const userNFTs = await getNFTsByTokens(tokens);
+  // Get NFTs amounts by Editions.
+  const ownerEditions = await getEditionsByOwner(pubkey);
+  if (ownerEditions) {
+    Array(userNFTs).forEach((nft: NFT) => {
+      Array(ownerEditions).forEach((edi: any) => {
+        if (edi.__token__ == nft.token) {
+          nft.amount++;
+        }
+      });
+    });
+  }
+  if (userNFTs) {
+    return userNFTs;
   }
   return [];
 };
@@ -101,16 +118,6 @@ export const getUserNFTsSolana = async (
       ) as Trait[],
     };
     NFTs.push(nftRow as NFT);
-  }
-  const ownerEditions = await getEditionsByOwner(pubkey);
-  if (ownerEditions) {
-    NFTs.forEach((nft: NFT) => {
-      Array(ownerEditions).forEach((edi: any) => {
-        if (edi.__token__ == nft.token) {
-          nft.amount++;
-        }
-      });
-    });
   }
   return NFTs;
 };

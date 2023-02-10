@@ -45,6 +45,14 @@ export const _newEdition = (
   return `INSERT INTO editions (${editionSchema}) VALUES ('${token}', ${edition}, '${owner}', ${Date.now()}, ${Date.now()})`;
 };
 
+export const _updateEditionOwner = (
+  token: string,
+  edition: number,
+  newOwner: string
+): string => {
+  return `UPDATE editions SET _owner = '${newOwner}', _timestamp = ${Date.now()}, WHERE __token__ = ${token} AND __edition__ = '${edition}'`;
+};
+
 export const _getEditionsByOwner = (owner: string): string => {
   return `SELECT * FROM editions WHERE _owner = '${owner}'`;
 };
