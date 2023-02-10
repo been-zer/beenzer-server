@@ -132,7 +132,7 @@ export const mintNFTSocket = (socket: Socket): void => {
               maxLon,
               minLon,
               TRIES,
-              false // print logs
+              false // Print Error logs
             )
           ) {
             socket.emit(
@@ -140,7 +140,9 @@ export const mintNFTSocket = (socket: Socket): void => {
               `🎉 ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
             );
           }
-          if (await newEdition(token.token.toBase58(), 1, creator, TRIES)) {
+          if (
+            await newEdition(token.token.toBase58(), 1, creator, TRIES, true)
+          ) {
             socket.emit(
               "mintLogs",
               `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
@@ -172,7 +174,7 @@ export const printNFTSocket = (socket: Socket): void => {
         if (await newEdition(token, Number(edition), pubkey, TRIES)) {
           socket.emit(
             "printLogs",
-            `🎉 ${name} Edition ${Number(
+            `🎉 ${token} Edition ${Number(
               edition
             )} has been printed succesfully!`
           );

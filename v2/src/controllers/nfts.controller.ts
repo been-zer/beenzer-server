@@ -131,7 +131,8 @@ export async function newEdition(
   token: string,
   edition: number,
   owner: string,
-  _tries = 10
+  _tries = 10,
+  _errLogs = false
 ): Promise<boolean> {
   if (token != "ERROR" && token.length > 0) {
     let i = 0;
@@ -140,7 +141,9 @@ export async function newEdition(
         await db.query(_newEdition(token, edition, owner));
         return true;
       } catch (error) {
-        console.log(error);
+        if (_errLogs) {
+          console.log(error);
+        }
         i++;
       }
     }
@@ -187,7 +190,7 @@ export async function getUserNFTsDB(owner: string): Promise<any> {
     const nfts: Array<object> = [];
     const tokens: Array<string> = [];
     const nftsList = await getNFTsByOwner(owner);
-    nftsList.forEach((owner: any) => tokens.push(owner._token));
+    nftsList.forEach((owner: any) => tokens.push(owner.__token__));
     for (let i = 0; i < tokens.length; i++) {
       const nft = await getNFT(tokens[i], -1); // -1 = all available editions
       nfts.push(nft[0]);
