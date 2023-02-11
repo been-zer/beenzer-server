@@ -72,7 +72,7 @@ export const getUserNFTs = async (
   if (_logs) {
     console.log("\neditionTokens query: ", tokens);
   }
-  // Get NFTs amounts by counting Editions.
+  // Get NFTs amounts by counting Editions
   const userEditions: Edition[] | any = await getEditionsByTokens(tokens);
   if (_logs) {
     console.log("\nuserEditions: ", userEditions);
