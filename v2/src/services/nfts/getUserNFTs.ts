@@ -34,7 +34,7 @@ export const getUserNFTs = async (
   pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION,
   _keypair: Keypair = Keypair.generate()
-): Promise<Array<any>> => {
+): Promise<Array<NFT>> => {
   // Get wallet's NFTs from Solana network
   const solanaNFTs = await getUserNFTsSolana(
     pubkey,
@@ -53,7 +53,6 @@ export const getUserNFTs = async (
   }
   // Get user NFTs from DB (Master Editions)
   const userNFTsDB = await getNFTsByTokens(tokens);
-  console.log("\nUser NFTs\n", tokens);
   // Get NFTs amounts by Editions.
   const userEditions = await getEditionsByOwner(pubkey);
   const userNFTs: NFT[] = [];
