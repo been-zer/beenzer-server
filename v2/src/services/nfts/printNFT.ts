@@ -125,7 +125,7 @@ async function printNFT(
           };
           return ret as Edition;
         }
-        return nftMaster;
+        return true;
       }
     } catch (err) {
       if (String(err).includes("max supply")) {
