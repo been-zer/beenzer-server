@@ -49,9 +49,9 @@ interface UserNFT {
 }
 export const getUserNFTs = async (
   pubkey: string,
-  _solanaConnection: Connection = SOLANA_CONNECTION,
-  _keypair: Keypair = Keypair.generate(),
-  _logs: boolean = false
+  _solanaConnection: Connection = SOLANA_CONNECTION, // Optional
+  _keypair: Keypair = Keypair.generate(), // Optional, new keypair for metaplex
+  _logs: boolean = true // Optional, print logs
 ): Promise<UserNFT[]> => {
   // Get wallet's NFTs from Solana network
   const solanaNFTs = await getUserNFTsSolana(
@@ -59,6 +59,9 @@ export const getUserNFTs = async (
     _solanaConnection,
     _keypair
   );
+  if (_logs) {
+    console.log("\nsolanaNFTs: ", solanaNFTs);
+  }
   // Pepare tokens query for DB: "token[0], token[1], token[n]..."
   let tokens = "";
   if (solanaNFTs.length === 1) {
