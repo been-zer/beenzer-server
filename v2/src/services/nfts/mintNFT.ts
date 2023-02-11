@@ -162,12 +162,9 @@ export async function mintToken(
         isMutable: false,
         maxSupply: toBigNumber(supply),
       });
-      console.log(`⛏️  Mint Success! Tries: ${i + 1}`);
-      console.log(
-        `   Minted NFT: https://solscan.io/token/${nft.mintAddress.toBase58()}`
-      );
-      console.log("nfttttttt", nft);
       const token = nft.mintAddress.toBase58();
+      console.log(`⛏️  Mint Success! Tries: ${i + 1}`);
+      console.log(`   Minted NFT: https://solscan.io/token/${token}`);
       return token;
     } catch (err) {
       console.log(`Minting NFT failed!!! Tries: ${i + 1}`);

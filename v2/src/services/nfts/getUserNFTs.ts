@@ -55,7 +55,7 @@ export const getUserNFTs = async (
   console.log("wallet nfts", solanaNFTs); // !rm
   console.log("tokens", tokens); // !rm
   // Get user NFTs from DB (Master Editions)
-  const userNFTsDB = tokens ? await getNFTsByTokens(tokens) : [];
+  const userNFTsDB = tokens.length > 0 ? await getNFTsByTokens(tokens) : [];
   console.log("userNFTsDB", userNFTsDB); // !rm
   // Get NFTs amounts by Editions.
   const userEditions: any = await getEditionsByOwner(pubkey);

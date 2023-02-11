@@ -107,45 +107,49 @@ export const mintNFTSocket = (socket: Socket): void => {
           "mintLogs",
           `⛏️ ${name} minted succesfully! Token address: ${token.token}, Supply: ${supply}`
         );
+
+        socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
+        if (
+          await newNFT(
+            id,
+            token.token,
+            supply,
+            floor,
+            _mintCcy,
+            creator,
+            username,
+            token.imageUri,
+            token.assetUri,
+            type,
+            token.metadataUri,
+            name,
+            description,
+            city,
+            latitude,
+            longitude,
+            visbility,
+            maxLat,
+            minLat,
+            maxLon,
+            minLon,
+            TRIES, // Async tries
+            false // Print Error logs
+          )
+        ) {
+          socket.emit(
+            "mintLogs",
+            `🎉 ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
+          );
+        } else {
+          socket.emit("mintLogs", "newNFT controller failed!");
+          socket.emit("mintLogs", "false");
+        }
         const firstEdition: any = await printNFT(
           new PublicKey(token.token),
           new PublicKey(creator),
           TRIES
         );
         if (firstEdition) {
-          socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
-          if (
-            await newNFT(
-              id,
-              token.token,
-              supply,
-              floor,
-              _mintCcy,
-              creator,
-              username,
-              token.imageUri,
-              token.assetUri,
-              type,
-              token.metadataUri,
-              name,
-              description,
-              city,
-              latitude,
-              longitude,
-              visbility,
-              maxLat,
-              minLat,
-              maxLon,
-              minLon,
-              TRIES, // Async tries
-              false // Print Error logs
-            )
-          ) {
-            socket.emit(
-              "mintLogs",
-              `🎉 ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
-            );
-          }
           if (await newEdition(token.token, 1, creator, TRIES, true)) {
             socket.emit(
               "mintLogs",
@@ -153,6 +157,9 @@ export const mintNFTSocket = (socket: Socket): void => {
             );
             socket.emit("mintLogs", "true");
           }
+        } else {
+          socket.emit("mintLogs", "newEdition controller failed!");
+          socket.emit("mintLogs", "false");
         }
       }
     }
