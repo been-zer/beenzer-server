@@ -75,7 +75,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         i++;
       }
       const name = `${SYMBOL} #${id}`;
-      const token: Token | boolean = await mintNFT(
+      const token: Token = await mintNFT(
         name,
         asset,
         SYMBOL,
@@ -99,7 +99,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         MASTER_COLLECTION, // NFT collection
         MASTER_PUBLICKEY, // Owner (payer)
         false, // It is not a Sized Collection
-        TRIES,
+        TRIES, // Async tries
         false // Print Error logs
       );
       if (token.token != "ERROR") {
@@ -137,7 +137,7 @@ export const mintNFTSocket = (socket: Socket): void => {
               minLat,
               maxLon,
               minLon,
-              TRIES,
+              TRIES, // Async tries
               false // Print Error logs
             )
           ) {
