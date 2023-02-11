@@ -147,7 +147,8 @@ export const mintNFTSocket = (socket: Socket): void => {
         const firstEdition: any = await printNFT(
           new PublicKey(token.token),
           new PublicKey(creator),
-          TRIES
+          TRIES, // Async tries
+          true // Return Edition
         );
         if (firstEdition) {
           if (
@@ -156,8 +157,8 @@ export const mintNFTSocket = (socket: Socket): void => {
               firstEdition.token,
               1,
               creator,
-              TRIES,
-              true
+              TRIES, // Async tries
+              true // Print Error logs
             )
           ) {
             socket.emit(
@@ -197,7 +198,8 @@ export const printNFTSocket = (socket: Socket): void => {
             edition.token,
             Number(edition),
             pubkey,
-            TRIES
+            TRIES, // Async tries
+            true // Return Edition
           )
         ) {
           socket.emit(

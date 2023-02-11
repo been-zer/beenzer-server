@@ -135,7 +135,12 @@ export async function newEdition(
   _tries = 10,
   _errLogs = false
 ): Promise<boolean> {
-  if (token != "ERROR" && token.length > 0) {
+  if (
+    master != "ERROR" &&
+    master.length > 0 &&
+    token != "ERROR" &&
+    token.length > 0
+  ) {
     let i = 0;
     while (i < _tries) {
       try {
