@@ -117,6 +117,7 @@ export async function newNFT(
         }
         i++;
         console.log("ERROR: newNFT controller failed! Tries: ", i);
+        sleep(3000);
       }
     }
     return false;

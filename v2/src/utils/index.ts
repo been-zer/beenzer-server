@@ -3,7 +3,9 @@
 // import { FfmpegCommandOptions } from "fluent-ffmpeg";
 // import gifify from "gifify";
 
-export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+export const sleep = (ms: number) => {
+  return new Promise((r) => setTimeout(r, ms));
+};
 /**
  * @description Get getTime data
  * @date 12/1/2022 - 12:02:42 PM
