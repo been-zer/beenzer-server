@@ -112,10 +112,11 @@ export const getUserNFTsSolana = async (
     });
     const mint = rawNFT.mintAddress.toBase58();
     const addr = rawNFT.address.toBase58();
+    console.log("\neo", mint, addr);
     const supply = await _solanaConnection.getTokenSupply(new PublicKey(mint));
     const nftRow = {
-      token: mint as string,
-      mint: addr as string,
+      token: addr as string,
+      mint: mint as string,
       symbol: rawNFT.symbol as string,
       amount: 1,
       supply: supply.value.uiAmount as number,
