@@ -3,8 +3,9 @@ import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
   getNFTsByTokens,
-  getEditionsByOwner,
+  getEditionsByTokens,
 } from "../../controllers/nfts.controller";
+import { Edition } from "./printNFT";
 import { SOLANA_CONNECTION } from "../solanaConnection";
 
 export interface NFT {
@@ -31,11 +32,27 @@ interface Trait {
   value: string;
 }
 
+interface UserNFT {
+  token: string;
+  amount: number;
+  supply: number;
+  floor: number;
+  ccy: string;
+  creator: string;
+  username: string;
+  title: string;
+  description: string;
+  metadata_uri: string;
+  image_uri: string;
+  asset_uri: string;
+  type: string;
+}
 export const getUserNFTs = async (
   pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION,
-  _keypair: Keypair = Keypair.generate()
-): Promise<Array<NFT>> => {
+  _keypair: Keypair = Keypair.generate(),
+  _logs: boolean = false
+): Promise<UserNFT[]> => {
   // Get wallet's NFTs from Solana network
   const solanaNFTs = await getUserNFTsSolana(
     pubkey,
@@ -52,36 +69,77 @@ export const getUserNFTs = async (
     }
     tokens = tokens.slice(0, -2);
   }
-  console.log("wallet nfts", solanaNFTs); // !rm
-  console.log("tokens", tokens); // !rm
-  // Get user NFTs from DB (Master Editions)
-  const userNFTsDB = tokens.length > 0 ? await getNFTsByTokens(tokens) : [];
-  console.log("userNFTsDB", userNFTsDB); // !rm
-  // Get NFTs amounts by Editions.
-  const userEditions: any = await getEditionsByOwner(pubkey);
-  const userNFTs: NFT[] = [];
+  if (_logs) {
+    console.log("\neditionTokens query: ", tokens);
+  }
+  // Get NFTs amounts by counting Editions.
+  const userEditions: Edition[] | any = await getEditionsByTokens(tokens);
+  if (_logs) {
+    console.log("\nuserEditions: ", userEditions);
+  }
+  const masterTokens = [];
   for (const nft of solanaNFTs) {
-    for (const nftdb of userNFTsDB) {
-      if (nftdb.__token__ == nft.token) {
-        userNFTs.push(nft);
-        break;
+    for (const edition of userEditions) {
+      if (nft.token === edition.__token__) {
+        masterTokens.push(edition.__master__ as string);
       }
     }
   }
-  console.log("userNFTs", userNFTs); // !rm
+  if (_logs) {
+    console.log("\nmasterTokens query: ", masterTokens);
+  }
+  let nftsQuery = "";
+  const amount: any = {};
+  for (const master of masterTokens) {
+    amount[master] = (amount[master] || 0) + 1;
+    nftsQuery += `'${master}', `;
+  }
+  if (_logs) {
+    console.log("\nToken amounts: ", amount);
+  }
+  nftsQuery = nftsQuery.slice(0, -2);
+  if (_logs) {
+    console.log("\nnftQuery", nftsQuery);
+  }
+  // Get user NFTs from DB (Master Editions)
+  const userMasters = tokens.length > 0 ? await getNFTsByTokens(tokens) : [];
+  if (_logs) {
+    console.log("\nuserMastersNFTs: ", userMasters);
+  }
+  const userNFTs: UserNFT[] = [];
+  for (const master of userMasters) {
+    const userNFTrow: UserNFT = {
+      token: master.__token__,
+      amount: 1,
+      supply: master._supply,
+      floor: Number(master._floor),
+      ccy: master._ccy,
+      creator: master._creator,
+      username: master._username,
+      title: master._name,
+      description: master._description,
+      metadata_uri: master._metadata_uri,
+      image_uri: master._image_uri,
+      asset_uri: master._asset_uri,
+      type: master._type,
+    };
+    userNFTs.push(userNFTrow);
+  }
+  if (_logs) {
+    console.log("\nuserNFTs: ", userNFTs);
+  }
   if (userNFTs) {
-    if (userEditions) {
-      for (const nft of userNFTs) {
-        if (userEditions) {
-          for (const edition of userEditions) {
-            if (edition.__token__ == nft.token) {
-              nft.amount++;
-            }
-          }
-        }
-      }
+    // Update UserNFT amount
+    for (const userNFT of userNFTs) {
+      userNFT.amount = amount[userNFT.token];
+    }
+    if (_logs) {
+      console.log("\nuserNFTs amounts: ", userNFTs);
     }
     return userNFTs;
+  }
+  if (_logs) {
+    console.log("\ngetUserNFTs -> User has no NFTs..");
   }
   return [];
 };

@@ -161,6 +161,7 @@ export async function newEdition(
 }
 
 interface Edition {
+  __master__: string;
   __token__: string;
   __edition__: string;
   _owner: string;
@@ -172,6 +173,19 @@ export async function getEditionsByOwner(
 ): Promise<Array<Edition> | Promise<boolean>> {
   try {
     const data = await db.query(_getEditionsByOwner(owner));
+    const rows = data.rows;
+    return rows;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getEditionsByTokens(
+  tokens: string
+): Promise<Array<Edition> | Promise<boolean>> {
+  try {
+    const data = await db.query(_getEditionsByOwner(tokens));
     const rows = data.rows;
     return rows;
   } catch (error) {

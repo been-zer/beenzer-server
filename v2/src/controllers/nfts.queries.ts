@@ -58,6 +58,10 @@ export const _getEditionsByOwner = (owner: string): string => {
   return `SELECT * FROM editions WHERE _owner = '${owner}'`;
 };
 
+export const _getEditionsByTokens = (tokens: string): string => {
+  return `SELECT * FROM editions WHERE __token__ IN (${tokens})`;
+};
+
 export const _newOwner = (token: string, owner: string): string => {
   return `INSERT INTO owners (${ownerSchema}) VALUES ('${token}', '${owner}', ${Date.now()})`;
 };

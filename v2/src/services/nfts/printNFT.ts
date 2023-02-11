@@ -29,8 +29,8 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
     })
   );
 
-interface Edition {
-  nft: any;
+export interface Edition {
+  master: string;
   copy: string;
   edition: number;
 }
@@ -117,10 +117,11 @@ async function printNFT(
           "✅ Succefully printed new NFT edition!",
           `Tries: ${i + 1}`
         );
+        i = _tries + 1;
         if (_returnEdition) {
           const ret = {
-            nft: nftMaster.address.toBase58(),
-            copy: nftCopy.editionAddress.toBase58(),
+            master: nftMaster.mint.toBase58(),
+            copy: nftCopy.tokenAddress.toBase58(),
             edition: edition,
           };
           return ret as Edition;
