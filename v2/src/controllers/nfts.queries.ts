@@ -50,7 +50,7 @@ export const _updateEditionOwner = (
   edition: number,
   newOwner: string
 ): string => {
-  return `UPDATE editions SET _owner = '${newOwner}', _timestamp = ${Date.now()}, WHERE __token__ = ${token} AND __edition__ = '${edition}'`;
+  return `UPDATE editions SET _owner = '${newOwner}', _timestamp = ${Date.now()}, WHERE __token__ = ${token} AND __edition__ = ${edition}`;
 };
 
 export const _getEditionsByOwner = (owner: string): string => {
