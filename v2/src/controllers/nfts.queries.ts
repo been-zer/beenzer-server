@@ -38,11 +38,12 @@ export const _newNFT = (
 };
 
 export const _newEdition = (
+  master: string,
   token: string,
   edition: number,
   owner: string
 ): string => {
-  return `INSERT INTO editions (${editionSchema}) VALUES ('${token}', ${edition}, '${owner}', ${Date.now()}, ${Date.now()})`;
+  return `INSERT INTO editions (${editionSchema}) VALUES ('${master}', '${token}', ${edition}, '${owner}', ${Date.now()}, ${Date.now()})`;
 };
 
 export const _updateEditionOwner = (

@@ -150,7 +150,16 @@ export const mintNFTSocket = (socket: Socket): void => {
           TRIES
         );
         if (firstEdition) {
-          if (await newEdition(token.token, 1, creator, TRIES, true)) {
+          if (
+            await newEdition(
+              token.token,
+              firstEdition.token,
+              1,
+              creator,
+              TRIES,
+              true
+            )
+          ) {
             socket.emit(
               "mintLogs",
               `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
@@ -167,13 +176,13 @@ export const mintNFTSocket = (socket: Socket): void => {
 };
 
 export const printNFTSocket = (socket: Socket): void => {
-  socket.on("printNFT", async (token: string, pubkey: string) => {
-    if (token.length > 22 && pubkey.length > 22) {
-      const msg = `🖨️ Printing NFT ${token}...`;
+  socket.on("printNFT", async (master: string, pubkey: string) => {
+    if (master.length > 22 && pubkey.length > 22) {
+      const msg = `🖨️ Printing NFT ${master}...`;
       socket.emit("printLogs", msg);
       console.log("printLogs", msg);
-      const edition = await printNFT(
-        new PublicKey(token),
+      const edition: any = await printNFT(
+        new PublicKey(master),
         new PublicKey(pubkey),
         TRIES,
         true, // Return Edition int
@@ -182,10 +191,18 @@ export const printNFTSocket = (socket: Socket): void => {
         true // Print error logs
       );
       if (Number(edition) > 1) {
-        if (await newEdition(token, Number(edition), pubkey, TRIES)) {
+        if (
+          await newEdition(
+            master,
+            edition.token,
+            Number(edition),
+            pubkey,
+            TRIES
+          )
+        ) {
           socket.emit(
             "printLogs",
-            `🎉 ${token} Edition ${Number(
+            `🎉 ${edition.token} Edition ${Number(
               edition
             )} has been printed succesfully!`
           );

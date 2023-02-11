@@ -16,7 +16,7 @@ import {
   METAPLEX_BUNDLR_URI,
   MARKETPLACE_PUBKEY,
 } from "../solanaConnection";
-import { NFT } from "./getUserNFTs";
+// import { NFT } from "./getUserNFTs";
 
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
   .use(keypairIdentity(MASTER_KEYPAIR))
@@ -28,6 +28,10 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
     })
   );
 
+interface Edition {
+  nft: any;
+  edition: number;
+}
 async function printNFT(
   originalNFT: PublicKey,
   destination: PublicKey,
@@ -36,7 +40,7 @@ async function printNFT(
   _whenMaxSupply = "SEND", // or BURN Master Edition
   _destinationWallet = MARKETPLACE_PUBKEY, // if SEND, destination wallet pubkey
   _errLogs: boolean = false // Optional. Print Error logs
-): Promise<NFT | number | boolean> {
+): Promise<Edition | boolean> {
   let i = 0;
   while (i < _tries) {
     try {
@@ -112,7 +116,8 @@ async function printNFT(
           `Tries: ${i + 1}`
         );
         if (_returnEdition) {
-          return edition;
+          const ret = { nft: nftCopy, edition: edition };
+          return ret as Edition;
         }
         return nftMaster;
       }
