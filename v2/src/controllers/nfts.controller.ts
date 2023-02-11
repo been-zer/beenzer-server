@@ -152,9 +152,16 @@ export async function newEdition(
   return false;
 }
 
+interface Edition {
+  __token__: string;
+  __edition__: string;
+  _owner: string;
+  _created_at: number;
+  _timestamp: number;
+}
 export async function getEditionsByOwner(
   owner: string
-): Promise<Array<object> | boolean> {
+): Promise<Array<Edition> | Promise<boolean>> {
   try {
     const data = await db.query(_getEditionsByOwner(owner));
     const rows = data.rows;

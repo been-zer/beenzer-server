@@ -51,28 +51,35 @@ export const getUserNFTs = async (
     }
     tokens = tokens.slice(0, -2);
   }
+  console.log("wallet nfts", solanaNFTs); // !rm
+  console.log("tokens", tokens); // !rm
   // Get user NFTs from DB (Master Editions)
   const userNFTsDB = await getNFTsByTokens(tokens);
+  console.log("userNFTsDB", userNFTsDB); // !rm
   // Get NFTs amounts by Editions.
-  const userEditions = await getEditionsByOwner(pubkey);
+  const userEditions: any = await getEditionsByOwner(pubkey);
   const userNFTs: NFT[] = [];
-  solanaNFTs.forEach((nft: NFT) => {
-    userNFTsDB.forEach((nftdb: any) => {
+  for (const nft of solanaNFTs) {
+    for (const nftdb of userNFTsDB) {
       if (nftdb.__token__ == nft.token) {
         userNFTs.push(nft);
+        break;
       }
-    });
-  });
-  userNFTs.forEach((nft: NFT) => {
-    if (userEditions) {
-      Array(userEditions).forEach((edition: any) => {
-        if (edition.__token__ == nft.token) {
-          nft.amount++;
-        }
-      });
     }
-  });
+  }
+  console.log("userNFTs", userNFTs); // !rm
   if (userNFTs) {
+    if (userEditions) {
+      for (const nft of userNFTs) {
+        if (userEditions) {
+          for (const edition of userEditions) {
+            if (edition.__token__ == nft.token) {
+              nft.amount++;
+            }
+          }
+        }
+      }
+    }
     return userNFTs;
   }
   return [];
