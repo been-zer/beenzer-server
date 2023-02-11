@@ -71,7 +71,7 @@ export const mintNFTSocket = (socket: Socket): void => {
             break;
           }
         }
-        sleep(1000);
+        sleep(3000);
         i++;
       }
       const name = `${SYMBOL} #${id}`;

@@ -19,7 +19,7 @@ import {
   _getMapNFTs,
   _newOwner,
 } from "./nfts.queries";
-import { getDate, getTime } from "../utils";
+import { getDate, getTime, sleep } from "../utils";
 
 /**
  * @description Get createNFTtransactions data
@@ -152,6 +152,7 @@ export async function newEdition(
           console.log(error);
         }
         i++;
+        sleep(3000);
       }
     }
   }
