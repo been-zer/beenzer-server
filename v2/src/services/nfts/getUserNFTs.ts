@@ -9,7 +9,7 @@ import { SOLANA_CONNECTION } from "../solanaConnection";
 
 export interface NFT {
   token: string;
-  mint: string;
+  account: string;
   symbol: string;
   amount: number;
   supply: number;
@@ -116,7 +116,7 @@ export const getUserNFTsSolana = async (
     const supply = await _solanaConnection.getTokenSupply(new PublicKey(mint));
     const nftRow = {
       token: mint as string,
-      mint: addr as string,
+      account: addr as string,
       symbol: rawNFT.symbol as string,
       amount: 1,
       supply: supply.value.uiAmount as number,

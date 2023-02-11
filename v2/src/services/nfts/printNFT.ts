@@ -9,6 +9,7 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import { burnNFT } from "./burnNFT";
 import { sendNFT } from "./sendNFT";
+import { sleep } from "../../utils";
 import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
@@ -133,6 +134,7 @@ async function printNFT(
       console.log(
         `❌ - Printing failed for unkown reason! Check logs. Tries: ${i}`
       );
+      sleep(5000);
     }
   }
   return false;

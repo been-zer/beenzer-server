@@ -154,7 +154,7 @@ export const mintNFTSocket = (socket: Socket): void => {
           if (
             await newEdition(
               token.token,
-              firstEdition.token,
+              firstEdition.nft.token,
               1,
               creator,
               TRIES, // Async tries
