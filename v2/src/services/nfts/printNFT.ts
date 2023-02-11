@@ -119,7 +119,7 @@ async function printNFT(
         );
         if (_returnEdition) {
           const ret = {
-            nft: nftMaster.toBase58(),
+            nft: nftMaster.address.toBase58(),
             copy: nftCopy.editionAddress.toBase58(),
             edition: edition,
           };
