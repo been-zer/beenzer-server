@@ -21,6 +21,7 @@ export interface NFT {
   asset_uri: string;
   metadata: Trait[];
 }
+
 interface Creator {
   pubkey: string;
   share: number;
