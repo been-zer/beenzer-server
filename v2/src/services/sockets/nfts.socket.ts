@@ -23,6 +23,12 @@ dotenv.config();
 
 const TRIES = Number(process.env.ASYNC_TRIES);
 
+interface Token {
+  token: string;
+  imageUri: string;
+  assetUri: string;
+  metadataUri: string;
+}
 export const mintNFTSocket = (socket: Socket): void => {
   socket.on(
     "mintNFT",
@@ -69,7 +75,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         i++;
       }
       const name = `${SYMBOL} #${id}`;
-      const token = await mintNFT(
+      const token: Token | boolean = await mintNFT(
         name,
         asset,
         SYMBOL,
@@ -96,7 +102,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         TRIES,
         true // Print Error logs
       );
-      if (token.token && token != "ERROR") {
+      if (token.token != "ERROR") {
         socket.emit(
           "mintLogs",
           `⛏️ ${name} minted succesfully! Token address: ${token.token}, Supply: ${supply}`
@@ -140,9 +146,7 @@ export const mintNFTSocket = (socket: Socket): void => {
               `🎉 ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
             );
           }
-          if (
-            await newEdition(token.token.toBase58(), 1, creator, TRIES, true)
-          ) {
+          if (await newEdition(token.token, 1, creator, TRIES, true)) {
             socket.emit(
               "mintLogs",
               `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
