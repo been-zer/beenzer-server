@@ -99,7 +99,7 @@ export const mintNFTSocket = (socket: Socket): void => {
       if (token.token && token != "ERROR") {
         socket.emit(
           "mintLogs",
-          `⛏️ ${name} minted succesfully! Token address: ${token}, Supply: ${supply}`
+          `⛏️ ${name} minted succesfully! Token address: ${token.token}, Supply: ${supply}`
         );
         const firstEdition: any = await printNFT(
           new PublicKey(token.token),
@@ -111,7 +111,7 @@ export const mintNFTSocket = (socket: Socket): void => {
           if (
             await newNFT(
               id,
-              token.token.toBase58(),
+              token.token,
               supply,
               floor,
               _mintCcy,
