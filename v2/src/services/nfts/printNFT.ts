@@ -31,6 +31,7 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 
 interface Edition {
   nft: any;
+  copy: string;
   edition: number;
 }
 async function printNFT(
@@ -117,7 +118,11 @@ async function printNFT(
           `Tries: ${i + 1}`
         );
         if (_returnEdition) {
-          const ret = { nft: nftCopy, edition: edition };
+          const ret = {
+            nft: nftMaster.toBase58(),
+            copy: nftCopy.editionAddress.toBase58(),
+            edition: edition,
+          };
           return ret as Edition;
         }
         return nftMaster;

@@ -159,7 +159,7 @@ export async function mintToken(
         sellerFeeBasisPoints: sellerFee,
         symbol: symbol,
         creators: creators,
-        isMutable: false,
+        isMutable: true,
         maxSupply: toBigNumber(supply),
       });
       const token = nft.mintAddress.toBase58();
