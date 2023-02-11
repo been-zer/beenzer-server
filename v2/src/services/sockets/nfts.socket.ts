@@ -100,7 +100,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         MASTER_PUBLICKEY, // Owner (payer)
         false, // It is not a Sized Collection
         TRIES,
-        true // Print Error logs
+        false // Print Error logs
       );
       if (token.token != "ERROR") {
         socket.emit(
