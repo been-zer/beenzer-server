@@ -76,6 +76,10 @@ export async function newNFT(
       try {
         const date = getDate();
         const time = getTime();
+        let assetUri = "";
+        if (image != asset) {
+          assetUri = asset;
+        }
         if (id != -1) {
           await db.query(
             _newNFT(
@@ -87,7 +91,7 @@ export async function newNFT(
               creator,
               username,
               image,
-              asset,
+              assetUri,
               type,
               metadata,
               name,
