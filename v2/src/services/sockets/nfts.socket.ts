@@ -3,7 +3,7 @@ import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../../utils";
 import {
   SYMBOL,
-  MARKETPLACE_PUBKEY,
+  MARKET_PUBKEY,
   MASTER_COLLECTION,
   MASTER_PUBLICKEY,
   SOLANA_CONNECTION,
@@ -189,7 +189,7 @@ export const printNFTSocket = (socket: Socket): void => {
         TRIES,
         true, // Return Edition int
         "SEND", // When max supply send to marketplace
-        MARKETPLACE_PUBKEY,
+        MARKET_PUBKEY,
         true // Print error logs
       );
       if (Number(edition) > 1) {

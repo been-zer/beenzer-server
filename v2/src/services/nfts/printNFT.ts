@@ -15,7 +15,7 @@ import {
   SOLANA_RPC_URL,
   MASTER_KEYPAIR,
   METAPLEX_BUNDLR_URI,
-  MARKETPLACE_PUBKEY,
+  MARKET_PUBKEY,
 } from "../../config";
 // import { NFT } from "./getUserNFTs";
 
@@ -40,7 +40,7 @@ async function printNFT(
   _tries: number = 10, // Optional
   _returnEdition: boolean = false, // Optional
   _whenMaxSupply = "SEND", // or BURN Master Edition
-  _destinationWallet = MARKETPLACE_PUBKEY, // if SEND, destination wallet pubkey
+  _destinationWallet = MARKET_PUBKEY, // if SEND, destination wallet pubkey
   _errLogs: boolean = false // Optional. Print Error logs
 ): Promise<Edition | boolean> {
   let i = 0;

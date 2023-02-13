@@ -1,5 +1,21 @@
 import { PublicKey } from "@solana/web3.js";
-import { MASTER_PUBLICKEY } from "../../config";
+import {
+  SYMBOL,
+  MASTER_PUBLICKEY,
+  MASTER_COLLECTION_SUPPLY,
+  LANDING_URL,
+  MARKET_URL,
+  DAO_URL,
+  DESCRIPTION,
+  TWITTER,
+  INSTAGRAM,
+  DISCORD,
+  TELEGRAM,
+  TIKTOK,
+  YOUTUBE,
+  OPENSEA,
+  MAGICEDEN,
+} from "../../config";
 import { uploadImage, uploadMetadata, mintToken } from "./mintNFT";
 import fs from "fs";
 
@@ -7,21 +23,23 @@ const imageBuffer = fs.readFileSync("./src/assets/logo.png");
 
 export async function mintCollection(
   buffer: Buffer = imageBuffer,
-  name: string = "BEENZER COLLECTION",
-  symbol: string = "BEENZER",
-  supply: number = 999,
+  name: string = `${SYMBOL} COLLECTION`,
+  symbol: string = SYMBOL,
+  supply: number = MASTER_COLLECTION_SUPPLY,
   sellerFee: number = 0,
   mutable: boolean = false,
-  website: string = "https://beenzer.app",
-  dao: string = "https://dao.beenzer.app",
-  market: string = "https://market.beenzer.app",
-  description: string = "Beenzer Collection is the NFT Master Edition for BEENZER official NFTs. Check our links to be part of the best web3 community! 💚",
-  twitter: string = "https://twitter.com/beenzer_app",
-  instagram: string = "https://instagram.com/beenzer_app",
-  discord: string = "https://discord.gg/Ta9X6zbg",
-  telegram: string = "https://t.me/+VgZorKQGP0gwY2Fk",
-  tiktok: string = "https://tiktok.com/beenzer_app",
-  youtube: string = "https://youtube.com/@beenzer",
+  website: string = LANDING_URL,
+  dao: string = DAO_URL,
+  market: string = MARKET_URL,
+  description: string = DESCRIPTION,
+  twitter: string = TWITTER,
+  instagram: string = INSTAGRAM,
+  discord: string = DISCORD,
+  telegram: string = TELEGRAM,
+  tiktok: string = TIKTOK,
+  youtube: string = YOUTUBE,
+  opensea: string = OPENSEA,
+  magiceden: string = MAGICEDEN,
   creators: { address: PublicKey; share: number }[] = [
     { address: MASTER_PUBLICKEY, share: 100 },
   ],
@@ -32,6 +50,8 @@ export async function mintCollection(
     try {
       const imageUri = await uploadImage(buffer, name + ".png", tries);
       const attributes = [
+        { trait_type: "SUUPLY", value: String(supply) },
+        { trait_type: "MUTABLE", value: mutable ? "TRUE" : "FALSE" },
         { trait_type: "WEBSITE", value: website },
         { trait_type: "DAO", value: dao },
         { trait_type: "MARKET", value: market },
@@ -41,6 +61,8 @@ export async function mintCollection(
         { trait_type: "TELEGRAM", value: telegram },
         { trait_type: "TIKTOK", value: tiktok },
         { trait_type: "YOUTUBE", value: youtube },
+        { trait_type: "OPENSEA", value: opensea },
+        { trait_type: "MAGICEDEN", value: magiceden },
       ];
       const metadataUri = await uploadMetadata(
         imageUri,
