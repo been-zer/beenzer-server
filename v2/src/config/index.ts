@@ -15,9 +15,9 @@ export const MASTER_KEYPAIR = Keypair.fromSecretKey(
 );
 // Master NFT Collection
 export const SYMBOL = String(process.env.NFT_SYMBOL);
-export const MASTER_COLLECTION_PUBKEY = String(process.env.NFT_COLLECTION);
-export const MASTER_COLLECTION = new PublicKey(MASTER_COLLECTION_PUBKEY);
-export const MASTER_COLLECTION_SUPPLY = 1000;
+export const NFT_MASTER_PUBKEY = String(process.env.NFT_MASTER);
+export const MASTER_COLLECTION = new PublicKey(NFT_MASTER_PUBKEY);
+export const NFT_MASTER_SUPPLY = 1000;
 // Tokenomics
 export const CURRENCY_SYMBOL = String(process.env.CURRENCY_SYMBOL);
 export const CURRENCY_TOKEN = String(process.env.CURRENCY_TOKEN);
@@ -31,7 +31,6 @@ export const TOKEN_KEYPAIR = Keypair.fromSecretKey(
   new Uint8Array(TOKEN_SECRET)
 );
 export const TOKEN_ACCOUNT = String(process.env.TOKEN_ACCOUNT);
-export const TOKEN_ACCOUNT_PUBLICKEY = new PublicKey(TOKEN_ACCOUNT);
 export const TOKEN_CREATOR = String(process.env.TOKEN_CREATOR);
 export const TOKEN_CREATOR_PUBLICKEY = new PublicKey(TOKEN_CREATOR);
 export const TOKEN_PUBLICKEY = new PublicKey(CURRENCY_TOKEN);

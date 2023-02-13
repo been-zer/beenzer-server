@@ -2,7 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 import {
   SYMBOL,
   MASTER_PUBLICKEY,
-  MASTER_COLLECTION_SUPPLY,
+  NFT_MASTER_SUPPLY,
   LANDING_URL,
   MARKET_URL,
   DAO_URL,
@@ -25,7 +25,7 @@ export async function mintCollection(
   buffer: Buffer = imageBuffer,
   name: string = `${SYMBOL} COLLECTION`,
   symbol: string = SYMBOL,
-  supply: number = MASTER_COLLECTION_SUPPLY,
+  supply: number = NFT_MASTER_SUPPLY,
   sellerFee: number = 0,
   mutable: boolean = false,
   website: string = LANDING_URL,

@@ -50,8 +50,8 @@ export async function balanceToken(
   solanaConnection: Connection
 ): Promise<number> {
   try {
-    const Currency = new PublicKey(token_pubkey);
-    const token: TokenAccountsFilter = { mint: Currency };
+    const token_publickey = new PublicKey(token_pubkey);
+    const token: TokenAccountsFilter = { mint: token_publickey };
     const accounts = await solanaConnection.getTokenAccountsByOwner(
       publicKey,
       token
