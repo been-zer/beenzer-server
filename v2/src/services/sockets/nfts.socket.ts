@@ -94,6 +94,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         minLat,
         maxLon,
         minLon,
+        true, // NFT is mutable (van be burned)
         _royalties,
         _image,
         _mintCcy,

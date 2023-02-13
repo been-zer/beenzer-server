@@ -145,9 +145,9 @@ export async function mintToken(
   sellerFee: number,
   symbol: string,
   creators: { address: PublicKey; share: number }[],
-  _mutable: boolean = true,
-  _tries: number = 10,
-  _errLogs: boolean = false
+  _isMutable: boolean = true, // Optional, if True token can be burned
+  _tries: number = 10, // Optional, number of async tries
+  _errLogs: boolean = false // Optional, print Error logs
 ): Promise<string> {
   console.log(`Step 3 - Minting ${name} in Solana...`);
   let nft: CreateNftOutput;
@@ -160,7 +160,7 @@ export async function mintToken(
         sellerFeeBasisPoints: sellerFee,
         symbol: symbol,
         creators: creators,
-        isMutable: _mutable,
+        isMutable: _isMutable,
         maxSupply: toBigNumber(supply),
       });
       const token = nft.mintAddress.toBase58();
@@ -206,7 +206,8 @@ async function mintNFT(
   minLat: number,
   maxLon: number,
   minLon: number,
-  _royalties: number = 1000, // Optional
+  _isMutable: boolean = true, // Optional, if True token can be burned
+  _royalties: number = 1000, // Optional, 1000 = 10%
   _nftImage: Buffer | boolean = false, // Optional
   _mintCcy: string = "SOL", // Optional
   _collection: PublicKey = MASTER_COLLECTION, // Optional
@@ -247,7 +248,7 @@ async function mintNFT(
     collectionAuthority: _collectionAuthority,
     collectionIsSized: _collectionIsSized,
     isVerified: true,
-    isMutabe: false,
+    isMutabe: _isMutable,
     creators: [
       { address: new PublicKey(creator), share: 80 },
       { address: MASTER_PUBLICKEY, share: 20 },
@@ -289,7 +290,7 @@ async function mintNFT(
           METADATA.sellerFeeBasisPoints,
           METADATA.symbol,
           METADATA.creators,
-          true, // NFT is mutable (can be burned)
+          _isMutable, // NFT is mutable (can be burned)
           _tries,
           _errLogs
         );
