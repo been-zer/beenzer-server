@@ -88,5 +88,5 @@ export default async function getBalances(
     Stock,
     STOCK_SYMBOL
   );
-  return { SOL, USDC };
+  return { SOL, USDC, Currency, Stock };
 }
