@@ -142,6 +142,7 @@ export const getUserNFTs = async (
           metadata_uri: master._metadata_uri,
           attributes: [], // Fill in with userEditions
         };
+        // Update amount and attributes
         for (const edition of nftEditions) {
           if (edition.master === master.__token__) {
             userNFTrow.editions.push(edition.edition);
