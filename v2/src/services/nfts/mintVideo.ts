@@ -22,6 +22,7 @@ mintNFT(
   233,
   2332,
   2332,
+  true, // NFT can be burned
   10,
   gif
 );
