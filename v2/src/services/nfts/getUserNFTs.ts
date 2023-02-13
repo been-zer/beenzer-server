@@ -85,17 +85,19 @@ export const getUserNFTs = async (
     );
     // Create NFT Edition array
     const nftEditions = [];
-    for (const userEdi of userEditions) {
-      const nftEdiRow: EditionNFT = {
-        master: userEdi.master as string,
-        edition: {
-          token: userEdi.copy as string,
-          id: userEdi.id as number,
-        } as EditionId,
-        id: userEdi.edition as number,
-        traits: { ...traits[userEdi.copy].traits } as Trait[],
-      };
-      nftEditions.push(nftEdiRow);
+    if (userEditions) {
+      for (const userEdi of userEditions) {
+        const nftEdiRow: EditionNFT = {
+          master: userEdi.master as string,
+          edition: {
+            token: userEdi.copy as string,
+            id: userEdi.id as number,
+          } as EditionId,
+          id: userEdi.edition as number,
+          traits: { ...traits[userEdi.copy].traits } as Trait[],
+        };
+        nftEditions.push(nftEdiRow);
+      }
     }
     if (_logs) {
       console.log("\nuserEditions: ", nftEditions);
@@ -121,32 +123,34 @@ export const getUserNFTs = async (
     }
     // Create userNFTs array to return
     const userNFTs: UserNFT[] = [];
-    for (const master of userMasters) {
-      const userNFTrow: UserNFT = {
-        master: master.__token__,
-        editions: [], // Fill in with userEditions
-        amount: 1, // Update after fill in userNFTs.editions
-        supply: master._supply,
-        floor: Number(master._floor),
-        ccy: master._ccy,
-        creator: master._creator,
-        username: master._username,
-        image_uri: master._image_uri,
-        name: master._name,
-        description: master._description,
-        asset_uri: master._asset_uri,
-        type: master._type,
-        metadata_uri: master._metadata_uri,
-        attributes: [], // Fill in with userEditions
-      };
-      for (const edition of nftEditions) {
-        if (edition.master === master.__token__) {
-          userNFTrow.editions.push(edition.edition);
-          userNFTrow.attributes = [...edition.traits];
+    if (userMasters) {
+      for (const master of userMasters) {
+        const userNFTrow: UserNFT = {
+          master: master.__token__,
+          editions: [], // Fill in with userEditions
+          amount: 1, // Update after fill in userNFTs.editions
+          supply: master._supply,
+          floor: Number(master._floor),
+          ccy: master._ccy,
+          creator: master._creator,
+          username: master._username,
+          image_uri: master._image_uri,
+          name: master._name,
+          description: master._description,
+          asset_uri: master._asset_uri,
+          type: master._type,
+          metadata_uri: master._metadata_uri,
+          attributes: [], // Fill in with userEditions
+        };
+        for (const edition of nftEditions) {
+          if (edition.master === master.__token__) {
+            userNFTrow.editions.push(edition.edition);
+            userNFTrow.attributes = [...edition.traits];
+          }
         }
+        userNFTrow.amount = userNFTrow.editions.length || 0;
+        userNFTs.push(userNFTrow);
       }
-      userNFTrow.amount = userNFTrow.editions.length || 0;
-      userNFTs.push(userNFTrow);
     }
     if (_logs) {
       console.log("\nuserNFTs: ", userNFTs);
