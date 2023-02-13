@@ -7,7 +7,7 @@ import {
   createBurnCheckedInstruction,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import { SOLANA_CONNECTION, MASTER_KEYPAIR } from "../solanaConnection";
+import { SOLANA_CONNECTION, MASTER_KEYPAIR } from "../../config";
 
 export async function burnNFT(
   token: PublicKey,

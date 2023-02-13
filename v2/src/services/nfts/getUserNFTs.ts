@@ -4,7 +4,7 @@ import {
   getEditionsByTokens,
 } from "../../controllers/nfts.controller";
 import { getWalletNFTs, NFT, Trait } from "./solanaNFTs";
-import { SOLANA_CONNECTION } from "../config";
+import { SOLANA_CONNECTION } from "../../config";
 import { Edition } from "./printNFT";
 
 export interface EditionId {

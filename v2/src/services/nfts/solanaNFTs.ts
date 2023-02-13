@@ -1,7 +1,7 @@
 import request from "request";
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { SOLANA_CONNECTION } from "../solanaConnection";
+import { SOLANA_CONNECTION } from "../../config";
 
 export interface Creator {
   pubkey: string;

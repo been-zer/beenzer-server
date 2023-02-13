@@ -15,7 +15,7 @@ import {
   TOKEN_ACCOUNT_PUBLICKEY,
   TOKEN_CREATOR_PUBLICKEY,
   MASTER_PUBLICKEY,
-} from "../solanaConnection";
+} from "../../config";
 
 export async function sendToken(
   _destination: PublicKey,

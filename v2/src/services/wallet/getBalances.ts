@@ -6,7 +6,7 @@ import {
   CURRENCY_TOKEN,
   STOCK_SYMBOL,
   STOCK_TOKEN,
-} from "../solanaConnection";
+} from "../../config";
 
 export async function balanceSOL(
   publicKey: PublicKey,

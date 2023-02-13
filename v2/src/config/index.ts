@@ -22,11 +22,11 @@ export const MASTER_COLLECTION = new PublicKey(
 export const CURRENCY_SYMBOL = String(process.env.CURRENCY_SYMBOL);
 export const CURRENCY_TOKEN = String(process.env.CURRENCY_TOKEN);
 export const CURRENCY_PUBLICKEY = new PublicKey(CURRENCY_TOKEN);
-export const STOCK_SYMBOL = String(process.env.SYMBOL);
+export const STOCK_SYMBOL = String(process.env.STOCK_SYMBOL);
 export const STOCK_TOKEN = String(process.env.STOCK_TOKEN);
 export const STOCK_PUBLICKEY = new PublicKey(STOCK_TOKEN);
 export const TOKEN_AUTHORITY = String(process.env.TOKEN_AUTHORITY);
-export const TOKEN_SECRET = String(process.env.TOKEN_AUTHORITY_KEYPAIR)
+export const TOKEN_SECRET = String(process.env.TOKEN_AUTHORITY_KEsYPAIR)
   .split(",")
   .map((x: string) => Number(x)) as Array<number>;
 export const TOKEN_KEYPAIR = Keypair.fromSecretKey(
@@ -36,6 +36,8 @@ export const TOKEN_ACCOUNT = String(process.env.TOKEN_ACCOUNT);
 export const TOKEN_ACCOUNT_PUBLICKEY = new PublicKey(TOKEN_ACCOUNT);
 export const TOKEN_CREATOR = String(process.env.TOKEN_CREATOR);
 export const TOKEN_CREATOR_PUBLICKEY = new PublicKey(TOKEN_CREATOR);
+export const TOKEN_PUBLICKEY = CURRENCY_PUBLICKEY;
+export const TOKEN = CURRENCY_TOKEN;
 // Metaplex
 export const METAPLEX_BUNDLR_URI = "https://node1.bundlr.network";
 // Marketplace

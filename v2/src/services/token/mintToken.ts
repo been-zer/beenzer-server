@@ -6,7 +6,7 @@ import {
   TOKEN_KEYPAIR,
   TOKEN_PUBLICKEY,
   TOKEN_ACCOUNT_PUBLICKEY,
-} from "../solanaConnection";
+} from "../../config";
 import dotenv from "dotenv";
 dotenv.config();
 

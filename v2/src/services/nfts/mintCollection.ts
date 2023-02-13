@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { MASTER_PUBLICKEY } from "../solanaConnection";
+import { MASTER_PUBLICKEY } from "../../config";
 import { uploadImage, uploadMetadata, mintToken } from "./mintNFT";
 import fs from "fs";
 
@@ -9,6 +9,9 @@ export async function mintCollection(
   buffer: Buffer = imageBuffer,
   name: string = "BEENZER COLLECTION",
   symbol: string = "BEENZER",
+  supply: number = 999,
+  sellerFee: number = 0,
+  mutable: boolean = false,
   website: string = "https://beenzer.app",
   dao: string = "https://dao.beenzer.app",
   market: string = "https://market.beenzer.app",
@@ -22,12 +25,12 @@ export async function mintCollection(
   creators: { address: PublicKey; share: number }[] = [
     { address: MASTER_PUBLICKEY, share: 100 },
   ],
-  _tries: number = 10
+  tries: number = 10
 ): Promise<PublicKey | string | boolean> {
   let i = 0;
-  while (i < _tries) {
+  while (i < tries) {
     try {
-      const imageUri = await uploadImage(buffer, name + ".png", _tries);
+      const imageUri = await uploadImage(buffer, name + ".png", tries);
       const attributes = [
         { trait_type: "WEBSITE", value: website },
         { trait_type: "DAO", value: dao },
@@ -47,16 +50,17 @@ export async function mintCollection(
         name,
         description,
         attributes,
-        _tries
+        tries
       );
       const token = await mintToken(
         metadataUri,
         name,
-        0,
-        0,
+        supply,
+        sellerFee,
         symbol,
         creators,
-        _tries
+        mutable,
+        tries
       );
       return token;
     } catch (err) {

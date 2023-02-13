@@ -1,1 +1,1 @@
-// temp folders for temporary videos
+// Folder for temporary videos & audios

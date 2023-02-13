@@ -7,7 +7,7 @@ import {
   MASTER_COLLECTION,
   MASTER_PUBLICKEY,
   SOLANA_CONNECTION,
-} from "../solanaConnection";
+} from "../../config";
 import mintNFT from "../nfts/mintNFT";
 import printNFT from "../nfts/printNFT";
 import { getUserNFTs } from "../nfts/getUserNFTs";
