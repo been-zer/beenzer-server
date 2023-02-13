@@ -14,13 +14,17 @@ export const MASTER_KEYPAIR = Keypair.fromSecretKey(
   new Uint8Array(MASTER_SECRET)
 );
 // Master NFT Collection
-export const SYMBOL = "BEENZER";
+export const SYMBOL = String(process.env.NFT_SYMBOL);
 export const MASTER_COLLECTION = new PublicKey(
   String(process.env.MASTER_COLLECTION)
 );
-// Main token
-export const TOKEN = String(process.env.TOKEN);
-export const TOKEN_PUBLICKEY = new PublicKey(TOKEN);
+// Tokenomics
+export const CURRENCY_SYMBOL = String(process.env.CURRENCY_SYMBOL);
+export const CURRENCY_TOKEN = String(process.env.CURRENCY_TOKEN);
+export const CURRENCY_PUBLICKEY = new PublicKey(CURRENCY_TOKEN);
+export const STOCK_SYMBOL = String(process.env.STOCK_SYMBOL);
+export const STOCK_TOKEN = String(process.env.STOCK_TOKEN);
+export const STOCK_PUBLICKEY = new PublicKey(STOCK_TOKEN);
 export const TOKEN_AUTHORITY = String(process.env.TOKEN_AUTHORITY);
 export const TOKEN_SECRET = String(process.env.TOKEN_AUTHORITY_KEYPAIR)
   .split(",")
