@@ -1,51 +1,32 @@
-import request from "request";
-import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 import {
   getNFTsByTokens,
   getEditionsByTokens,
 } from "../../controllers/nfts.controller";
 import { Edition } from "./printNFT";
+import { getWalletNFTs, NFT, Trait } from "./solanaNFTs";
 import { SOLANA_CONNECTION } from "../solanaConnection";
 
-export interface NFT {
+export interface TokenTraits {
   token: string;
-  account: string;
-  symbol: string;
-  amount: number;
-  supply: number;
-  royalty: number;
-  creators: Creator[];
-  name: string;
-  description: string;
-  image_uri: string;
-  asset_uri: string;
-  metadata: Trait[];
+  traits: Trait[];
 }
-
-interface Creator {
-  pubkey: string;
-  share: number;
-}
-interface Trait {
-  name: string;
-  value: string;
-}
-
-interface UserNFT {
-  token: string;
+export interface UserNFT {
+  master: string;
+  editions: string[];
   amount: number;
   supply: number;
   floor: number;
   ccy: string;
   creator: string;
   username: string;
-  title: string;
-  description: string;
-  metadata_uri: string;
   image_uri: string;
+  name: string;
+  description: string;
   asset_uri: string;
   type: string;
+  metadata_uri: string;
+  attributes: Trait[];
 }
 export const getUserNFTs = async (
   pubkey: string,
@@ -54,13 +35,20 @@ export const getUserNFTs = async (
   _logs: boolean = true // Optional, print logs
 ): Promise<UserNFT[]> => {
   // Get wallet's NFTs from Solana network
-  const solanaNFTs = await getUserNFTsSolana(
-    pubkey,
-    _solanaConnection,
-    _keypair
-  );
+  const solanaNFTs: NFT[] = await getWalletNFTs(pubkey, _solanaConnection, _keypair);
   if (_logs) {
     console.log("\nsolanaNFTs: ", solanaNFTs);
+  }
+  const traits: TokenTraits[] = [];
+  for (const nft of solanaNFTs) {
+    const trait: TokenTraits = {
+      token: nft.token,
+      traits: nft.attributes
+    };
+    traits.push(trait);
+  }
+  if (_logs) {
+    console.log("\nToken attributes: ", traits);
   }
   // Pepare tokens query for DB: "token[0], token[1], token[n]..."
   let tokens = "";
@@ -76,15 +64,27 @@ export const getUserNFTs = async (
     console.log("\neditionTokens query: ", tokens);
   }
   // Get NFTs amounts by counting Editions
-  const userEditions: Edition[] | any = await getEditionsByTokens(tokens);
+  const userEditions: Edition[] | boolean | any = await getEditionsByTokens(tokens);
+  const nftEditions = [];
+  for (const userEdi of userEditions) {
+    const nftEdiRow = {
+      edition: userEdi as Edition,
+      traits: traits[userEdi.copy]
+    }
+    nftEditions.push(nftEdiRow);
+  }
   if (_logs) {
-    console.log("\nuserEditions: ", userEditions);
+    console.log("\nnftEditions: ", nftEditions);
   }
   const masterTokens = [];
   for (const nft of solanaNFTs) {
-    for (const edition of userEditions) {
-      if (nft.token === edition.__token__) {
-        masterTokens.push(edition.__master__ as string);
+    for (const edition of nftEditions) {
+      if (nft.token === edition.edition.token) {
+        const nftRow = {
+          master: edition. as string,
+          traits: edition.traits
+        };
+        masterTokens.push(edition.edition.__master__ as string);
       }
     }
   }
@@ -119,12 +119,14 @@ export const getUserNFTs = async (
       ccy: master._ccy,
       creator: master._creator,
       username: master._username,
-      title: master._name,
-      description: master._description,
-      metadata_uri: master._metadata_uri,
       image_uri: master._image_uri,
+      name: master._name,
+      description: master._description,
       asset_uri: master._asset_uri,
       type: master._type,
+      metadata_uri: master._metadata_uri,
+      attributes: nftEditions[]
+
     };
     userNFTs.push(userNFTrow);
   }
@@ -145,58 +147,4 @@ export const getUserNFTs = async (
     console.log("\ngetUserNFTs -> User has no NFTs..");
   }
   return [];
-};
-
-export const getUserNFTsSolana = async (
-  pubkey: string,
-  _solanaConnection: Connection = SOLANA_CONNECTION,
-  _keypair: Keypair = Keypair.generate()
-): Promise<NFT[]> => {
-  const metaplex = new Metaplex(_solanaConnection);
-  metaplex.use(keypairIdentity(_keypair));
-  const owner = new PublicKey(pubkey);
-  const rawNFTs = (await metaplex
-    .nfts()
-    .findAllByOwner({ owner })) as Array<any>;
-  const NFTs: NFT[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  for (const rawNFT of rawNFTs) {
-    let metadata: any;
-    await new Promise((resolve, reject) => {
-      request(rawNFT.uri as string, (error: any, response: any, body: any) => {
-        if (error) reject(error);
-        else {
-          metadata = JSON.parse(body);
-          resolve(metadata);
-        }
-      });
-    });
-    const mint = rawNFT.mintAddress.toBase58();
-    const addr = rawNFT.address.toBase58();
-    console.log("\neo", mint, addr);
-    const supply = await _solanaConnection.getTokenSupply(new PublicKey(mint));
-    const nftRow = {
-      token: mint as string,
-      account: addr as string,
-      symbol: rawNFT.symbol as string,
-      amount: 1,
-      supply: supply.value.uiAmount as number,
-      royalty: rawNFT.sellerFeeBasisPoints as number, // base 100 ex: 1000 = 10%
-      creators: rawNFT.creators.map((x: { address: string; share: number }) => {
-        return { pubkey: x.address, share: x.share };
-      }) as Creator[],
-      name: metadata.name as string,
-      description: metadata.description as string,
-      image_uri: metadata.image as string,
-      asset_uri: metadata.properties.files.uri as string,
-      type: metadata.properties.files.type as string,
-      metadata: metadata.attributes.map(
-        (x: { trait_type: string; value: number }) => {
-          return { type: x.trait_type, value: x.value };
-        }
-      ) as Trait[],
-    };
-    NFTs.push(nftRow as NFT);
-  }
-  return NFTs;
 };

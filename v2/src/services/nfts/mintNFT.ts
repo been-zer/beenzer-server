@@ -167,6 +167,9 @@ export async function mintToken(
       console.log(`   Minted NFT: https://solscan.io/token/${token}`);
       return token;
     } catch (err) {
+      if (String(err).includes("funds")) {
+        console.log("Not enough funds in the master wallet!!!");
+      }
       console.log(`Minting NFT failed!!! Tries: ${i + 1}`);
       if (_errLogs) {
         console.log("\nERROR\n", err);
