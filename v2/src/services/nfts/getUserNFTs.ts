@@ -41,7 +41,6 @@ export interface UserNFT {
 export const getUserNFTs = async (
   pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION, // Optional
-  _keypair: Keypair = Keypair.generate(), // Optional, new keypair for metaplex
   _logs: boolean = true, // Optional, print logs
   _errLogs: boolean = true // Optional, print error logs
 ): Promise<UserNFT[]> => {
@@ -50,7 +49,7 @@ export const getUserNFTs = async (
     const solanaNFTs: NFT[] = await getWalletNFTs(
       pubkey,
       _solanaConnection,
-      _keypair
+      Keypair.generate() // New keypair for Metaplex login
     );
     if (_logs) {
       console.log("\nsolanaNFTs: ", solanaNFTs);

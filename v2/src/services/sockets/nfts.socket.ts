@@ -6,6 +6,7 @@ import {
   MARKETPLACE_PUBKEY,
   MASTER_COLLECTION,
   MASTER_PUBLICKEY,
+  SOLANA_CONNECTION,
 } from "../solanaConnection";
 import mintNFT from "../nfts/mintNFT";
 import printNFT from "../nfts/printNFT";
@@ -222,7 +223,10 @@ export const printNFTSocket = (socket: Socket): void => {
 export const getUserNFTsSocket = (socket: Socket): void => {
   socket.on("getUserNFTs", async (pubkey: string) => {
     if (pubkey.length > 22) {
-      socket.emit("userNFTs", await getUserNFTs(pubkey));
+      socket.emit(
+        "userNFTs",
+        await getUserNFTs(pubkey, SOLANA_CONNECTION, true, true)
+      );
     }
   });
 };
