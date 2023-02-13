@@ -157,7 +157,7 @@ export const mintNFTSocket = (socket: Socket): void => {
             await newEdition(
               token.token,
               firstEdition.copy,
-              1,
+              1, // Edition id
               creator,
               TRIES, // Async tries
               true // Print Error logs

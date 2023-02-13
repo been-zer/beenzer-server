@@ -17,7 +17,6 @@ import {
   METAPLEX_BUNDLR_URI,
   MARKET_PUBKEY,
 } from "../../config";
-// import { NFT } from "./getUserNFTs";
 
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
   .use(keypairIdentity(MASTER_KEYPAIR))
@@ -117,7 +116,7 @@ async function printNFT(
           "✅ Succefully printed new NFT edition!",
           `Tries: ${i + 1}`
         );
-        i = _tries + 1;
+        i = _tries;
         if (_returnEdition) {
           const ret = {
             master: nftMaster.mint.toBase58(),
