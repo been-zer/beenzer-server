@@ -145,6 +145,7 @@ export async function mintToken(
   sellerFee: number,
   symbol: string,
   creators: { address: PublicKey; share: number }[],
+  _mutable: boolean = true,
   _tries: number = 10,
   _errLogs: boolean = false
 ): Promise<string> {
@@ -159,7 +160,7 @@ export async function mintToken(
         sellerFeeBasisPoints: sellerFee,
         symbol: symbol,
         creators: creators,
-        isMutable: true,
+        isMutable: _mutable,
         maxSupply: toBigNumber(supply),
       });
       const token = nft.mintAddress.toBase58();
@@ -288,6 +289,7 @@ async function mintNFT(
           METADATA.sellerFeeBasisPoints,
           METADATA.symbol,
           METADATA.creators,
+          true, // NFT is mutable (can be burned)
           _tries,
           _errLogs
         );
