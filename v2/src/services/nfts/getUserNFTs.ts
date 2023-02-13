@@ -10,6 +10,7 @@ import { Edition } from "./printNFT";
 export interface EditionId {
   token: string;
   id: number;
+  timestamp: number;
 }
 export interface EditionNFT {
   master: string; // Master pubkey
@@ -88,10 +89,11 @@ export const getUserNFTs = async (
     if (userEditions) {
       for (const userEdi of userEditions) {
         const nftEdiRow: EditionNFT = {
-          master: userEdi.master as string,
+          master: userEdi.__master__ as string,
           edition: {
-            token: userEdi.copy as string,
-            id: userEdi.id as number,
+            token: userEdi.__token__ as string,
+            id: userEdi.__edition__ as number,
+            timestamp: userEdi._timestamp as number,
           } as EditionId,
           id: userEdi.edition as number,
           traits: { ...traits[userEdi.copy].traits } as Trait[],
@@ -127,7 +129,7 @@ export const getUserNFTs = async (
       for (const master of userMasters) {
         const userNFTrow: UserNFT = {
           master: master.__token__,
-          editions: [], // Fill in with userEditions
+          editions: [], // To fill in with userEditions
           amount: 1, // Update after fill in userNFTs.editions
           supply: master._supply,
           floor: Number(master._floor),
@@ -140,7 +142,7 @@ export const getUserNFTs = async (
           asset_uri: master._asset_uri,
           type: master._type,
           metadata_uri: master._metadata_uri,
-          attributes: [], // Fill in with userEditions
+          attributes: [], // To fill in with userEditions
         };
         // Update amount and attributes
         for (const edition of nftEditions) {

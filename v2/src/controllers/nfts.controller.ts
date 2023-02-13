@@ -164,14 +164,15 @@ export async function newEdition(
   return false;
 }
 
-interface Edition {
+export interface Edition {
   __master__: string;
   __token__: string;
-  __edition__: string;
+  __edition__: number;
   _owner: string;
   _created_at: number;
   _timestamp: number;
 }
+
 export async function getEditionsByOwner(
   owner: string
 ): Promise<Array<Edition> | Promise<boolean>> {
