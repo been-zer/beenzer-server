@@ -31,6 +31,7 @@ export const TOKEN_KEYPAIR = Keypair.fromSecretKey(
   new Uint8Array(TOKEN_SECRET)
 );
 export const TOKEN_ACCOUNT = String(process.env.TOKEN_ACCOUNT);
+export const TOKEN_ACCOUNT_PUBLICKEY = new PublicKey(TOKEN_ACCOUNT);
 export const TOKEN_CREATOR = String(process.env.TOKEN_CREATOR);
 export const TOKEN_CREATOR_PUBLICKEY = new PublicKey(TOKEN_CREATOR);
 export const TOKEN_PUBLICKEY = new PublicKey(CURRENCY_TOKEN);
