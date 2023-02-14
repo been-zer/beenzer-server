@@ -157,7 +157,7 @@ export async function newEdition(
           console.log(error);
         }
         i++;
-        await sleep(3000);
+        // await sleep(3000);
       }
     }
   }

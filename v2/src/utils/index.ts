@@ -4,6 +4,7 @@
 // import gifify from "gifify";
 
 export const sleep = (ms: number) => {
+  console.log(`\nSleeping... ${ms}ms\n`);
   return new Promise((r) => setTimeout(r, ms));
 };
 /**
