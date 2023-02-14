@@ -79,7 +79,7 @@ async function printNFT(
           }
         } else {
           console.log(
-            "❌ - ERROR: Unknown _whenMaxSupply value! Please, leave it empty for default value - SEND, or insert BURN to burn the Master Edition when last print operation is done."
+            "❌ ERROR: Unknown _whenMaxSupply value! Please, leave it empty for default value - SEND, or insert BURN to burn the Master Edition when last print operation is done."
           );
           return false;
         }
@@ -108,7 +108,7 @@ async function printNFT(
             );
           } else {
             console.log(
-              "❌ - ERROR: Unknown _whenMaxSupply value! Please, leave it empty for default value - SEND, or insert BURN to burn the Master Edition when last print operation is done."
+              "❌ ERROR: Unknown _whenMaxSupply value! Please, leave it empty for default value - SEND, or insert BURN to burn the Master Edition when last print operation is done."
             );
             return false;
           }
@@ -118,9 +118,10 @@ async function printNFT(
           `Tries: ${i + 1}`
         );
         i = _tries;
+        console.log("EOOO", nftCopy);
         const edition: Edition = {
           master: nftMaster.mint.address.toBase58(),
-          edition: nftCopy.tokenAddress.toBase58(),
+          edition: nftCopy.metadataAddress.toBase58(),
           minter: destination.toBase58(),
           id: id,
         };
@@ -144,7 +145,7 @@ async function printNFT(
       }
       i++;
       console.log(
-        `❌ - Printing failed for unkown reason! Check logs. Tries: ${i}`
+        `❌ ERROR: Printing failed for unkown reason! Check logs. Tries: ${i}`
       );
       await sleep(5000);
       if (_errLogs) {

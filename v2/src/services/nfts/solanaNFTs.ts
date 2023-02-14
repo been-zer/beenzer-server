@@ -7,10 +7,12 @@ export interface Creator {
   pubkey: string;
   share: number;
 }
+
 export interface Trait {
   name: string;
   value: string;
 }
+
 export interface NFT {
   token: string;
   account: string;
@@ -25,6 +27,7 @@ export interface NFT {
   asset_uri: string;
   attributes: Trait[];
 }
+
 export const getWalletNFTs = async (
   pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION,

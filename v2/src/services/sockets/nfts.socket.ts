@@ -53,7 +53,7 @@ export const mintNFTSocket = (socket: Socket): void => {
       while (i < TRIES) {
         if (i == TRIES - 1) {
           console.log(
-            `❌ - ERROR: Failed to get ${SYMBOL} id! ALERT: Last try...`
+            `❌ ERROR: Failed to get ${SYMBOL} id! ALERT: Last try...`
           );
         }
         if (await addNFTCounter()) {
@@ -128,10 +128,7 @@ export const mintNFTSocket = (socket: Socket): void => {
           }
         }
       }
-      socket.emit(
-        "mintLogs",
-        "`❌ - ERROR: Mint NFT failed! Check server logs."
-      );
+      socket.emit("mintLogs", "`❌ ERROR: Mint NFT failed! Check server logs.");
       socket.emit("mintLogs", "false");
     }
   );

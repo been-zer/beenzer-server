@@ -59,7 +59,7 @@ export const getUserNFTs = async (
     const traits: TokenTraits[] = [];
     for (const nft of solanaNFTs) {
       const trait: TokenTraits = {
-        token: nft.token,
+        token: nft.account,
         traits: { ...nft.attributes },
       };
       traits.push(trait);
@@ -158,7 +158,7 @@ export const getUserNFTs = async (
       }
     }
     if (_logs) {
-      console.log("\nuserNFTs: ", userNFTs);
+      console.log("\nuserNFTs: ", userNFTs, "\n\n");
     }
     return userNFTs;
   } catch (err) {
