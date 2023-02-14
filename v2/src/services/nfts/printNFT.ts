@@ -145,7 +145,7 @@ async function printNFT(
       console.log(
         `❌ - Printing failed for unkown reason! Check logs. Tries: ${i}`
       );
-      sleep(5000);
+      await sleep(5000);
       if (_errLogs) {
         console.log("\nERROR:\n", err);
       }

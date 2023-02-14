@@ -53,7 +53,7 @@ export async function uploadAsset(
         console.log("Not enough funds in the master wallet!!!");
       }
       console.log(err);
-      sleep(3000);
+      await sleep(3000);
       i++;
     }
   }
@@ -83,7 +83,7 @@ export async function uploadImage(
         console.log("Not enough funds in the master wallet!!!");
       }
       console.log(err);
-      sleep(3000);
+      await sleep(3000);
       i++;
     }
   }
@@ -131,7 +131,7 @@ export async function uploadMetadata(
         console.log("Not enough funds in the master wallet!!!");
       }
       console.log(err);
-      sleep(3000);
+      await sleep(3000);
       i++;
     }
   }
@@ -175,7 +175,7 @@ export async function mintToken(
       if (_errLogs) {
         console.log("\nERROR\n", err);
       }
-      sleep(5000);
+      await sleep(5000);
       i++;
     }
   }

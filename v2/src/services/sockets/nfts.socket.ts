@@ -200,7 +200,7 @@ export const printNFTSocket = (socket: Socket): void => {
           await newEdition(
             master,
             edition.token,
-            pubkey, // Minter
+            pubkey, // Minter (first owner)
             Number(edition), // Edition id
             TRIES, // Async tries
             true // Return Edition
