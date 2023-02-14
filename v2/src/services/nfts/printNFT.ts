@@ -121,7 +121,7 @@ async function printNFT(
         console.log("EOOO", nftCopy);
         const edition: Edition = {
           master: nftMaster.mint.address.toBase58(),
-          edition: nftCopy.metadataAddress.toBase58(),
+          edition: nftCopy.nft.address.toBase58(),
           minter: destination.toBase58(),
           id: id,
         };

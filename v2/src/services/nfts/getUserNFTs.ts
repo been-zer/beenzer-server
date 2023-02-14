@@ -7,21 +7,24 @@ import { getWalletNFTs, NFT, Trait } from "./solanaNFTs";
 import { SOLANA_CONNECTION } from "../../config";
 import { Edition } from "./printNFT";
 
-export interface EditionId {
-  token: string;
-  id: number;
-  timestamp: number;
-}
 export interface EditionNFT {
   master: string; // Master pubkey
   edition: EditionId; // Token + Edition number
   id: number; // Edition id
   traits: Trait[]; // NFT attributes
 }
+
+export interface EditionId {
+  token: string;
+  id: number;
+  timestamp: number;
+}
+
 export interface TokenTraits {
   token: string;
   traits: Trait[];
 }
+
 export interface UserNFT {
   master: string;
   editions: EditionId[];
@@ -39,6 +42,7 @@ export interface UserNFT {
   metadata_uri: string;
   attributes: Trait[];
 }
+
 export const getUserNFTs = async (
   pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION, // Optional
@@ -84,6 +88,9 @@ export const getUserNFTs = async (
     const userEditions: Edition[] | boolean | any = await getEditionsByTokens(
       tokens
     );
+    if (_logs) {
+      console.log("\nuserEditions: ", userEditions);
+    }
     // Create NFT Edition array
     const nftEditions = [];
     if (userEditions) {
@@ -96,13 +103,13 @@ export const getUserNFTs = async (
             timestamp: userEdi._timestamp as number,
           } as EditionId,
           id: userEdi.edition as number,
-          traits: { ...traits[userEdi.copy].traits } as Trait[],
+          traits: { ...traits[userEdi.__edition__].traits } as Trait[],
         };
         nftEditions.push(nftEdiRow);
       }
     }
     if (_logs) {
-      console.log("\nuserEditions: ", nftEditions);
+      console.log("\nnftEditions: ", nftEditions);
     }
     // Pepare user NFT Master tokens for querying DB: "token[0], token[1], token[n]..."
     let masterTokens = "";
@@ -162,7 +169,7 @@ export const getUserNFTs = async (
     }
     return userNFTs;
   } catch (err) {
-    console.log("\nERROR in getUserNFTs.ts\n");
+    console.log("\n❌ ERROR: getUserNFTs failed!\n");
     if (_errLogs) {
       console.log(err);
     }
