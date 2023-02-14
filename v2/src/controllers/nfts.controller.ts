@@ -69,7 +69,7 @@ export async function newNFT(
   _logs = false
 ): Promise<boolean> {
   console.log("Token address:", token);
-  if (token != "ERROR" && token.length > 0) {
+  if (token != "ERROR" && token) {
     let i = 0;
     while (i < _tries) {
       console.log(`Adding ${name} to DB... Tries: ${i + 1}`);
@@ -140,12 +140,7 @@ export async function newEdition(
   _tries = 10,
   _errLogs = false
 ): Promise<boolean> {
-  if (
-    master != "ERROR" &&
-    master.length > 0 &&
-    edition != "ERROR" &&
-    edition.length > 0
-  ) {
+  if (master != "ERROR" && edition != "ERROR" && master && edition) {
     let i = 0;
     while (i < _tries) {
       try {
@@ -157,7 +152,7 @@ export async function newEdition(
           console.log(error);
         }
         i++;
-        // await sleep(3000);
+        await sleep(3000);
       }
     }
   }
@@ -166,16 +161,17 @@ export async function newEdition(
 
 export interface Edition {
   __master__: string;
-  __token__: string;
   __edition__: number;
-  _owner: string;
-  _created_at: number;
+  _minter: string;
+  _id: number;
+  _date: string;
+  _time: string;
   _timestamp: number;
 }
 
 export async function getEditionsByOwner(
   owner: string
-): Promise<Array<Edition> | Promise<boolean>> {
+): Promise<Array<Edition> | boolean> {
   try {
     const data = await db.query(_getEditionsByOwner(owner));
     const rows = data.rows;
@@ -188,15 +184,17 @@ export async function getEditionsByOwner(
 
 export async function getEditionsByTokens(
   tokens: string
-): Promise<Array<Edition> | Promise<boolean>> {
-  try {
-    const data = await db.query(_getEditionsByOwner(tokens));
-    const rows = data.rows;
-    return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
+): Promise<Array<Edition> | boolean> {
+  if (tokens) {
+    try {
+      const data = await db.query(_getEditionsByOwner(tokens));
+      const rows = data.rows;
+      return rows;
+    } catch (error) {
+      console.log(error);
+    }
   }
+  return false;
 }
 
 export async function newOwner(token: string, owner: string): Promise<boolean> {
