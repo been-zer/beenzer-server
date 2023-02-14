@@ -6,10 +6,6 @@ import {
 } from "./nfts.schemas";
 import { getDate, getTime } from "../utils";
 
-export const _getNFT = (token: string, edition: number): string => {
-  return `SELECT * FROM nfts WHERE __token__ = '${token}' AND __edition__ = ${edition}`;
-};
-
 export const _newNFT = (
   id: number,
   token: string,
@@ -38,6 +34,10 @@ export const _newNFT = (
   return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${image}', '${asset}', '${type}', '${metadata}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
 };
 
+export const _getNFT = (token: string, edition: number): string => {
+  return `SELECT * FROM nfts WHERE __token__ = '${token}' AND __edition__ = ${edition}`;
+};
+
 export const _newEdition = (
   master: string,
   edition: string,
@@ -59,12 +59,16 @@ export const _getNFTbyId = (id: number): string => {
   return `SELECT * FROM nfts WHERE _id_ = ${id}`;
 };
 
-export const _getEditionsByMinter = (minter: string): string => {
-  return `SELECT * FROM editions WHERE _minter = '${minter}'`;
+export const _getNFTsByTokens = (tokens: string): string => {
+  return `SELECT * FROM nfts WHERE __token__ IN (${tokens})`;
 };
 
 export const _getEditionsByTokens = (tokens: string): string => {
-  return `SELECT * FROM editions WHERE __token__ IN (${tokens})`;
+  return `SELECT * FROM editions WHERE __edition__ IN (${tokens})`;
+};
+
+export const _getEditionsByMinter = (minter: string): string => {
+  return `SELECT * FROM editions WHERE _minter = '${minter}'`;
 };
 
 export const _newOwner = (token: string, owner: string): string => {
@@ -81,10 +85,6 @@ export const _getUserNFTs = (tokens: Array<string>): Array<string> => {
     nfts.push(`SELECT * FROM nfts WHERE __token__ = '${token}'`);
   });
   return nfts;
-};
-
-export const _getNFTsByTokens = (tokens: string): string => {
-  return `SELECT * FROM nfts WHERE __token__ IN (${tokens})`;
 };
 
 export const _getAllNFTs = (): string => {

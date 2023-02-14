@@ -173,7 +173,7 @@ export const getUserNFTsSocket = (socket: Socket): void => {
     if (pubkey.length > 22) {
       socket.emit(
         "userNFTs",
-        await getUserNFTs(pubkey, SOLANA_CONNECTION, false, false)
+        await getUserNFTs(pubkey, SOLANA_CONNECTION, true, true)
       );
     }
   });

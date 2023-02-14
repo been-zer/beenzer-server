@@ -5,6 +5,7 @@ const video = fs.readFileSync("./src/services/13.mp4");
 const gif = fs.readFileSync("./src/services/out.gif");
 
 mintNFT(
+  0, // id
   "BEENZER test",
   video,
   "BEENZER",
