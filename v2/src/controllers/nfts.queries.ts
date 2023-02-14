@@ -27,11 +27,9 @@ export const _newNFT = (
   maxLat: number,
   minLat: number,
   maxLon: number,
-  minLon: number,
-  date: string,
-  time: string
+  minLon: number
 ): string => {
-  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${image}', '${asset}', '${type}', '${metadata}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${date}', '${time}', ${Date.now()})`;
+  return `INSERT INTO nfts (${nftSchema}) VALUES (${id}, '${token}', ${supply}, ${floor}, '${ccy}', '${creator}', '${username}', '${image}', '${asset}', '${type}', '${metadata}', '${name}', '${description}', '${city}', ${latitude}, ${longitude}, '${visibility}', ${maxLat}, ${minLat}, ${maxLon}, ${minLon}, '${getDate()}', '${getTime()}', ${Date.now()})`;
 };
 
 export const _getNFT = (token: string, edition: number): string => {

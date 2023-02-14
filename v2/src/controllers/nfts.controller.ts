@@ -34,17 +34,6 @@ import { getDate, getTime, sleep } from "../utils";
  */
 const db: Client = nftsDB;
 
-export async function getNFT(token: string, edition: number): Promise<any> {
-  try {
-    const data = await db.query(_getNFT(token, edition));
-    const rows = data.rows;
-    return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
 export async function newNFT(
   id: number,
   token: string,
@@ -74,8 +63,6 @@ export async function newNFT(
     let i = 0;
     while (i < _tries) {
       try {
-        const date = getDate();
-        const time = getTime();
         let assetUri = "";
         if (image != asset) {
           assetUri = asset;
@@ -103,9 +90,7 @@ export async function newNFT(
               maxLat,
               minLat,
               maxLon,
-              minLon,
-              date,
-              time
+              minLon
             )
           );
           console.log(`🎉 ${name} added to DB succesfully!`);
@@ -159,6 +144,17 @@ export async function newEdition(
     return true;
   }
   return false;
+}
+
+export async function getNFT(token: string, edition: number): Promise<any> {
+  try {
+    const data = await db.query(_getNFT(token, edition));
+    const rows = data.rows;
+    return rows;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export async function getNFTbyId(id: number): Promise<any> {
