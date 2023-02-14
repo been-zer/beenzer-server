@@ -115,7 +115,7 @@ async function printNFT(
           }
         }
         console.log(
-          "✅ Succefully printed new NFT edition!",
+          "✅  Succefully printed new NFT edition!",
           `Tries: ${i + 1}`
         );
         i = _tries;

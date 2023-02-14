@@ -140,6 +140,7 @@ export async function newEdition(
   _tries = 10,
   _errLogs = false
 ): Promise<boolean> {
+  console.log("newEdition args: ", master, edition, minter, id);
   if (master != "ERROR" && edition != "ERROR" && master && edition) {
     let i = 0;
     while (i < _tries) {

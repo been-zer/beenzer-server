@@ -74,7 +74,7 @@ export async function uploadImage(
       const imgUri = await METAPLEX.storage().upload(imgMetaplexFile);
       console.log("Image url:", imgUri);
       if (imgUri === "ERROR") {
-        console.log("Uploading image failed.");
+        console.log("❌ - ERROR: Uploading image failed.");
         continue;
       }
       return imgUri;
@@ -122,13 +122,13 @@ export async function uploadMetadata(
       });
       console.log("Metadata url:", uri);
       if (uri === "ERROR") {
-        console.log("Uploading metadata failed.");
+        console.log("❌ - ERROR: Uploading metadata failed.");
         continue;
       }
       return uri;
     } catch (err) {
       if (String(err).includes("funds")) {
-        console.log("Not enough funds in the master wallet!!!");
+        console.log("❌ - ERROR: Not enough funds in the master wallet!!!");
       }
       console.log(err);
       await sleep(3000);
@@ -164,14 +164,14 @@ export async function mintToken(
         maxSupply: toBigNumber(supply),
       });
       const token = nft.mintAddress.toBase58();
-      console.log(`⛏️  Mint Success! Tries: ${i + 1}`);
+      console.log(`✅  Mint Success! Tries: ${i + 1}`);
       console.log(`   Minted NFT: https://solscan.io/token/${token}`);
       return token;
     } catch (err) {
       if (String(err).includes("funds")) {
-        console.log("Not enough funds in the master wallet!!!");
+        console.log("❌ - ERROR: Not enough funds in the master wallet!!!");
       }
-      console.log(`Minting NFT failed!!! Tries: ${i + 1}`);
+      console.log(`❌ - ERROR: Minting NFT failed!!! Tries: ${i + 1}`);
       if (_errLogs) {
         console.log("\nERROR\n", err);
       }
@@ -295,6 +295,7 @@ async function mintNFT(
           _errLogs
         );
         if (token != "ERROR") {
+          console.log("");
           const ret = { token, imageUri, assetUri, metadataUri };
           return ret as Token;
         }

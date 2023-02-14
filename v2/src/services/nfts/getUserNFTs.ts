@@ -42,8 +42,8 @@ export interface UserNFT {
 export const getUserNFTs = async (
   pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION, // Optional
-  _logs: boolean = true, // Optional, print logs
-  _errLogs: boolean = true // Optional, print error logs
+  _logs: boolean = false, // Optional, print logs
+  _errLogs: boolean = false // Optional, print error logs
 ): Promise<UserNFT[]> => {
   try {
     // Get wallet's NFTs from Solana network

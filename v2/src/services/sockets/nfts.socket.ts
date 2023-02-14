@@ -60,14 +60,16 @@ export const mintNFTSocket = (socket: Socket): void => {
       let i = 0;
       while (i < TRIES) {
         if (i == TRIES - 1) {
-          console.log("ERROR: Failed to get BEENZER id! ALERT: Last try...");
+          console.log(
+            "❌ ERROR:  Failed to get BEENZER id! ALERT: Last try..."
+          );
         }
         if (await addNFTCounter()) {
           id = (await getNFTCounter()) + 1;
           if (id) {
             socket.emit("mintLogs", `Minting ${nftFile} ${SYMBOL} #${id}...`);
             console.log(
-              `Minting ${nftFile} ${SYMBOL} #${id}... Tries: ${i + 1}`
+              `⛏️  Minting ${nftFile} ${SYMBOL} #${id}... Tries: ${i + 1}`
             );
             i = TRIES;
             break;
@@ -110,7 +112,6 @@ export const mintNFTSocket = (socket: Socket): void => {
           "mintLogs",
           `⛏️ ${name} minted succesfully! Token address: ${token.token}, Supply: ${supply}`
         );
-
         socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
         if (
           await newNFT(
@@ -165,6 +166,7 @@ export const mintNFTSocket = (socket: Socket): void => {
               true // Print Error logs
             )
           ) {
+            console.log("\nOKOK\n");
             socket.emit(
               "mintLogs",
               `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
@@ -215,7 +217,7 @@ export const printNFTSocket = (socket: Socket): void => {
           socket.emit("printLogs", "true");
         }
       } else {
-        const msgErr = `❌ - Print Edition failed!! Check Error logs.`;
+        const msgErr = `❌ ERROR: Print Edition failed!! Check Error logs.`;
         socket.emit("printLogs", msgErr);
         console.log("printLogs", msgErr);
       }
@@ -228,7 +230,7 @@ export const getUserNFTsSocket = (socket: Socket): void => {
     if (pubkey.length > 22) {
       socket.emit(
         "userNFTs",
-        await getUserNFTs(pubkey, SOLANA_CONNECTION, true, true)
+        await getUserNFTs(pubkey, SOLANA_CONNECTION, false, false)
       );
     }
   });
