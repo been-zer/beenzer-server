@@ -35,10 +35,20 @@ export interface UserNFT {
   creator: string;
   username: string;
   image_uri: string;
-  name: string;
-  description: string;
   asset_uri: string;
   type: string;
+  name: string;
+  description: string;
+  date: string;
+  time: string;
+  city: string;
+  lat: number;
+  lon: number;
+  visibility: string;
+  maxlat: number;
+  minlat: number;
+  maxlon: number;
+  minlon: number;
   metadata_uri: string;
   attributes: Trait[];
 }
@@ -152,10 +162,20 @@ export const getUserNFTs = async (
           creator: master._creator,
           username: master._username,
           image_uri: master._image_uri,
-          name: master._name,
-          description: master._description,
           asset_uri: master._asset_uri,
           type: master._type,
+          name: master._name,
+          description: master._description,
+          date: master._date,
+          time: master._time,
+          city: master._city,
+          lat: master._lan,
+          lon: master._lon,
+          visibility: master._visibility,
+          maxlat: master._maxlat,
+          minlat: master._minlat,
+          maxlon: master._maxlon,
+          minlon: master._minlon,
           metadata_uri: master._metadata_uri,
           attributes: [], // To fill in with userEditions
         };
