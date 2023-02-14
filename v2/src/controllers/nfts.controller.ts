@@ -5,6 +5,7 @@ import {
   _newNFT,
   _newEdition,
   _getEditionsByOwner,
+  _getNFTbyId,
   _updateNFTOwner,
   _updateNFTLikes,
   _createNFTtransactions,
@@ -160,6 +161,17 @@ export async function newEdition(
     return true;
   }
   return false;
+}
+
+export async function getNFTbyId(id: number): Promise<any> {
+   try {
+     const data = await db.query(_getNFTbyId(id));
+     const rows = data.rows;
+     return rows[0];
+   } catch (error) {
+     console.log(error);
+     return false;
+   }
 }
 
 export interface Edition {

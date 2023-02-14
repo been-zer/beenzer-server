@@ -15,22 +15,15 @@ import {
   Edition,
   addNFTCounter,
   getNFTCounter,
-  newNFT,
-  newEdition,
   getAllNFTs,
   getMapNFTs,
+  getNFTbyId,
 } from "../../controllers/nfts.controller";
 import dotenv from "dotenv";
 dotenv.config();
 
 const TRIES = Number(process.env.ASYNC_TRIES);
 
-interface Token {
-  token: string;
-  imageUri: string;
-  assetUri: string;
-  metadataUri: string;
-}
 export const mintNFTSocket = (socket: Socket): void => {
   socket.on(
     "mintNFT",
@@ -61,7 +54,7 @@ export const mintNFTSocket = (socket: Socket): void => {
       while (i < TRIES) {
         if (i == TRIES - 1) {
           console.log(
-            "❌ ERROR:  Failed to get BEENZER id! ALERT: Last try..."
+            `❌ - ERROR: Failed to get ${SYMBOL} id! ALERT: Last try...`
           );
         }
         if (await addNFTCounter()) {
@@ -79,105 +72,67 @@ export const mintNFTSocket = (socket: Socket): void => {
         i++;
       }
       const name = `${SYMBOL} #${id}`;
-      const token: Token = await mintNFT(
-        name,
-        asset,
-        SYMBOL,
-        type,
-        supply,
-        floor,
-        creator,
-        username,
-        description,
-        city,
-        latitude,
-        longitude,
-        visbility,
-        maxLat,
-        minLat,
-        maxLon,
-        minLon,
-        true, // NFT is mutable (van be burned)
-        _royalties,
-        _image,
-        _mintCcy,
-        MASTER_COLLECTION, // NFT collection
-        MASTER_PUBLICKEY, // Owner (payer)
-        false, // It is not a Sized Collection
-        TRIES, // Async tries
-        false // Print Error logs
-      );
-      if (token.token != "ERROR") {
+      if (
+        await mintNFT(
+          id,
+          name,
+          asset,
+          SYMBOL,
+          type,
+          supply,
+          floor,
+          creator,
+          username,
+          description,
+          city,
+          latitude,
+          longitude,
+          visbility,
+          maxLat,
+          minLat,
+          maxLon,
+          minLon,
+          true, // NFT is mutable (van be burned)
+          _royalties,
+          _image,
+          _mintCcy,
+          MASTER_COLLECTION, // NFT collection
+          MASTER_PUBLICKEY, // Owner (payer)
+          false, // It is not a Sized Collection
+          TRIES, // Async tries
+          false // Print Error logs
+        )
+      ) {
         socket.emit(
           "mintLogs",
-          `⛏️ ${name} minted succesfully! Token address: ${token.token}, Supply: ${supply}`
+          `⛏️  ${name} minted succesfully! Supply: ${supply}`
         );
-        socket.emit("printLogs", `🚀 NFT successfully added to your wallet`);
-        if (
-          await newNFT(
-            id,
-            token.token,
-            supply,
-            floor,
-            _mintCcy,
-            creator,
-            username,
-            token.imageUri,
-            token.assetUri,
-            type,
-            token.metadataUri,
-            name,
-            description,
-            city,
-            latitude,
-            longitude,
-            visbility,
-            maxLat,
-            minLat,
-            maxLon,
-            minLon,
-            TRIES, // Async tries
-            false // Print Error logs
-          )
-        ) {
+        const masterToken = await getNFTbyId(id);
+        if (masterToken) {
           socket.emit(
             "mintLogs",
-            `🎉 ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
+            `✅  ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
           );
-        } else {
-          socket.emit("mintLogs", "newNFT controller failed!");
-          socket.emit("mintLogs", "false");
-        }
-        const firstEdition: Edition | boolean | any = await printNFT(
-          new PublicKey(token.token),
-          new PublicKey(creator),
-          TRIES, // Async tries
-          true // Return Edition
-        );
-        if (firstEdition) {
-          console.log("\nOK\n");
-          if (
-            await newEdition(
-              token.token, // Master
-              firstEdition.copy, // Token
-              creator, // Minter
-              1, // Edition id
-              TRIES, // Async tries
-              true // Print Error logs
-            )
-          ) {
-            console.log("\nOKOK\n");
+          const firstEdition: Edition | boolean | any = await printNFT(
+            new PublicKey(masterToken),
+            new PublicKey(creator),
+            TRIES, // Async tries
+            true // Return Edition
+          );
+          if (firstEdition) {
             socket.emit(
               "mintLogs",
               `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
             );
             socket.emit("mintLogs", "true");
           }
-        } else {
-          socket.emit("mintLogs", "newEdition controller failed!");
-          socket.emit("mintLogs", "false");
         }
       }
+      socket.emit(
+        "mintLogs",
+        "`❌ - ERROR: Mint NFT failed! Check server logs."
+      );
+      socket.emit("mintLogs", "false");
     }
   );
 };
@@ -198,29 +153,18 @@ export const printNFTSocket = (socket: Socket): void => {
         true // Print error logs
       );
       if (Number(edition) > 1) {
-        if (
-          await newEdition(
-            master,
-            edition.token,
-            pubkey, // Minter (first owner)
-            Number(edition), // Edition id
-            TRIES, // Async tries
-            true // Return Edition
-          )
-        ) {
-          socket.emit(
-            "printLogs",
-            `🎉 ${edition.token} Edition ${Number(
-              edition
-            )} has been printed succesfully!`
-          );
-          socket.emit("printLogs", "true");
-        }
-      } else {
-        const msgErr = `❌ ERROR: Print Edition failed!! Check Error logs.`;
-        socket.emit("printLogs", msgErr);
-        console.log("printLogs", msgErr);
+        socket.emit(
+          "printLogs",
+          `🎉 ${edition.token} Edition ${Number(
+            edition
+          )} has been printed succesfully!`
+        );
+        socket.emit("printLogs", "true");
       }
+    } else {
+      const msgErr = `❌ ERROR: Print Edition failed!! Check Error logs.`;
+      socket.emit("printLogs", msgErr);
+      console.log("printLogs", msgErr);
     }
   });
 };

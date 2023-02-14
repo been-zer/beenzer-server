@@ -7,6 +7,7 @@ import {
   PrintNewEditionOutput,
 } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
+import { newEdition } from "../../controllers/nfts.controller";
 import { burnNFT } from "./burnNFT";
 import { sendNFT } from "./sendNFT";
 import { sleep } from "../../utils";
@@ -30,10 +31,9 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 
 export interface Edition {
   master: string;
-  token: string;
+  edition: string;
+  minter: string;
   id: number;
-  owner: string;
-  created: number;
 }
 async function printNFT(
   originalNFT: PublicKey,
@@ -43,7 +43,7 @@ async function printNFT(
   _whenMaxSupply = "SEND", // or BURN Master Edition
   _destinationWallet = MARKET_PUBKEY, // if SEND, destination wallet pubkey
   _errLogs: boolean = false // Optional, print error logs
-): Promise<Edition | boolean> {
+): Promise<boolean> {
   let i = 0;
   while (i < _tries) {
     try {
@@ -85,10 +85,10 @@ async function printNFT(
           return false;
         }
       }
-      const edition = Number(supply) + 1;
+      const id = Number(supply) + 1;
       console.log(
         `🖨️  Printing new NFT edition from ${originalNFT.toBase58()}...`,
-        `Current supply ${edition} from maxSupply ${maxSupply}`
+        `Current supply ${id} from maxSupply ${maxSupply}`
       );
       const nftCopy: PrintNewEditionOutput =
         await METAPLEX.nfts().printNewEdition({
@@ -96,7 +96,7 @@ async function printNFT(
           newOwner: destination,
         });
       if (nftCopy) {
-        nftMaster.edition = edition;
+        nftMaster.id = id;
         if (freeSupply === 1) {
           if (_whenMaxSupply === "BURN") {
             await burnNFT(originalNFT);
@@ -119,22 +119,24 @@ async function printNFT(
           `Tries: ${i + 1}`
         );
         i = _tries;
-        console.log(
-          "\n\nEOOOO\n\n",
-
-          nftCopy
-        );
-        if (_returnEdition) {
-          const ret: Edition = {
-            master: nftMaster.mint.address.toBase58(),
-            token: nftCopy.tokenAddress.toBase58(),
-            id: edition,
-            owner: destination.toBase58(),
-            created: Date.now(),
-          };
-          return ret;
+        const edition: Edition = {
+          master: nftMaster.mint.address.toBase58(),
+          edition: nftCopy.tokenAddress.toBase58(),
+          minter: destination.toBase58(),
+          id: id,
+        };
+        if (
+          await newEdition(
+            edition.master, // Master
+            edition.edition, // Token
+            edition.minter, // Minter
+            edition.id, // Edition id
+            _tries, // Async tries
+            _errLogs // Print error logs
+          )
+        ) {
+          return true;
         }
-        return true;
       }
     } catch (err) {
       if (String(err).includes("max supply")) {

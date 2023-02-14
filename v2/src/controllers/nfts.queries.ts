@@ -55,6 +55,10 @@ export const _updateEditionOwner = (
   return `UPDATE editions SET _owner = '${newOwner}', _timestamp = ${Date.now()}, WHERE __token__ = ${token} AND __edition__ = ${edition}`;
 };
 
+export const _getNFTbyId = (id: number): string => {
+  return `SELECT * FROM nfts WHERE _id_ = ${id}`;
+};
+
 export const _getEditionsByOwner = (owner: string): string => {
   return `SELECT * FROM editions WHERE _owner = '${owner}'`;
 };

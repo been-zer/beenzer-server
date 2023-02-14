@@ -11,6 +11,7 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import { getDate, getTime, sleep } from "../../utils";
 import { videoToGif } from "../videoToGif";
+import { newNFT } from "../../controllers/nfts.controller";
 import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
@@ -182,13 +183,14 @@ export async function mintToken(
   return "ERROR";
 }
 
-interface Token {
+export interface Token {
   token: string;
   imageUri: string;
   assetUri: string;
   metadataUri: string;
 }
 async function mintNFT(
+  id: number,
   name: string,
   asset: Buffer,
   symbol: string,
@@ -215,7 +217,7 @@ async function mintNFT(
   _collectionIsSized: boolean = false, // Optional
   _tries: number = 10, // Optional
   _errLogs: boolean = false // Optional
-): Promise<Token> {
+): Promise<boolean> {
   const date = getDate();
   const year = date.slice(0, 4);
   const time = getTime();
@@ -294,20 +296,41 @@ async function mintNFT(
           _tries,
           _errLogs
         );
-        if (token != "ERROR") {
-          console.log("");
-          const ret = { token, imageUri, assetUri, metadataUri };
-          return ret as Token;
+        if (token != "ERROR" && String(token).length > 22) {
+          if (
+            await newNFT(
+              id,
+              token,
+              supply,
+              floor,
+              _mintCcy,
+              creator,
+              username,
+              imageUri,
+              assetUri,
+              type,
+              metadataUri,
+              name,
+              description,
+              city,
+              latitude,
+              longitude,
+              visbility,
+              maxLat,
+              minLat,
+              maxLon,
+              minLon,
+              _tries, // Async tries
+              false // Print Error logs
+            )
+          ) {
+            return true;
+          }
         }
       }
     }
   }
-  return {
-    token: "ERROR",
-    imageUri: "ERROR",
-    assetUri: "ERROR",
-    metadataUri: "ERROR",
-  };
+  return false;
 }
 
 export default mintNFT;
