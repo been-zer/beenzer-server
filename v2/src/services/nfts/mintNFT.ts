@@ -12,6 +12,7 @@ import { PublicKey } from "@solana/web3.js";
 import { getDate, getTime, sleep } from "../../utils";
 import { videoToGif } from "../videoToGif";
 import { newNFT } from "../../controllers/nfts.controller";
+import printNFT from "./printNFT";
 import {
   SOLANA_CONNECTION,
   SOLANA_RPC_URL,
@@ -139,7 +140,7 @@ export async function uploadMetadata(
   return "ERROR";
 }
 
-export async function mintToken(
+export async function mintMaster(
   metadataUri: string,
   name: string,
   supply: number,
@@ -166,7 +167,7 @@ export async function mintToken(
       });
       const token = nft.mintAddress.toBase58();
       console.log(`✅  Mint Success! Tries: ${i + 1}`);
-      console.log(`   Minted NFT: https://solscan.io/token/${token}`);
+      console.log(`    https://solscan.io/token/${token}`);
       return token;
     } catch (err) {
       if (String(err).includes("funds")) {
@@ -285,7 +286,7 @@ async function mintNFT(
       );
       if (metadataUri && metadataUri !== "ERROR") {
         // Step 3 - Mint Master Edition
-        const token: string = await mintToken(
+        const token: string = await mintMaster(
           metadataUri,
           METADATA.name,
           METADATA.maxSupply,
@@ -324,7 +325,9 @@ async function mintNFT(
               false // Print error logs
             )
           ) {
-            return true;
+            if (await printNFT(token, creator, _tries)) {
+              return true;
+            }
           }
         }
       }

@@ -36,8 +36,8 @@ export interface Edition {
   id: number;
 }
 async function printNFT(
-  originalNFT: PublicKey,
-  destination: PublicKey,
+  masterToken: string,
+  printer: string,
   _tries: number = 10, // Optional, async tries
   _whenMaxSupply = "SEND", // or BURN Master Edition
   _destinationWallet = MARKET_PUBKEY, // if SEND, destination wallet pubkey
@@ -46,6 +46,8 @@ async function printNFT(
   let i = 0;
   while (i < _tries) {
     try {
+      const originalNFT = new PublicKey(masterToken);
+      const destination = new PublicKey(printer);
       const nftMaster: Nft | Sft | any = await METAPLEX.nfts().findByMint({
         mintAddress: originalNFT,
         loadJsonMetadata: true,

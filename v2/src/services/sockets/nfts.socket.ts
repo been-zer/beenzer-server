@@ -1,5 +1,4 @@
 import { Socket } from "socket.io";
-import { PublicKey } from "@solana/web3.js";
 import { sleep } from "../../utils";
 import {
   SYMBOL,
@@ -113,19 +112,7 @@ export const mintNFTSocket = (socket: Socket): void => {
             "mintLogs",
             `✅  ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
           );
-          if (
-            await printNFT(
-              new PublicKey(masterToken),
-              new PublicKey(creator),
-              TRIES // Async tries
-            )
-          ) {
-            socket.emit(
-              "mintLogs",
-              `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
-            );
-            socket.emit("mintLogs", "true");
-          }
+          socket.emit("mintLogs", "true");
         }
       }
       socket.emit("mintLogs", "`❌ ERROR: Mint NFT failed! Check server logs.");
@@ -141,8 +128,8 @@ export const printNFTSocket = (socket: Socket): void => {
       socket.emit("printLogs", msg);
       console.log("printLogs", msg);
       const edition: any = await printNFT(
-        new PublicKey(master),
-        new PublicKey(pubkey),
+        master,
+        pubkey,
         TRIES, // Async tries
         "SEND", // When max supply send to marketplace
         MARKET_PUBKEY, // Wallet where to transfer the Master Edition after maxSupply reached
