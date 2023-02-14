@@ -147,7 +147,8 @@ export async function newEdition(
       try {
         await db.query(_newEdition(master, edition, minter, id));
         console.log(`🎉 ${master} Edition ${id} added to DB succesfully!`);
-        return true;
+        i = _tries;
+        break;
       } catch (error) {
         if (_errLogs) {
           console.log(error);
@@ -156,6 +157,7 @@ export async function newEdition(
         await sleep(3000);
       }
     }
+    return true;
   }
   return false;
 }
