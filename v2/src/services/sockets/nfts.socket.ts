@@ -12,7 +12,6 @@ import mintNFT from "../nfts/mintNFT";
 import printNFT from "../nfts/printNFT";
 import { getUserNFTs } from "../nfts/getUserNFTs";
 import {
-  Edition,
   addNFTCounter,
   getNFTCounter,
   getAllNFTs,
@@ -92,33 +91,35 @@ export const mintNFTSocket = (socket: Socket): void => {
           minLat,
           maxLon,
           minLon,
-          true, // NFT is mutable (van be burned)
+          true, // NFT is mutable (an be burned)
           _royalties,
           _image,
           _mintCcy,
           MASTER_COLLECTION, // NFT collection
           MASTER_PUBLICKEY, // Owner (payer)
-          false, // It is not a Sized Collection
+          false, // It is not a sized collection
           TRIES, // Async tries
-          false // Print Error logs
+          false // Print error logs
         )
       ) {
         socket.emit(
           "mintLogs",
           `⛏️  ${name} minted succesfully! Supply: ${supply}`
         );
-        const masterToken = await getNFTbyId(id);
-        if (masterToken) {
+        const masterNFT = await getNFTbyId(id);
+        const masterToken: string = masterNFT.__token__;
+        if (masterToken.length > 22) {
           socket.emit(
             "mintLogs",
             `✅  ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
           );
-          const firstEdition: Edition | boolean | any = await printNFT(
-            new PublicKey(masterToken.__token__),
-            new PublicKey(creator),
-            TRIES // Async tries
-          );
-          if (firstEdition) {
+          if (
+            await printNFT(
+              new PublicKey(masterToken),
+              new PublicKey(creator),
+              TRIES // Async tries
+            )
+          ) {
             socket.emit(
               "mintLogs",
               `🎉 ${name} Edition 1 has been printed it to your wallet! You can transfer it, sell it, burn it, or hold it!`
