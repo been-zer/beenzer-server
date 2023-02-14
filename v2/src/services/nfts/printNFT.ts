@@ -39,7 +39,6 @@ async function printNFT(
   originalNFT: PublicKey,
   destination: PublicKey,
   _tries: number = 10, // Optional, async tries
-  _returnEdition: boolean = false, // Optional, default return boolean
   _whenMaxSupply = "SEND", // or BURN Master Edition
   _destinationWallet = MARKET_PUBKEY, // if SEND, destination wallet pubkey
   _errLogs: boolean = false // Optional, print error logs

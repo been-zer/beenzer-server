@@ -114,10 +114,9 @@ export const mintNFTSocket = (socket: Socket): void => {
             `✅  ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
           );
           const firstEdition: Edition | boolean | any = await printNFT(
-            new PublicKey(masterToken),
+            new PublicKey(masterToken.__token__),
             new PublicKey(creator),
-            TRIES, // Async tries
-            true // Return Edition
+            TRIES // Async tries
           );
           if (firstEdition) {
             socket.emit(
@@ -147,7 +146,6 @@ export const printNFTSocket = (socket: Socket): void => {
         new PublicKey(master),
         new PublicKey(pubkey),
         TRIES, // Async tries
-        true, // Return Edition int
         "SEND", // When max supply send to marketplace
         MARKET_PUBKEY, // Wallet where to transfer the Master Edition after maxSupply reached
         true // Print error logs
