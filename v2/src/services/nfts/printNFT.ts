@@ -30,8 +30,10 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 
 export interface Edition {
   master: string;
-  copy: string;
-  edition: number;
+  token: string;
+  id: number;
+  owner: string;
+  created: number;
 }
 async function printNFT(
   originalNFT: PublicKey,
@@ -118,12 +120,14 @@ async function printNFT(
         );
         i = _tries;
         if (_returnEdition) {
-          const ret = {
+          const ret: Edition = {
             master: nftMaster.mint.toBase58(),
-            copy: nftCopy.tokenAddress.toBase58(),
-            edition: edition,
+            token: nftCopy.tokenAddress.toBase58(),
+            id: edition,
+            owner: destination.toBase58(),
+            created: Date.now(),
           };
-          return ret as Edition;
+          return ret;
         }
         return true;
       }
@@ -132,14 +136,14 @@ async function printNFT(
         console.log("Trying to print a full supply NFT!");
         return false;
       }
-      if (_errLogs) {
-        console.log("\nERROR:\n", err);
-      }
       i++;
       console.log(
         `❌ - Printing failed for unkown reason! Check logs. Tries: ${i}`
       );
       sleep(5000);
+      if (_errLogs) {
+        console.log("\nERROR:\n", err);
+      }
     }
   }
   return false;

@@ -12,6 +12,7 @@ import mintNFT from "../nfts/mintNFT";
 import printNFT from "../nfts/printNFT";
 import { getUserNFTs } from "../nfts/getUserNFTs";
 import {
+  Edition,
   addNFTCounter,
   getNFTCounter,
   newNFT,
@@ -146,19 +147,20 @@ export const mintNFTSocket = (socket: Socket): void => {
           socket.emit("mintLogs", "newNFT controller failed!");
           socket.emit("mintLogs", "false");
         }
-        const firstEdition: any = await printNFT(
+        const firstEdition: Edition | boolean | any = await printNFT(
           new PublicKey(token.token),
           new PublicKey(creator),
           TRIES, // Async tries
           true // Return Edition
         );
         if (firstEdition) {
+          console.log("\nOK\n");
           if (
             await newEdition(
-              token.token,
-              firstEdition.copy,
+              token.token, // Master
+              firstEdition.copy, // Token
               1, // Edition id
-              creator,
+              creator, // Owner
               TRIES, // Async tries
               true // Print Error logs
             )
