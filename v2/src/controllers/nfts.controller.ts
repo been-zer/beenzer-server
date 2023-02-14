@@ -21,7 +21,7 @@ import {
   _getMapNFTs,
   _newOwner,
 } from "./nfts.queries";
-import { getDate, getTime, sleep } from "../utils";
+import { sleep } from "../utils";
 
 /**
  * @description Get createNFTtransactions data
