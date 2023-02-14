@@ -91,8 +91,8 @@ export const getUserNFTs = async (
         const nftEdiRow: EditionNFT = {
           master: userEdi.__master__ as string,
           edition: {
-            token: userEdi.__token__ as string,
-            id: userEdi.__edition__ as number,
+            token: userEdi.__edition__ as string,
+            id: userEdi._id as number,
             timestamp: userEdi._timestamp as number,
           } as EditionId,
           id: userEdi.edition as number,

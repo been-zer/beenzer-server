@@ -59,8 +59,8 @@ export const _getNFTbyId = (id: number): string => {
   return `SELECT * FROM nfts WHERE _id_ = ${id}`;
 };
 
-export const _getEditionsByOwner = (owner: string): string => {
-  return `SELECT * FROM editions WHERE _owner = '${owner}'`;
+export const _getEditionsByMinter = (minter: string): string => {
+  return `SELECT * FROM editions WHERE _minter = '${minter}'`;
 };
 
 export const _getEditionsByTokens = (tokens: string): string => {

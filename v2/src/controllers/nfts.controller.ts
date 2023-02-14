@@ -4,7 +4,8 @@ import {
   _getNFT,
   _newNFT,
   _newEdition,
-  _getEditionsByOwner,
+  _getEditionsByMinter,
+  _getEditionsByTokens,
   _getNFTbyId,
   _updateNFTOwner,
   _updateNFTLikes,
@@ -139,7 +140,6 @@ export async function newEdition(
   _tries = 10,
   _errLogs = false
 ): Promise<boolean> {
-  console.log("newEdition args: ", master, edition, minter, id);
   if (master != "ERROR" && edition != "ERROR" && master && edition) {
     let i = 0;
     while (i < _tries) {
@@ -182,11 +182,11 @@ export interface Edition {
   _timestamp: number;
 }
 
-export async function getEditionsByOwner(
-  owner: string
+export async function getEditionsByMinter(
+  minter: string
 ): Promise<Array<Edition> | boolean> {
   try {
-    const data = await db.query(_getEditionsByOwner(owner));
+    const data = await db.query(_getEditionsByMinter(minter));
     const rows = data.rows;
     return rows;
   } catch (error) {
@@ -200,7 +200,7 @@ export async function getEditionsByTokens(
 ): Promise<Array<Edition> | boolean> {
   if (tokens) {
     try {
-      const data = await db.query(_getEditionsByOwner(tokens));
+      const data = await db.query(_getEditionsByTokens(tokens));
       const rows = data.rows;
       return rows;
     } catch (error) {
