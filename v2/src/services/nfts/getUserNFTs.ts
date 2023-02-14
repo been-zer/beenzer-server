@@ -103,7 +103,10 @@ export const getUserNFTs = async (
             timestamp: userEdi._timestamp as number,
           } as EditionId,
           id: userEdi.edition as number,
-          traits: { ...traits[userEdi.__edition__].traits } as Trait[],
+          traits: {
+            ...traits.find(({ token }) => token === userEdi.__edition__)
+              ?.traits,
+          } as Trait[],
         };
         nftEditions.push(nftEdiRow);
       }
