@@ -120,7 +120,6 @@ async function printNFT(
           `Tries: ${i + 1}`
         );
         i = _tries;
-        console.log("EOOO", nftCopy);
         const edition: Edition = {
           master: nftMaster.mint.address.toBase58(),
           edition: nftCopy.nft.address.toBase58(),

@@ -95,9 +95,8 @@ export const getUserNFTs = async (
       console.log("\neditionTokens query: ", tokens);
     }
     // Get wallet NFT Editions from DB
-    const userEditions: Edition[] | boolean | any = await getEditionsByTokens(
-      tokens
-    );
+    const userEditions: Edition[] | boolean | any =
+      (await getEditionsByTokens(tokens)) || [];
     if (_logs) {
       console.log("\nuserEditions: ", userEditions);
     }
