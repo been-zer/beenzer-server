@@ -118,7 +118,7 @@ export const getUserNFTs = async (
       console.log("\nmasterTokens query: ", masterTokens);
     }
     // Get wallet NFT Masters from DB
-    const userMasters = await getNFTsByTokens(masterTokens);
+    const userMasters = (await getNFTsByTokens(masterTokens)) || [];
     if (_logs) {
       console.log("\nuserMasters: ", userMasters);
     }
