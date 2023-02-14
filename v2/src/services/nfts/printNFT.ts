@@ -38,11 +38,11 @@ export interface Edition {
 async function printNFT(
   originalNFT: PublicKey,
   destination: PublicKey,
-  _tries: number = 10, // Optional
-  _returnEdition: boolean = false, // Optional
+  _tries: number = 10, // Optional, async tries
+  _returnEdition: boolean = false, // Optional, default return boolean
   _whenMaxSupply = "SEND", // or BURN Master Edition
   _destinationWallet = MARKET_PUBKEY, // if SEND, destination wallet pubkey
-  _errLogs: boolean = false // Optional. Print Error logs
+  _errLogs: boolean = false // Optional, print error logs
 ): Promise<Edition | boolean> {
   let i = 0;
   while (i < _tries) {
@@ -119,9 +119,14 @@ async function printNFT(
           `Tries: ${i + 1}`
         );
         i = _tries;
+        console.log(
+          "\n\nEOOOO\n\n",
+
+          nftCopy
+        );
         if (_returnEdition) {
           const ret: Edition = {
-            master: nftMaster.mint.toBase58(),
+            master: nftMaster.mint.address.toBase58(),
             token: nftCopy.tokenAddress.toBase58(),
             id: edition,
             owner: destination.toBase58(),

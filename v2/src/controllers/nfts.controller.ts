@@ -134,23 +134,23 @@ export async function newNFT(
 
 export async function newEdition(
   master: string,
-  token: string,
-  edition: number,
-  owner: string,
+  edition: string,
+  minter: string,
+  id: number,
   _tries = 10,
   _errLogs = false
 ): Promise<boolean> {
   if (
     master != "ERROR" &&
     master.length > 0 &&
-    token != "ERROR" &&
-    token.length > 0
+    edition != "ERROR" &&
+    edition.length > 0
   ) {
     let i = 0;
     while (i < _tries) {
       try {
-        await db.query(_newEdition(master, token, edition, owner));
-        console.log(`🎉 ${token} Edition ${edition} added to DB succesfully!`);
+        await db.query(_newEdition(master, edition, minter, id));
+        console.log(`🎉 ${master} Edition ${id} added to DB succesfully!`);
         return true;
       } catch (error) {
         if (_errLogs) {

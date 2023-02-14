@@ -159,8 +159,8 @@ export const mintNFTSocket = (socket: Socket): void => {
             await newEdition(
               token.token, // Master
               firstEdition.copy, // Token
+              creator, // Minter
               1, // Edition id
-              creator, // Owner
               TRIES, // Async tries
               true // Print Error logs
             )
@@ -189,10 +189,10 @@ export const printNFTSocket = (socket: Socket): void => {
       const edition: any = await printNFT(
         new PublicKey(master),
         new PublicKey(pubkey),
-        TRIES,
+        TRIES, // Async tries
         true, // Return Edition int
         "SEND", // When max supply send to marketplace
-        MARKET_PUBKEY,
+        MARKET_PUBKEY, // Wallet where to transfer the Master Edition after maxSupply reached
         true // Print error logs
       );
       if (Number(edition) > 1) {
@@ -200,8 +200,8 @@ export const printNFTSocket = (socket: Socket): void => {
           await newEdition(
             master,
             edition.token,
-            Number(edition),
-            pubkey,
+            pubkey, // Minter
+            Number(edition), // Edition id
             TRIES, // Async tries
             true // Return Edition
           )
