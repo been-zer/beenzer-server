@@ -69,11 +69,9 @@ export async function newNFT(
   _tries = 10,
   _logs = false
 ): Promise<boolean> {
-  console.log("Token address:", token);
   if (token != "ERROR" && token) {
     let i = 0;
     while (i < _tries) {
-      console.log(`Adding ${name} to DB... Tries: ${i + 1}`);
       try {
         const date = getDate();
         const time = getTime();
@@ -164,14 +162,14 @@ export async function newEdition(
 }
 
 export async function getNFTbyId(id: number): Promise<any> {
-   try {
-     const data = await db.query(_getNFTbyId(id));
-     const rows = data.rows;
-     return rows[0];
-   } catch (error) {
-     console.log(error);
-     return false;
-   }
+  try {
+    const data = await db.query(_getNFTbyId(id));
+    const rows = data.rows;
+    return rows[0];
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export interface Edition {

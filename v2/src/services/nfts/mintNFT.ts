@@ -148,7 +148,7 @@ export async function mintToken(
   creators: { address: PublicKey; share: number }[],
   _isMutable: boolean = true, // Optional, if True token can be burned
   _tries: number = 10, // Optional, number of async tries
-  _errLogs: boolean = false // Optional, print Error logs
+  _errLogs: boolean = false // Optional, print error logs
 ): Promise<string> {
   console.log(`Step 3 - Minting ${name} in Solana...`);
   let nft: CreateNftOutput;
@@ -321,7 +321,7 @@ async function mintNFT(
               maxLon,
               minLon,
               _tries, // Async tries
-              false // Print Error logs
+              false // Print error logs
             )
           ) {
             return true;
