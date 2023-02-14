@@ -95,6 +95,12 @@ export const getUserNFTs = async (
     const nftEditions = [];
     if (userEditions) {
       for (const userEdi of userEditions) {
+        let attributes: Trait[] = [];
+        for (const x of traits) {
+          if (x.token == userEdi.__edition__) {
+            attributes = x.traits;
+          }
+        }
         const nftEdiRow: EditionNFT = {
           master: userEdi.__master__ as string,
           edition: {
@@ -103,10 +109,7 @@ export const getUserNFTs = async (
             timestamp: userEdi._timestamp as number,
           } as EditionId,
           id: userEdi.edition as number,
-          traits: {
-            ...traits.find(({ token }) => token === userEdi.__edition__)
-              ?.traits,
-          } as Trait[],
+          traits: attributes as Trait[],
         };
         nftEditions.push(nftEdiRow);
       }
