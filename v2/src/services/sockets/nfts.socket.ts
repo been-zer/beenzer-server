@@ -155,10 +155,9 @@ export const printNFTSocket = (socket: Socket): void => {
 export const getUserNFTsSocket = (socket: Socket): void => {
   socket.on("getUserNFTs", async (pubkey: string) => {
     if (pubkey.length > 22) {
-      socket.emit(
-        "userNFTs",
-        await getUserNFTs(pubkey, SOLANA_CONNECTION, true, true)
-      );
+      const NFTs = await getUserNFTs(pubkey, SOLANA_CONNECTION, false, true);
+      console.log("\nuserNFTs:\n", NFTs);
+      socket.emit("userNFTs", NFTs);
     }
   });
 };
