@@ -5,7 +5,7 @@ const getFeedbyLocation = async (
   pubkey: string,
   latitude: number,
   longitude: number,
-  _logs: boolean = true // Optional, print logs
+  _logs: boolean = false // Optional, print logs
 ): Promise<any> => {
   try {
     const follows = await getUserFollows(pubkey);
