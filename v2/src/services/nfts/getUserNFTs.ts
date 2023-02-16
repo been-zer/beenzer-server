@@ -182,13 +182,17 @@ const getUserNFTs = async (
         for (const edition of nftEditions) {
           if (edition.master === master.__token__) {
             userNFTrow.editions.push(edition.edition);
-            console.log("traits", edition.traits);
+            if (_logs) {
+              console.log("traits", edition.traits);
+            }
             userNFTrow.attributes = edition.traits;
           }
         }
         userNFTrow.amount = userNFTrow.editions.length || 0;
         userNFTs.push(userNFTrow);
-        console.log("attributes", userNFTrow.attributes);
+        if (_logs) {
+          console.log("attributes", userNFTrow.attributes);
+        }
       }
     }
     if (_logs) {
