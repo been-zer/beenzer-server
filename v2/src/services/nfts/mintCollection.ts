@@ -16,7 +16,7 @@ import {
   OPENSEA,
   MAGICEDEN,
 } from "../../config";
-import { uploadImage, uploadMetadata, mintToken } from "./mintNFT";
+import { uploadImage, uploadMetadata, mintMaster } from "./mintNFT";
 import fs from "fs";
 
 const imageBuffer = fs.readFileSync("./src/assets/logo.png");
@@ -74,7 +74,7 @@ export async function mintCollection(
         attributes,
         tries
       );
-      const token = await mintToken(
+      const token = await mintMaster(
         metadataUri,
         name,
         supply,
