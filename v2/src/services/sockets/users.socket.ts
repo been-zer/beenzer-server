@@ -15,11 +15,11 @@ import {
   getUsersFlags,
   isFriend,
 } from "../../controllers/users.controller";
+import getUserNFTs from "../nfts/getUserNFTs";
 import {
   createMessages,
   // deleteMessages
 } from "../../controllers/messages.controller";
-import { getUserNFTs } from "../nfts/getUserNFTs";
 
 export const newConnectionSocket = (socket: Socket): void => {
   socket.on("newConnection", async (pubkey: string) => {

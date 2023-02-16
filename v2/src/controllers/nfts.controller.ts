@@ -4,8 +4,6 @@ import {
   _getNFT,
   _newNFT,
   _newEdition,
-  _getEditionsByMinter,
-  _getEditionsByTokens,
   _getNFTbyId,
   _updateNFTOwner,
   _updateNFTLikes,
@@ -17,6 +15,9 @@ import {
   _getNFTsByOwner,
   _getUserNFTs,
   _getNFTsByTokens,
+  _getEditionsByTokens,
+  _getEditionsByMinter,
+  _getEditionsByMaster,
   _getAllNFTs,
   _getMapNFTs,
   _newOwner,
@@ -204,6 +205,23 @@ export async function getEditionsByTokens(
     }
   }
   return false;
+}
+
+export async function getLastEdition(master: string): Promise<number> {
+  if (master) {
+    try {
+      const data = await db.query(_getEditionsByMaster(master));
+      const rows = data.rows;
+      if (rows.length > 1) {
+        return Number(rows[rows.length - 1]._id);
+      } else {
+        return 1;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return 0;
 }
 
 export async function newOwner(token: string, owner: string): Promise<boolean> {

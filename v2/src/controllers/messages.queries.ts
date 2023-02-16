@@ -1,4 +1,4 @@
-import { messagesSchema, messagesInit } from "./messages.schemas";
+import { messagesSchema, messagesInit } from "./schemas/messages.schemas";
 
 export const _createMessages = (table: string): string => {
   return `CREATE TABLE ${table} (${messagesInit})`;

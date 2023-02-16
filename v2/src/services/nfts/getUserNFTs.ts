@@ -53,7 +53,7 @@ export interface UserNFT {
   attributes: Trait[];
 }
 
-export const getUserNFTs = async (
+const getUserNFTs = async (
   pubkey: string,
   _solanaConnection: Connection = SOLANA_CONNECTION, // Optional
   _logs: boolean = false, // Optional, print logs
@@ -201,3 +201,5 @@ export const getUserNFTs = async (
   }
   return [];
 };
+
+export default getUserNFTs;

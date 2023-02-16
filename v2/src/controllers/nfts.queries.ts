@@ -3,7 +3,7 @@ import {
   editionSchema,
   ownerSchema,
   transactionsSchema,
-} from "./nfts.schemas";
+} from "./schemas/nfts.schemas";
 import { getDate, getTime } from "../utils";
 
 export const _newNFT = (
@@ -67,6 +67,10 @@ export const _getEditionsByTokens = (tokens: string): string => {
 
 export const _getEditionsByMinter = (minter: string): string => {
   return `SELECT * FROM editions WHERE _minter = '${minter}'`;
+};
+
+export const _getEditionsByMaster = (master: string): string => {
+  return `SELECT * FROM editions WHERE __master__ = '${master}'`;
 };
 
 export const _newOwner = (token: string, owner: string): string => {

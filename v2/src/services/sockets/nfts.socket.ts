@@ -9,13 +9,15 @@ import {
 } from "../../config";
 import mintNFT from "../nfts/mintNFT";
 import printNFT from "../nfts/printNFT";
-import { getUserNFTs } from "../nfts/getUserNFTs";
+import getUserNFTs from "../nfts/getUserNFTs";
+import getUserFeedByLocation from "../nfts/getUserFeedByLocation";
 import {
   addNFTCounter,
   getNFTCounter,
   getAllNFTs,
-  getMapNFTs,
   getNFTbyId,
+  getLastEdition,
+  getMapNFTs,
 } from "../../controllers/nfts.controller";
 import dotenv from "dotenv";
 dotenv.config();
@@ -43,7 +45,7 @@ export const mintNFTSocket = (socket: Socket): void => {
       minLon: number,
       _image: Buffer | boolean = false, // Optional
       _royalties: number = 1000, // Optional
-      _mintCcy: string = "SOL" // Optional
+      _mintCcy: string = "SOL" // OptionalgetFeed
     ) => {
       console.log("mintNFT", username, creator);
       const nftFile = type.split("/")[0] || "unknown";
@@ -127,25 +129,35 @@ export const printNFTSocket = (socket: Socket): void => {
       const msg = `🖨️ Printing NFT ${master}...`;
       socket.emit("printLogs", msg);
       console.log("printLogs", msg);
-      const edition: any = await printNFT(
-        master,
-        pubkey,
-        TRIES, // Async tries
-        "SEND", // When max supply send to marketplace
-        MARKET_PUBKEY, // Wallet where to transfer the Master Edition after maxSupply reached
-        true // Print error logs
-      );
-      if (Number(edition) > 1) {
-        socket.emit(
-          "printLogs",
-          `🎉 ${edition.token} Edition ${Number(
-            edition
-          )} has been printed succesfully!`
-        );
-        socket.emit("printLogs", "true");
+      if (
+        await printNFT(
+          master,
+          pubkey,
+          TRIES, // Async tries
+          "SEND", // When max supply send to marketplace
+          MARKET_PUBKEY, // Wallet where to transfer the Master Edition after maxSupply reached
+          true // Print error logs
+        )
+      ) {
+        const edition = await getLastEdition(master);
+        if (edition > 1) {
+          socket.emit(
+            "printLogs",
+            `🎉 Master: ${master} \nEdition ${edition} has been printed succesfully!`
+          );
+          socket.emit("printLogs", "true");
+        } else {
+          const msgErr = `❌ ERROR: Print Edition failed!! Edition id: !${edition}!`;
+          socket.emit("printLogs", msgErr);
+          console.log("printLogs", msgErr);
+        }
+      } else {
+        const msgErr = `❌ ERROR: Print Edition failed!! PrintNFT func failed!`;
+        socket.emit("printLogs", msgErr);
+        console.log("printLogs", msgErr);
       }
     } else {
-      const msgErr = `❌ ERROR: Print Edition failed!! Check Error logs.`;
+      const msgErr = `❌ ERROR: printNFT socket inputs are wrong. Check master & pubkey args!`;
       socket.emit("printLogs", msgErr);
       console.log("printLogs", msgErr);
     }
@@ -176,6 +188,24 @@ export const getMapNFTsSocket = (socket: Socket): void => {
       socket.emit("mapNFTs", await getMapNFTs(latitude, longitude));
     }
   });
+};
+
+export const getFeedSocket = (socket: Socket): void => {
+  socket.on(
+    "getFeed",
+    async (pubkey: string, latitude: number, longitude: number) => {
+      if (pubkey.length > 22) {
+        socket.emit(
+          "userFeed",
+          await getUserFeedByLocation(pubkey, latitude, longitude)
+        );
+      } else {
+        const msgErr = `❌ ERROR: getFeed socket input is wrong. Check pubkey arg!`;
+        socket.emit("userFeed", msgErr);
+        console.log("printLogs", msgErr);
+      }
+    }
+  );
 };
 
 export const uploadVideoSocket = (socket: Socket): void => {
