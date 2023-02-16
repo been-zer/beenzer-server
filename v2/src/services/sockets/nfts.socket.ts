@@ -10,6 +10,7 @@ import {
 import mintNFT from "../nfts/mintNFT";
 import printNFT from "../nfts/printNFT";
 import getUserNFTs from "../nfts/getUserNFTs";
+import getUserFeed from "../nfts/getUserFeed";
 import getFeedByLocation from "../nfts/getFeedByLocation";
 import {
   addNFTCounter,
@@ -174,14 +175,6 @@ export const getUserNFTsSocket = (socket: Socket): void => {
   });
 };
 
-export const getAllNFTsSocket = (socket: Socket): void => {
-  socket.on("getAllNFTs", async (res: string) => {
-    if (res === "please") {
-      socket.emit("allNFTs", await getAllNFTs());
-    }
-  });
-};
-
 export const getMapNFTsSocket = (socket: Socket): void => {
   socket.on("getMapNFTs", async (latitude: number, longitude: number) => {
     if (latitude && longitude) {
@@ -196,16 +189,36 @@ export const getFeedSocket = (socket: Socket): void => {
     async (pubkey: string, latitude: number, longitude: number) => {
       if (pubkey.length > 22) {
         socket.emit(
-          "userFeed",
+          "getFeedRes",
           await getFeedByLocation(pubkey, latitude, longitude)
         );
       } else {
-        const msgErr = `❌ ERROR: getFeed socket input is wrong. Check pubkey arg!`;
-        socket.emit("userFeed", msgErr);
+        const msgErr = `❌ ERROR: getFeed socket input is wrong. Check args!`;
+        socket.emit("getFeedRes", msgErr);
         console.log("printLogs", msgErr);
       }
     }
   );
+};
+
+export const getUserFeedSocket = (socket: Socket): void => {
+  socket.on("getUserFeed", async (pubkey: string) => {
+    if (pubkey.length > 22) {
+      socket.emit("getUserFeedRes", await getUserFeed(pubkey));
+    } else {
+      const msgErr = `❌ ERROR: getUserFeed socket input is wrong. Check pubkey arg!`;
+      socket.emit("getUserFeedRes", msgErr);
+      console.log("printLogs", msgErr);
+    }
+  });
+};
+
+export const getAllNFTsSocket = (socket: Socket): void => {
+  socket.on("getAllNFTs", async (res: string) => {
+    if (res === "please") {
+      socket.emit("allNFTs", await getAllNFTs());
+    }
+  });
 };
 
 export const uploadVideoSocket = (socket: Socket): void => {
@@ -218,8 +231,10 @@ const nftsSocket = (socket: Socket): void => {
   mintNFTSocket(socket);
   printNFTSocket(socket);
   getUserNFTsSocket(socket);
-  getAllNFTsSocket(socket);
   getMapNFTsSocket(socket);
+  getFeedSocket(socket);
+  getUserFeedSocket(socket);
+  getAllNFTsSocket(socket);
   uploadVideoSocket(socket);
 };
 

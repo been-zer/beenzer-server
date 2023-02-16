@@ -15,6 +15,7 @@ import {
   _getNFTsByOwner,
   _getUserNFTs,
   _getNFTsByTokens,
+  _getNFTsByCreators,
   _getEditionsByTokens,
   _getEditionsByMinter,
   _getEditionsByMaster,
@@ -118,35 +119,6 @@ export async function newNFT(
   return false;
 }
 
-export async function newEdition(
-  master: string,
-  edition: string,
-  minter: string,
-  id: number,
-  _tries = 10,
-  _errLogs = false
-): Promise<boolean> {
-  if (master != "ERROR" && edition != "ERROR" && master && edition) {
-    let i = 0;
-    while (i < _tries) {
-      try {
-        await db.query(_newEdition(master, edition, minter, id));
-        console.log(`🎉 ${master} Edition ${id} added to DB succesfully!`);
-        i = _tries;
-        break;
-      } catch (error) {
-        if (_errLogs) {
-          console.log(error);
-        }
-        i++;
-        await sleep(3000);
-      }
-    }
-    return true;
-  }
-  return false;
-}
-
 export async function getNFT(token: string, edition: number): Promise<any> {
   try {
     const data = await db.query(_getNFT(token, edition));
@@ -169,93 +141,11 @@ export async function getNFTbyId(id: number): Promise<any> {
   }
 }
 
-export interface Edition {
-  __master__: string;
-  __edition__: number;
-  _minter: string;
-  _id: number;
-  _date: string;
-  _time: string;
-  _timestamp: number;
-}
-
-export async function getEditionsByMinter(
-  minter: string
-): Promise<Array<Edition> | boolean> {
+export async function getNFTsByCreators(tokens: string): Promise<any> {
   try {
-    const data = await db.query(_getEditionsByMinter(minter));
+    const data = await db.query(_getNFTsByCreators(tokens));
     const rows = data.rows;
     return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
-export async function getEditionsByTokens(
-  tokens: string
-): Promise<Array<Edition> | boolean> {
-  if (tokens) {
-    try {
-      const data = await db.query(_getEditionsByTokens(tokens));
-      const rows = data.rows;
-      return rows;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  return false;
-}
-
-export async function getLastEdition(master: string): Promise<number> {
-  if (master) {
-    try {
-      const data = await db.query(_getEditionsByMaster(master));
-      const rows = data.rows;
-      if (rows.length > 1) {
-        return Number(rows[rows.length - 1]._id);
-      } else {
-        return 1;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  return 0;
-}
-
-export async function newOwner(token: string, owner: string): Promise<boolean> {
-  try {
-    await db.query(_newOwner(token, owner));
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
-export async function getNFTsByOwner(owner: string): Promise<any> {
-  try {
-    const data = await db.query(_getNFTsByOwner(owner));
-    const rows = data.rows;
-    return rows;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
-export async function getUserNFTsDB(owner: string): Promise<any> {
-  try {
-    const nfts: Array<object> = [];
-    const tokens: Array<string> = [];
-    const nftsList = await getNFTsByOwner(owner);
-    nftsList.forEach((owner: any) => tokens.push(owner.__token__));
-    for (let i = 0; i < tokens.length; i++) {
-      const nft = await getNFT(tokens[i], -1); // -1 = all available editions
-      nfts.push(nft[0]);
-    }
-    return nfts;
   } catch (error) {
     console.log(error);
     return false;
@@ -318,19 +208,129 @@ export async function addNFTCounter(): Promise<boolean> {
   }
 }
 
-// Deprecated...  use getNFTCounter() instead!
-export async function getNFTsLength(): Promise<number> {
+export interface Edition {
+  __master__: string;
+  __edition__: number;
+  _minter: string;
+  _id: number;
+  _date: string;
+  _time: string;
+  _timestamp: number;
+}
+
+export async function newEdition(
+  master: string,
+  edition: string,
+  minter: string,
+  id: number,
+  _tries = 10,
+  _errLogs = false
+): Promise<boolean> {
+  if (master != "ERROR" && edition != "ERROR" && master && edition) {
+    let i = 0;
+    while (i < _tries) {
+      try {
+        await db.query(_newEdition(master, edition, minter, id));
+        console.log(`🎉 ${master} Edition ${id} added to DB succesfully!`);
+        i = _tries;
+        break;
+      } catch (error) {
+        if (_errLogs) {
+          console.log(error);
+        }
+        i++;
+        await sleep(3000);
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
+export async function getEditionsByMinter(
+  minter: string
+): Promise<Array<Edition> | boolean> {
   try {
-    const nftId = await db.query(_getNFTsLength());
-    console.log("New NFT Beenzer #id number : ", Number(nftId.rows[0].count));
-    return Number(nftId.rows[0].count);
+    const data = await db.query(_getEditionsByMinter(minter));
+    const rows = data.rows;
+    return rows;
   } catch (error) {
-    console.log("ERROR: nfts.controller => getNFTid()");
-    return -1;
+    console.log(error);
+    return false;
   }
 }
 
-// To double check:
+export async function getEditionsByTokens(
+  tokens: string
+): Promise<Array<Edition> | boolean> {
+  if (tokens) {
+    try {
+      const data = await db.query(_getEditionsByTokens(tokens));
+      const rows = data.rows;
+      return rows;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return false;
+}
+
+export async function getLastEdition(master: string): Promise<number> {
+  if (master) {
+    try {
+      const data = await db.query(_getEditionsByMaster(master));
+      const rows = data.rows;
+      if (rows.length > 1) {
+        return Number(rows[rows.length - 1]._id);
+      } else {
+        return 1;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return 0;
+}
+
+// Not in production
+
+export async function newOwner(token: string, owner: string): Promise<boolean> {
+  try {
+    await db.query(_newOwner(token, owner));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getNFTsByOwner(owner: string): Promise<any> {
+  try {
+    const data = await db.query(_getNFTsByOwner(owner));
+    const rows = data.rows;
+    return rows;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getUserNFTsDB(owner: string): Promise<any> {
+  try {
+    const nfts: Array<object> = [];
+    const tokens: Array<string> = [];
+    const nftsList = await getNFTsByOwner(owner);
+    nftsList.forEach((owner: any) => tokens.push(owner.__token__));
+    for (let i = 0; i < tokens.length; i++) {
+      const nft = await getNFT(tokens[i], -1); // -1 = all available editions
+      nfts.push(nft[0]);
+    }
+    return nfts;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
 
 export async function updateNFTOwner(
   token: string,
@@ -393,5 +393,17 @@ export async function newNFTtransactions(
     }
     console.log(error);
     return false;
+  }
+}
+
+// Deprecated...  use getNFTCounter() instead
+export async function getNFTsLength(): Promise<number> {
+  try {
+    const nftId = await db.query(_getNFTsLength());
+    console.log("New NFT Beenzer #id number : ", Number(nftId.rows[0].count));
+    return Number(nftId.rows[0].count);
+  } catch (error) {
+    console.log("ERROR: nfts.controller => getNFTid()");
+    return -1;
   }
 }

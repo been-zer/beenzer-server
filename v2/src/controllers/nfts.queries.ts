@@ -57,6 +57,10 @@ export const _getNFTbyId = (id: number): string => {
   return `SELECT * FROM nfts WHERE _id_ = ${id}`;
 };
 
+export const _getNFTsByCreators = (tokens: string): string => {
+  return `SELECT * FROM nfts WHERE _creator IN (${tokens})`;
+};
+
 export const _getNFTsByTokens = (tokens: string): string => {
   return `SELECT * FROM nfts WHERE __token__ IN (${tokens})`;
 };
@@ -73,14 +77,6 @@ export const _getEditionsByMaster = (master: string): string => {
   return `SELECT * FROM editions WHERE __master__ = '${master}'`;
 };
 
-export const _newOwner = (token: string, owner: string): string => {
-  return `INSERT INTO owners (${ownerSchema}) VALUES ('${token}', '${owner}', ${Date.now()})`;
-};
-
-export const _getNFTsByOwner = (owner: string): string => {
-  return `SELECT * FROM owners WHERE _owner = '${owner}'`;
-};
-
 export const _getUserNFTs = (tokens: Array<string>): Array<string> => {
   const nfts: Array<string> = [];
   tokens.forEach((token: string): void => {
@@ -89,12 +85,30 @@ export const _getUserNFTs = (tokens: Array<string>): Array<string> => {
   return nfts;
 };
 
+export const _getMapNFTs = (latitude: number, longitude: number): string => {
+  return `SELECT * FROM nfts WHERE ( _maxlat >= ${latitude} AND _minlat <= ${latitude} AND _maxlon >= ${longitude} AND _minlon <= ${longitude} ) OR ( _maxlat = 0)`;
+};
+
 export const _getAllNFTs = (): string => {
   return `SELECT * FROM nfts`;
 };
 
-export const _getMapNFTs = (latitude: number, longitude: number): string => {
-  return `SELECT * FROM nfts WHERE ( _maxlat >= ${latitude} AND _minlat <= ${latitude} AND _maxlon >= ${longitude} AND _minlon <= ${longitude} ) OR ( _maxlat = 0)`;
+export const _getNFTCounter = () => {
+  return `SELECT * from counter`;
+};
+
+export const _addNFTCounter = () => {
+  return `UPDATE counter SET _n = _n + 1, _timestamp = ${Date.now()}`;
+};
+
+// Not in production
+
+export const _newOwner = (token: string, owner: string): string => {
+  return `INSERT INTO owners (${ownerSchema}) VALUES ('${token}', '${owner}', ${Date.now()})`;
+};
+
+export const _getNFTsByOwner = (owner: string): string => {
+  return `SELECT * FROM owners WHERE _owner = '${owner}'`;
 };
 
 export const _updateNFTOwner = (token: string, newOwner: string): string => {
@@ -107,14 +121,6 @@ export const _updateNFTLikes = (token: string, likes: number) => {
 
 export const _createNFTtransactions = (token: string): string => {
   return `CREATE TABLE _${token}_ (${transactionsSchema})`;
-};
-
-export const _getNFTCounter = () => {
-  return `SELECT * from counter`;
-};
-
-export const _addNFTCounter = () => {
-  return `UPDATE counter SET _n = _n + 1, _timestamp = ${Date.now()}`;
 };
 
 export const _getNFTsLength = () => {
