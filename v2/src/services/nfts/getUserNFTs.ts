@@ -50,7 +50,6 @@ export interface UserNFT {
   maxlon: number;
   minlon: number;
   metadata_uri: string;
-  attributes: Trait[];
 }
 
 const getUserNFTs = async (
@@ -176,23 +175,15 @@ const getUserNFTs = async (
           maxlon: master._maxlon,
           minlon: master._minlon,
           metadata_uri: master._metadata_uri,
-          attributes: [], // To fill in with userEditions
         };
         // Step 9 - Update amount and attributes
         for (const edition of nftEditions) {
           if (edition.master === master.__token__) {
             userNFTrow.editions.push(edition.edition);
-            if (_logs) {
-              console.log("traits", edition.traits);
-            }
-            userNFTrow.attributes = edition.traits;
           }
         }
         userNFTrow.amount = userNFTrow.editions.length || 0;
         userNFTs.push(userNFTrow);
-        if (_logs) {
-          console.log("attributes", userNFTrow.attributes);
-        }
       }
     }
     if (_logs) {
