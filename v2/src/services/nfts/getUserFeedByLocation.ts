@@ -1,14 +1,27 @@
 import { getMapNFTs } from "../../controllers/nfts.controller";
+import { getUserFollows } from "../../controllers/users.controller";
 
 const getUserFeedbyLocation = async (
-  string: string,
+  pubkey: string,
   latitude: number,
   longitude: number
 ): Promise<any> => {
   try {
-    let mapNFTs = await getMapNFTs(latitude, longitude);
-    mapNFTs = mapNFTs.rows;
-    return mapNFTs;
+    const follows = await getUserFollows(pubkey);
+    const following = [];
+    for (const user of follows.rows) {
+      following.push(user.__pubkey__);
+    }
+    const mapNFTs = await getMapNFTs(latitude, longitude);
+    const userFeed = [];
+    for (const nft of mapNFTs.rows) {
+      for (const follow in following) {
+        if (nft._creator == follow) {
+          userFeed.push(nft);
+        }
+      }
+    }
+    return userFeed;
   } catch (error) {
     console.log(error);
     return false;
