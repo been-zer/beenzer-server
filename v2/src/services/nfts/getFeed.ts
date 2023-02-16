@@ -1,7 +1,7 @@
 import { getMapNFTs } from "../../controllers/nfts.controller";
 import { getUserFollows } from "../../controllers/users.controller";
 
-const getFeedbyLocation = async (
+const getUserFeed = async (
   pubkey: string,
   latitude: number,
   longitude: number
@@ -28,4 +28,4 @@ const getFeedbyLocation = async (
   }
 };
 
-export default getFeedbyLocation;
+export default getUserFeed;

@@ -157,7 +157,7 @@ export const printNFTSocket = (socket: Socket): void => {
         console.log("printLogs", msgErr);
       }
     } else {
-      const msgErr = `❌ ERROR: printNFT socket inputs are wrong. Check master & pubkey args!`;
+      const msgErr = `❌ ERROR: PrintNFT socket inputs are wrong. Check master & pubkey args!`;
       socket.emit("printLogs", msgErr);
       console.log("printLogs", msgErr);
     }
