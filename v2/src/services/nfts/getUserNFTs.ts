@@ -60,7 +60,7 @@ const getUserNFTs = async (
   _errLogs: boolean = false // Optional, print error logs
 ): Promise<UserNFT[]> => {
   try {
-    // Get wallet's NFTs from Solana network
+    // Step 1 - Get wallet's NFTs from Solana network
     const solanaNFTs: NFT[] = await getWalletNFTs(
       pubkey,
       _solanaConnection,
@@ -69,7 +69,7 @@ const getUserNFTs = async (
     if (_logs) {
       console.log("\nsolanaNFTs: ", solanaNFTs);
     }
-    // Keep NFT metadata attributes
+    // Step 2 - Keep NFT metadata attributes
     const traits: TokenTraits[] = [];
     for (const nft of solanaNFTs) {
       const trait: TokenTraits = {
@@ -81,7 +81,7 @@ const getUserNFTs = async (
     if (_logs) {
       console.log("\nToken attributes: ", traits);
     }
-    // Pepare user NFT Edition tokens for querying DB: "token[0], token[1], token[n]..."
+    // Step 3 - Pepare user NFT Edition tokens for querying DB: "token[0], token[1], token[n]..."
     let tokens = "";
     if (solanaNFTs.length === 1) {
       tokens = `'${solanaNFTs[0].token}'`;
@@ -94,13 +94,13 @@ const getUserNFTs = async (
     if (_logs) {
       console.log("\neditionTokens query: ", tokens);
     }
-    // Get wallet NFT Editions from DB
+    // Step 4 - Get wallet NFT Editions from DB
     const userEditions: Edition[] | boolean | any =
       (await getEditionsByTokens(tokens)) || [];
     if (_logs) {
       console.log("\nuserEditions: ", userEditions);
     }
-    // Create NFT Edition array
+    // Step 5 - Create NFT Edition array
     const nftEditions = [];
     if (userEditions) {
       for (const userEdi of userEditions) {
@@ -126,7 +126,7 @@ const getUserNFTs = async (
     if (_logs) {
       console.log("\nnftEditions: ", nftEditions);
     }
-    // Pepare user NFT Master tokens for querying DB: "token[0], token[1], token[n]..."
+    // Step 6 - Pepare user NFT Master tokens for querying DB: "token[0], token[1], token[n]..."
     let masterTokens = "";
     if (nftEditions.length === 1) {
       masterTokens = `'${nftEditions[0].master}'`;
@@ -139,7 +139,7 @@ const getUserNFTs = async (
     if (_logs) {
       console.log("\nmasterTokens query: ", masterTokens);
     }
-    // Get wallet NFT Masters from DB
+    // Step 7 - Get wallet NFT Masters from DB
     let userMasters = [];
     if (masterTokens) {
       userMasters = await getNFTsByTokens(masterTokens);
@@ -147,7 +147,7 @@ const getUserNFTs = async (
     if (_logs) {
       console.log("\nuserMasters: ", userMasters);
     }
-    // Create userNFTs array to return
+    // Step 8 - Create userNFTs array to return
     const userNFTs: UserNFT[] = [];
     if (userMasters) {
       for (const master of userMasters) {
@@ -178,7 +178,7 @@ const getUserNFTs = async (
           metadata_uri: master._metadata_uri,
           attributes: [], // To fill in with userEditions
         };
-        // Update amount and attributes
+        // Step 9 - Update amount and attributes
         for (const edition of nftEditions) {
           if (edition.master === master.__token__) {
             userNFTrow.editions.push(edition.edition);
