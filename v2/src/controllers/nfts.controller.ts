@@ -11,6 +11,7 @@ import {
   _newNFTtransactions,
   _getNFTCounter,
   _addNFTCounter,
+  _subNFTCounter,
   _getNFTsLength,
   _getNFTsByOwner,
   _getUserNFTs,
@@ -201,6 +202,16 @@ export async function getNFTCounter(): Promise<number> {
 export async function addNFTCounter(): Promise<boolean> {
   try {
     await db.query(_addNFTCounter());
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function subNFTCounter(): Promise<boolean> {
+  try {
+    await db.query(_subNFTCounter());
     return true;
   } catch (error) {
     console.log(error);

@@ -13,8 +13,9 @@ import getUserNFTs from "../nfts/getUserNFTs";
 import getUserFeed from "../nfts/getUserFeed";
 import getFeedByLocation from "../nfts/getFeedByLocation";
 import {
-  addNFTCounter,
   getNFTCounter,
+  addNFTCounter,
+  subNFTCounter,
   getAllNFTs,
   getNFTbyId,
   getLastEdition,
@@ -117,9 +118,18 @@ export const mintNFTSocket = (socket: Socket): void => {
           );
           socket.emit("mintLogs", "true");
         }
+      } else {
+        socket.emit(
+          "mintLogs",
+          "`❌ ERROR: Mint NFT failed! Please try again. No extra charges will be applied!"
+        );
+        if (await subNFTCounter()) {
+          console.log(
+            "❌ ERROR: Mint NFT failed! Substracted NFT counter correctly."
+          );
+        }
+        socket.emit("mintLogs", "false");
       }
-      socket.emit("mintLogs", "`❌ ERROR: Mint NFT failed! Check server logs.");
-      socket.emit("mintLogs", "false");
     }
   );
 };

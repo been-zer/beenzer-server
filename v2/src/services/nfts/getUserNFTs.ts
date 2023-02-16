@@ -160,8 +160,8 @@ const getUserNFTs = async (
           ccy: master._ccy,
           creator: master._creator,
           username: master._username,
-          image_uri: master._image_uri,
-          asset_uri: master._asset_uri,
+          image_uri: master._image,
+          asset_uri: master._asset,
           type: master._type,
           name: master._name,
           description: master._description,
@@ -182,11 +182,13 @@ const getUserNFTs = async (
         for (const edition of nftEditions) {
           if (edition.master === master.__token__) {
             userNFTrow.editions.push(edition.edition);
-            userNFTrow.attributes = [...edition.traits];
+            console.log("traits", edition.traits);
+            userNFTrow.attributes = edition.traits;
           }
         }
         userNFTrow.amount = userNFTrow.editions.length || 0;
         userNFTs.push(userNFTrow);
+        console.log("attributes", userNFTrow.attributes);
       }
     }
     if (_logs) {

@@ -101,6 +101,10 @@ export const _addNFTCounter = () => {
   return `UPDATE counter SET _n = _n + 1, _timestamp = ${Date.now()}`;
 };
 
+export const _subNFTCounter = () => {
+  return `UPDATE counter SET _n = _n - 1, _timestamp = ${Date.now()}`;
+};
+
 // Not in production
 
 export const _newOwner = (token: string, owner: string): string => {
