@@ -10,7 +10,7 @@ import {
 import mintNFT from "../nfts/mintNFT";
 import printNFT from "../nfts/printNFT";
 import getUserNFTs from "../nfts/getUserNFTs";
-import getUserFeedByLocation from "../nfts/getUserFeedByLocation";
+import getFeedByLocation from "../nfts/getFeedByLocation";
 import {
   addNFTCounter,
   getNFTCounter,
@@ -197,7 +197,7 @@ export const getFeedSocket = (socket: Socket): void => {
       if (pubkey.length > 22) {
         socket.emit(
           "userFeed",
-          await getUserFeedByLocation(pubkey, latitude, longitude)
+          await getFeedByLocation(pubkey, latitude, longitude)
         );
       } else {
         const msgErr = `❌ ERROR: getFeed socket input is wrong. Check pubkey arg!`;
