@@ -38,9 +38,10 @@ export const server: any = createServer(app);
 export const io: any = new Server(server, {
   cors: {
     origin: [
-      String(process.env.CLIENT_MARKET_URL),
-      String(process.env.CLIENT_DAO_URL),
+      "*", // Remove in production
       String(process.env.CLIENT_APP_URL),
+      String(process.env.CLIENT_DAO_URL),
+      String(process.env.CLIENT_MARKET_URL),
     ],
     methods: ["GET", "POST"],
   },
