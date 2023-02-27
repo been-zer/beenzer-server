@@ -30,5 +30,9 @@ export const socketConnect = (io: Server): void => {
     nftsSocket(socket);
     tokenSocket(socket);
     servicesSocket(socket);
+    // Debugging
+    socket.on("clientLogs", (message: string) => {
+      console.log("client log", message);
+    });
   });
 };
