@@ -22,7 +22,7 @@ export const socketConnect = (io: Server): void => {
     });
     // Errors
     socket.on("error", (err: any) => {
-      console.log("socket error", err);
+      console.log("ERROR: Socket error:\n", err);
     });
     // Sockets
     userSocket(socket);
