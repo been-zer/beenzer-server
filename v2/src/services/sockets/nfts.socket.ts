@@ -62,10 +62,7 @@ export const mintNFTSocket = (socket: Socket): void => {
         if (await addNFTCounter()) {
           id = (await getNFTCounter()) + 1;
           if (id) {
-            socket.emit("mintLogs", `Minting ${nftFile} ${SYMBOL} #${id}...`);
-            console.log(
-              `⛏️  Minting ${nftFile} ${SYMBOL} #${id}... Tries: ${i + 1}`
-            );
+
             i = TRIES;
             break;
           }
