@@ -94,7 +94,7 @@ export const mintNFTSocket = (socket: Socket): void => {
           minLat,
           maxLon,
           minLon,
-          true, // NFT is mutable (an be burned)
+          true, // NFT is mutable (can be burned)
           _royalties,
           _image,
           _mintCcy,
@@ -107,7 +107,8 @@ export const mintNFTSocket = (socket: Socket): void => {
       ) {
         socket.emit(
           "mintLogs",
-          `⛏️  ${name} minted succesfully! Supply: ${supply}`
+          // `⛏️  ${name} minted succesfully! Supply: ${supply}`
+          "test"
         );
         const masterNFT = await getNFTbyId(id);
         const masterToken: string = masterNFT.__token__;
