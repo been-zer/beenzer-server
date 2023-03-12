@@ -19,6 +19,7 @@ import {
   getLastEdition,
   getMapNFTs,
 } from "../../controllers/nfts.controller";
+import { newLog } from "../../controllers/users.controller";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -52,7 +53,8 @@ export const mintNFTSocket = (socket: Socket): void => {
       const id = await getNewNFTid(TRIES, false);
       const name = `${SYMBOL} #${id}`;
       const log1 = `⛏️  Minting ${nftFile} ${name}...`;
-      socket.emit("mintLogs", log1);
+      newLog(creator, log1);
+      socket.emit("minLogs", log1);
       console.log("\nLOG1", log1);
       if (
         await mintNFT(
@@ -86,21 +88,23 @@ export const mintNFTSocket = (socket: Socket): void => {
         )
       ) {
         const log2 = `⛏️  ${name} minted succesfully! Supply: ${supply}`;
-        socket.emit("mintLogs", log2);
+        newLog(creator, log2);
+        socket.emit("minLogs", log2);
         console.log("\nLOG2", log2);
         const masterNFT = await getNFTbyId(id);
         const masterToken: string = masterNFT.__token__;
         if (masterToken.length > 22) {
           const log3 = `✅  ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`;
-          socket.emit("mintLogs", log3);
-          console.log("\nLOG3", log3);
+          newLog(creator, log3);
+          socket.emit("minLogs", log3);
+          console.log("\nLOG3\n", log3);
           socket.emit("mintLogs", "true");
         }
       } else {
-        socket.emit(
-          "mintLogs",
-          "❌ ERROR: Mint NFT failed! Please try again. No extra charges will be applied!"
-        );
+        const msgErr =
+          "❌ ERROR: Mint NFT failed! Please try again. No extra charges will be applied!";
+        newLog(creator, msgErr);
+        socket.emit("mintLogs", msgErr);
         if (await subNFTCounter()) {
           console.log(
             "❌ ERROR: Mint NFT failed! Substracted NFT counter correctly."
@@ -115,9 +119,10 @@ export const mintNFTSocket = (socket: Socket): void => {
 export const printNFTSocket = (socket: Socket): void => {
   socket.on("printNFT", async (master: string, pubkey: string) => {
     if (master.length > 22 && pubkey.length > 22) {
-      const msg = `🖨️ Printing NFT ${master}...`;
-      socket.emit("printLogs", msg);
-      console.log("printLogs", msg);
+      const log1 = `🖨️ Printing NFT ${master}...`;
+      newLog(pubkey, log1);
+      socket.emit("printLogs", log1);
+      console.log("printLogs", log1);
       if (
         await printNFT(
           master,
@@ -130,13 +135,13 @@ export const printNFTSocket = (socket: Socket): void => {
       ) {
         const edition = await getLastEdition(master);
         if (edition > 1) {
-          socket.emit(
-            "printLogs",
-            `🎉 Master: ${master} \nEdition ${edition} has been printed succesfully!`
-          );
+          const log2 = `🎉 Master: ${master} \nEdition ${edition} has been printed succesfully!`;
+          newLog(pubkey, log2);
+          socket.emit("printLogs", log2);
           socket.emit("printLogs", "true");
         } else {
           const msgErr = `❌ ERROR: Print Edition failed!! Edition id: !${edition}!`;
+          newLog(pubkey, msgErr);
           socket.emit("printLogs", msgErr);
           console.log("printLogs", msgErr);
         }
