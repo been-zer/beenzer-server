@@ -88,26 +88,26 @@ export async function newUser(
   }
 }
 
-export async function getLogs(pubkey: string): Promise<object | boolean> {
-  try {
-    const data = await db.query(_getLogs(pubkey));
-    const user = data.rows[0];
-    return user as object;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
 export async function newLog(pubkey: string, log: string): Promise<boolean> {
   try {
     await db.query(_newLog(pubkey, log));
     return true;
   } catch (error) {
     if (String(error).includes("duplicate")) {
-      console.log("ERROR: User already exists");
+      console.log("ERROR: Log already exists");
       return false;
     }
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getLogs(pubkey: string): Promise<object | boolean> {
+  try {
+    const data = await db.query(_getLogs(pubkey));
+    const user = data.rows[0];
+    return user as object;
+  } catch (error) {
     console.log(error);
     return false;
   }
