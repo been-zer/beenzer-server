@@ -1,5 +1,4 @@
 import { Socket } from "socket.io";
-import { sleep } from "../../utils";
 import {
   SYMBOL,
   MARKET_PUBKEY,
@@ -13,8 +12,7 @@ import getUserNFTs from "../nfts/getUserNFTs";
 import getUserFeed from "../nfts/getUserFeed";
 import getFeedByLocation from "../nfts/getFeedByLocation";
 import {
-  getNFTCounter,
-  addNFTCounter,
+  getNewNFTid,
   subNFTCounter,
   getAllNFTs,
   getNFTbyId,
@@ -51,27 +49,11 @@ export const mintNFTSocket = (socket: Socket): void => {
     ) => {
       console.log("mintNFT", username, creator);
       const nftFile = type.split("/")[0] || "unknown";
-      let id = 0;
-      let i = 0;
-      while (i < TRIES) {
-        if (i == TRIES - 1) {
-          console.log(
-            `❌ ERROR: Failed to get ${SYMBOL} id! ALERT: Last try...`
-          );
-        }
-        if (await addNFTCounter()) {
-          id = (await getNFTCounter()) + 1;
-          if (id) {
-            i = TRIES;
-            break;
-          }
-        }
-        sleep(3000);
-        i++;
-      }
+      const id = await getNewNFTid(TRIES, false);
       const name = `${SYMBOL} #${id}`;
-      // socket.emit("mintLogs", `Minting ${nftFile} ${name}...`);
-      console.log(`⛏️  Minting ${nftFile} ${name}... Tries: ${i + 1}`);
+      const log1 = `⛏️  Minting ${nftFile} ${name}...`;
+      socket.emit("mintLogs", log1);
+      console.log("\nLOG1", log1);
       if (
         await mintNFT(
           id,
@@ -103,24 +85,21 @@ export const mintNFTSocket = (socket: Socket): void => {
           false // Print error logs
         )
       ) {
-        socket.emit(
-          "mintLogs",
-          // `⛏️  ${name} minted succesfully! Supply: ${supply}`
-          "test"
-        );
+        const log2 = `⛏️  ${name} minted succesfully! Supply: ${supply}`;
+        socket.emit("mintLogs", log2);
+        console.log("\nLOG2", log2);
         const masterNFT = await getNFTbyId(id);
         const masterToken: string = masterNFT.__token__;
         if (masterToken.length > 22) {
-          socket.emit(
-            "mintLogs",
-            `✅  ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`
-          );
+          const log3 = `✅  ${name} Master Edition has been added to your Collection! Once all copies are sold out, it will be transfered to the Marketplace for secondary sells. With an 8% royalties for you, forever!`;
+          socket.emit("mintLogs", log3);
+          console.log("\nLOG3", log3);
           socket.emit("mintLogs", "true");
         }
       } else {
         socket.emit(
           "mintLogs",
-          "`❌ ERROR: Mint NFT failed! Please try again. No extra charges will be applied!"
+          "❌ ERROR: Mint NFT failed! Please try again. No extra charges will be applied!"
         );
         if (await subNFTCounter()) {
           console.log(

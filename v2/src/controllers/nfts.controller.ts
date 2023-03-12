@@ -189,6 +189,32 @@ export async function getMapNFTs(
   }
 }
 
+export async function getNewNFTid(
+  _tries = 10,
+  _printErr = false
+): Promise<number> {
+  let id = 0;
+  let i = 0;
+  while (i < _tries) {
+    try {
+      if (await addNFTCounter()) {
+        id = (await getNFTCounter()) + 1;
+        if (id) {
+          return id;
+        }
+      }
+    } catch (err) {
+      if (_printErr) {
+        console.log(err);
+      }
+      console.log(`❌ ERROR: getNewNFTid controller failed!`);
+      sleep(3000);
+      i++;
+    }
+  }
+  return -1;
+}
+
 export async function getNFTCounter(): Promise<number> {
   try {
     const data = await db.query(_getNFTCounter());

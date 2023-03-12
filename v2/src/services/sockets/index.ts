@@ -34,5 +34,10 @@ export const socketConnect = (io: Server): void => {
     socket.on("clientLogs", (message: string) => {
       console.log("client log", message);
     });
+    // let i = 0;
+    // setInterval(() => {
+    //   socket.emit("mintLogs", String(i));
+    //   i++;
+    // }, 5000);
   });
 };

@@ -5,6 +5,8 @@ import {
   isUserName,
   newUser,
   getUser,
+  newLog,
+  getLogs,
   updateUser,
   getUserFollows,
   getUserFollowers,
@@ -106,6 +108,26 @@ export const updateUserSocket = (socket: Socket): void => {
   );
 };
 
+export const getLogsSocket = (socket: Socket): void => {
+  socket.on("getLogs", async (pubkey: string) => {
+    socket.emit("getLogsRes", await getLogs(pubkey));
+  });
+};
+
+export const newLogSocket = async (socket: Socket): Promise<void> => {
+  socket.on("newLog", async (pubkey: string, log: string) => {
+    if (pubkey.length >= 22) {
+      if (await newLog(pubkey, log)) {
+        socket.emit("newLogSaved", true);
+        console.log("New log saved! From : ", pubkey, log);
+      } else {
+        console.log("New log ctrl failed!");
+        socket.emit("newLogSaved", false);
+      }
+    }
+  });
+};
+
 export const addFriendSocket = (socket: Socket): void => {
   socket.on("addFriend", async (pubkey: string, pubkey2: string) => {
     if (pubkey.length > 22 && pubkey2.length > 22) {
@@ -171,6 +193,8 @@ const userSocket = (socket: Socket): void => {
   usernameExistsSocket(socket);
   searchUsersSocket(socket);
   getUserSocket(socket);
+  getLogsSocket(socket);
+  newLogSocket(socket);
   updateUserSocket(socket);
   addFriendSocket(socket);
   removeFriendSocket(socket);

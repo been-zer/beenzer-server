@@ -15,6 +15,8 @@ import {
   _isUserName,
   _searchUsers,
   _usersFlags,
+  _newLog,
+  _getLogs,
 } from "./users.queries";
 import {
   _getNFT,
@@ -75,6 +77,31 @@ export async function newUser(
 ): Promise<boolean> {
   try {
     await db.query(_newUser(pubkey, username, appuser));
+    return true;
+  } catch (error) {
+    if (String(error).includes("duplicate")) {
+      console.log("ERROR: User already exists");
+      return false;
+    }
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getLogs(pubkey: string): Promise<object | boolean> {
+  try {
+    const data = await db.query(_getLogs(pubkey));
+    const user = data.rows[0];
+    return user as object;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function newLog(pubkey: string, log: string): Promise<boolean> {
+  try {
+    await db.query(_newLog(pubkey, log));
     return true;
   } catch (error) {
     if (String(error).includes("duplicate")) {
