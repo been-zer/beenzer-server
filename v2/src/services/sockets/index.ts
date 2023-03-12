@@ -31,9 +31,9 @@ export const socketConnect = (io: Server): void => {
     tokenSocket(socket);
     servicesSocket(socket);
     // Debugging
-    socket.on("clientLogs", (message: string) => {
-      console.log("client log", message);
-    });
+    // socket.on("clientLogs", (message: string) => {
+    //   console.log("client log", message);
+    // });
     // let i = 0;
     // setInterval(() => {
     //   socket.emit("mintLogs", String(i));
