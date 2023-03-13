@@ -102,7 +102,9 @@ export async function newLog(pubkey: string, log: string): Promise<boolean> {
   }
 }
 
-export async function getLogs(pubkey: string): Promise<object[] | boolean> {
+export async function getLogs(
+  pubkey: string
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_getLogs(pubkey));
     const user = data.rows;
