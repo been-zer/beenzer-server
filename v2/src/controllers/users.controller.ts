@@ -178,7 +178,7 @@ export async function isFriend(
 
 export async function getUserFollows(
   pubkey: string
-): Promise<Array<object> | boolean | any> {
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_getUserFollows(pubkey));
     const rows = data.rows;
@@ -200,7 +200,7 @@ export async function getUserFollows(
 
 export async function getUserFollowers(
   pubkey: string
-): Promise<Array<object> | boolean | any> {
+): Promise<Array<object> | boolean> {
   try {
     const data = await db.query(_getUserFollowers(pubkey));
     const rows = data.rows;
