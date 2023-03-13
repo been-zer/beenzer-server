@@ -24,12 +24,12 @@ export const _newUser = (
   return `INSERT INTO users (${usersSchema}) VALUES ('${pubkey}', '${username}', '', '', '', '', '', '', '', '', '', '', false, '', '', '', '', '', '', '', '', ${appuser}, ${Date.now()}, ${Date.now()})`;
 };
 
-export const _getLogs = (pubkey: string): string => {
-  return `SELECT * FROM logs WHERE __pubkey__ = '${pubkey}'`;
-};
-
 export const _newLog = (pubkey: string, log: string): string => {
   return `INSERT INTO logs (${logsSchema}) VALUES ('${pubkey}', '${log}', ${Date.now()})`;
+};
+
+export const _getLogs = (pubkey: string): string => {
+  return `SELECT * FROM logs WHERE _pubkey = '${pubkey}'`;
 };
 
 export const _updateUser = (
