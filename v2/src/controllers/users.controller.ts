@@ -105,7 +105,7 @@ export async function newLog(pubkey: string, log: string): Promise<boolean> {
 export async function getLogs(pubkey: string): Promise<object | boolean> {
   try {
     const data = await db.query(_getLogs(pubkey));
-    const user = data.rows[0];
+    const user = data.rows;
     return user as object;
   } catch (error) {
     console.log(error);
