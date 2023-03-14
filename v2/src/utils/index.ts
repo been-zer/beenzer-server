@@ -1,18 +1,8 @@
-// import ffmpeg from "fluent-ffmpeg";
-// import ffmpegGif from "ffmpeg-gif";
-// import { FfmpegCommandOptions } from "fluent-ffmpeg";
-// import gifify from "gifify";
-
 export const sleep = (ms: number) => {
   console.log(`\nSleeping... ${ms}ms\n`);
   return new Promise((r) => setTimeout(r, ms));
 };
-/**
- * @description Get getTime data
- * @date 12/1/2022 - 12:02:42 PM
- *
- * @returns {string}
- */
+
 export const getTime = (): string => {
   const date = new Date();
   const hours = formatTime(date.getUTCHours());
@@ -21,12 +11,6 @@ export const getTime = (): string => {
   return `${hours}:${minutes}:${seconds}`;
 };
 
-/**
- * @description Get getDate data
- * @date 12/1/2022 - 12:02:42 PM
- *
- * @returns {string}
- */
 export const getDate = (): string => {
   const date = new Date();
   const year = formatTime(date.getUTCFullYear());
@@ -35,13 +19,6 @@ export const getDate = (): string => {
   return `${year}-${month}-${day}`;
 };
 
-/**
- * @description Get formatTime data
- * @date 12/1/2022 - 12:02:42 PM
- *
- * @param {number} num
- * @returns {string}
- */
 export const formatTime = (num: number): string => {
   if (String(num).length < 2) return "0" + String(num);
   else if (String(num).length < 1) return "00";
