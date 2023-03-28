@@ -1,3 +1,4 @@
+// import and run server
 import { server, io } from "./app";
 import { socketConnect } from "./services/sockets";
 import getBalances from "./services/wallet/getBalances";

@@ -1,4 +1,4 @@
-// import and run server
+// init server
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { createServer } from "http";
